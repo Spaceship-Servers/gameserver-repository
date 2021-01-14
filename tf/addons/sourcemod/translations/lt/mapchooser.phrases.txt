@@ -1,0 +1,48 @@
+"Phrases"
+{
+	"Vote Nextmap"
+	{
+***REPLACED API KEY***
+	}
+
+	"Nextmap Voting Started"
+	{
+***REPLACED API KEY***
+	}
+
+	"Nextmap Voting Finished"
+	{
+***REPLACED API KEY***
+	}
+
+	"Current Map Extended"
+	{
+***REPLACED API KEY***
+	}
+
+	"Extend Map"
+	{
+		"lt"		"Pratesti dabartinį žemėlapį"
+	}
+
+	"Dont Change"
+	{
+		"lt"		"Nekeisti"
+	}
+
+	"Current Map Stays"
+	{
+***REPLACED API KEY***
+	}
+
+	"Changed Next Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"Starting Runoff"
+	{
+***REPLACED API KEY***
+	}
+
+}

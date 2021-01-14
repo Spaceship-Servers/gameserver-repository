@@ -1,0 +1,68 @@
+"Phrases"
+{
+	"Already Nominated"
+	{
+		"lt"		"Jūs jau pasiūlėte žemėlapį."
+	}
+
+	"Max Nominations"
+	{
+		"lt"		"Maksimalus pasiūlymų skaičius pasiektas."
+	}
+
+	"Map Already In Vote"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map Inserted"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map Already Nominated"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map Nominated"
+	{
+		"lt"		"{1} pasiūlė {2}."
+	}
+
+	"Map Nomination Changed"
+	{
+		"lt"		"{1} pakeitė pasiūlymą į {2}."
+	}
+
+	"Nominate Title"
+	{
+		"lt"		"Pasiūlyti Žemėlapį:"
+	}
+
+	"Can't Nominate Current Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map in Exclude List"
+	{
+***REPLACED API KEY***
+	}
+
+	"Current Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"Recently Played"
+	{
+		"lt"		"Nesenai Žaista"
+	}
+
+	"Nominated"
+	{
+		"lt"		"Pasiūlytas"
+	}
+
+}

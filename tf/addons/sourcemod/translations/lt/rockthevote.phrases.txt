@@ -1,0 +1,103 @@
+"Phrases"
+{
+	"Rock The Vote"
+	{
+		"lt"		"Iškviesti balsavimą:"
+	}
+
+	"RTV Not Allowed"
+	{
+		"lt"		"Balsavimas, vartotojo pageidavimu, vis dar neleidžiamas."
+	}
+
+	"RTV Started"
+	{
+		"lt"		"Balsavimas jau prasidėjo."
+	}
+
+	"RTV Ended"
+	{
+***REPLACED API KEY***
+	}
+
+	"Already Voted"
+	{
+***REPLACED API KEY***
+	}
+
+	"Minimal Players Not Met"
+	{
+		"lt"		"Permažai žaidėjų."
+	}
+
+	"Map Already In Vote"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map Inserted"
+	{
+***REPLACED API KEY***
+	}
+
+	"RTV Requested"
+	{
+		"lt"		"{1} nori iškviesti balsavimą, žaidėjo pageidavimu. ({2} balsai už, {3} balsų reikia)"
+	}
+
+	"RTV Vote Ready"
+	{
+		"lt"		"Kviečiamas balsavimas!"
+	}
+
+	"Don't Change"
+	{
+***REPLACED API KEY***
+	}
+
+	"Already Nominated"
+	{
+		"lt"		"Jūs jau nominavote žemėlapį."
+	}
+
+	"Max Nominations"
+	{
+		"lt"		"Maksimalus kiekis nominacijų pasiektas."
+	}
+
+	"Selected Map"
+	{
+		"lt"		"{1} pasirinko {2}"
+	}
+
+	"No Votes"
+	{
+***REPLACED API KEY***
+	}
+
+	"Current Map Stays"
+	{
+***REPLACED API KEY***
+	}
+
+	"Changing Maps"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map Already Nominated"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map Nominated"
+	{
+		"lt"		"{1} nominamo {2} į balsavimo pagal pageidavimą sąrašą."
+	}
+
+	"Nominate Title"
+	{
+***REPLACED API KEY***
+	}
+
+}

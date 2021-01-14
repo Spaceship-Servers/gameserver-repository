@@ -1,0 +1,108 @@
+"Phrases"
+{
+	"Timeleft"
+	{
+***REPLACED API KEY***
+	}
+
+	"Thetime"
+	{
+		"lt"		"Šiuo metu serverio laikas {1}"
+	}
+
+	"Friendly Fire On"
+	{
+		"lt"		"Komandos narių šaudymas yra įjungtas."
+	}
+
+	"Friendly Fire Off"
+	{
+		"lt"		"Komandos narių šaudymas yra išjungtas."
+	}
+
+	"Current Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"LastRound"
+	{
+		"lt"		"Tai paskutinis raundas!"
+	}
+
+	"NoTimelimit"
+	{
+***REPLACED API KEY***
+	}
+
+	"Next Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"Pending Vote"
+	{
+		"lt"		"Laukiamas balsavimas"
+	}
+
+	"WinLimitAppend"
+	{
+		"lt"		", arba pakeisti žemėlapį, kai komanda laimės vieną raundą"
+	}
+
+	"WinLimit"
+	{
+***REPLACED API KEY***
+	}
+
+	"MaxRoundsAppend"
+	{
+		"lt"		", arba pakeisti žemėlapį po dar vieno raundo"
+	}
+
+	"MaxRounds"
+	{
+***REPLACED API KEY***
+	}
+
+	"FragLimitAppend"
+	{
+		"lt"		", arba pakeisti žemėlapį, kai žaidėjas nušaus vieną priešininką"
+	}
+
+	"FragLimit"
+	{
+***REPLACED API KEY***
+	}
+
+	"WinLimitAppendPlural"
+	{
+		"lt"		", arba pakeisti žemėlapį, kai komanda laimės {1} raundą(ų)"
+	}
+
+	"WinLimitPlural"
+	{
+***REPLACED API KEY***
+	}
+
+	"MaxRoundsAppendPlural"
+	{
+		"lt"		", arba pakeisti žemėlapį po {1} raundo(ų)"
+	}
+
+	"MaxRoundsPlural"
+	{
+***REPLACED API KEY***
+	}
+
+	"FragLimitAppendPlural"
+	{
+		"lt"		", arba pakeisti žemėlapį, kai žaidėjas nušaus {1} priešininką(ų)"
+	}
+
+	"FragLimitPlural"
+	{
+***REPLACED API KEY***
+	}
+
+}

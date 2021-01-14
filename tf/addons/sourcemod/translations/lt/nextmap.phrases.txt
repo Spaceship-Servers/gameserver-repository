@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Next Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map History"
+	{
+***REPLACED API KEY***
+	}
+
+	"Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"Started"
+	{
+		"lt"		"[Prasidėjo]"
+	}
+
+	"Played Time"
+	{
+		"lt"		"[Žaista Laiko]"
+	}
+
+	"Reason"
+	{
+		"lt"		"[Pasibaigimo priežastis]"
+	}
+
+	"Current Map"
+	{
+***REPLACED API KEY***
+	}
+
+	"ago"
+	{
+		"lt"		"prieš"
+	}
+
+}
