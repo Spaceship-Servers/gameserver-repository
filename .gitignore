@@ -11,7 +11,9 @@ tf/addons/*/scripting/**/*.smx
 tf/addons/*/plugins/*.smx
 
 tf/cfg/*
-!tf/cfg/quickplay
+!tf/cfg/base.cfg
+!tf/cfg/stv.cfg
+!tf/cfg/servers
 !tf/cfg/sourcemod
 !tf/cfg/pure_server_whitelist.txt
 
