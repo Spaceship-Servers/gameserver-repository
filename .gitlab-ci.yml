@@ -57,11 +57,11 @@ stages:
                         git reset --hard origin/$CI_COMMIT_REF_NAME;
 
                         echo "chmodding"
-                        chmod 744 build.sh;
+                        #chmod 744 build.sh;
                         chmod 744 start.sh;
 
-                        echo "building"
-                        ./build.sh $COMMIT_OLD;
+                        #echo "building"
+                        #./build.sh $COMMIT_OLD;
 
                     fi;
                 fi;
