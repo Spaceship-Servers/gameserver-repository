@@ -24,6 +24,7 @@ tf/addons/*/configs/sourcebans/sourcebans.cfg
 tf/addons/*/backup/*
 !tf/addons/sourcemod/scripting/
 !tf/addons/sourcemod/plugins/*
+!tf/addons/sourcemod/plugins/**/*
 !tf/maps
 !tf/maps/*
 tf/maps/graphs
