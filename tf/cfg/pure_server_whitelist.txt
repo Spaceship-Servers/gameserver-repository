@@ -1,0 +1,45 @@
+whitelist
+{
+    // revert full server whitelist
+    sound\...                                       any
+    models\...                                      any
+    materials\...                                   any
+    particles\...                                   any
+    scripts\game_sounds.txt                         any
+    scripts\game_sounds_manifest.txt                any
+    scripts\game_sounds_player.txt                  any
+    scripts\game_sounds_vo.txt                      any
+    scripts\game_sounds_vo_handmade.txt             any
+    scripts\game_sounds_weapons.txt                 any
+    scripts\soundmixers.txt                         any
+    sound\ui\hitsound.wav                           any
+    // fixed sv pure shit
+    particles\bullet_tracers.pcf                    trusted_source
+    particles\burningplayer.pcf                     trusted_source
+    particles\burningplayer_dx80.pcf                trusted_source
+    particles\cig_smoke.pcf                         trusted_source
+    particles\cig_smoke_dx80.pcf                    trusted_source
+    particles\explosion.pcf                         trusted_source
+    particles\explosion_dx80.pcf                    trusted_source
+    particles\explosion_dx90_slow.pcf               trusted_source
+    particles\explosion_high.pcf                    trusted_source
+    particles\disguise.pcf                          trusted_source
+    particles\flag_particles.pcf                    trusted_source
+    particles\nemesis.pcf                           trusted_source
+    particles\player_recent_teleport.pcf            trusted_source
+    particles\player_recent_teleport_dx80.pcf       trusted_source
+    particles\speechbubbles.pcf                     trusted_source
+    particles\teleported_fx.pcf                     trusted_source
+    particles\teleport_status.pcf                   trusted_source
+    particles\water.pcf                             trusted_source
+    particles\water_dx80.pcf                        trusted_source
+    // rocket prediction mod
+    // https://gamebanana.com/effects/5191
+    particles\rockettrail.pcf                       trusted_source
+    particles\rockettrail_dx80.pcf                  trusted_source
+    // sticky and pipebomb helper
+    // https://gamebanana.com/effects/5164
+    particles\stickybomb.pcf                        trusted_source
+    particles\stickybomb_dx80.pcf                   trusted_source
+}
+
