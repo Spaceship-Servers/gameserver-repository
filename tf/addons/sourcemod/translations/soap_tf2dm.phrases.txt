@@ -1,0 +1,30 @@
+"Phrases"
+{
+	"Health Remaining"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your attacker had {1} health remaining."
+	}
+	"Attacker is dead"
+	{
+		"en"			"Your attacker is dead."
+	}
+	"Plugins unloaded"
+	{
+		"en"			"Plugins unloaded."
+	}
+	"Plugins reloaded"
+	{
+		"en"			"Plugins reloaded."
+	}
+	"Kill HP Received"
+	{
+		"#format"		"{1:i},{2:s}"
+		"en"			"You got {1} hp for killing {2}"
+	}
+	"Damage HP Received"
+	{
+		"#format"		"{1:i},{2:s}"
+		"en"			"You got {1} hp for damaging {2}"
+	}
+}

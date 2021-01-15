@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"Health Remaining"
+	{
+		"ru"			"У противника осталось {1} оз."
+	}
+	"Attacker is dead"
+	{
+		"ru"			"Ваш убийца мёртв."
+	}
+	"Plugins unloaded"
+	{
+		"ru"			"Плагины отключены."
+	}
+	"Plugins reloaded"
+	{
+		"ru"			"Плагины загружены."
+	}
+	"Kill HP Received"
+	{
+		"ru"			"Вы получили {1} оз за убийство {2}"
+	}
+	"Damage HP Received"
+	{
+		"ru"			"Вы получили {1} оз за нанесение урона {2}"
+	}
+}
