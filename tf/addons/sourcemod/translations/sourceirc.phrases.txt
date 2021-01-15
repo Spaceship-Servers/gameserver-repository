@@ -1,0 +1,79 @@
+"Phrases"
+{
+	// Core
+	"Hi"
+	{
+		"#format"		"{1:s}"
+		"en"			"Hi, i'm {1}. Try typing {1} help for information on how to use me."
+	}
+	"Unknown Command"
+	{
+		"#format"		"{1:s}"
+		"en"			"Unknown command: {1}"
+	}
+	"Access Denied"
+	{
+		"#format"		"{1:s}"
+		"en"			"Access Denied: {1}"
+	}
+	"Not Connected"
+	{
+		"en"			"Error: Not connected to IRC yet"
+	}
+	
+	// Changemap
+	"Changing Map"
+	{
+		"#format"		"{1:s}"
+		"en"			"Changing map to {1}"
+	}
+	"Multiple Maps"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1} matches more than one map"
+	}
+	"Invalid Map"
+	{
+		"#format"		"{1:s}"
+		"en"			"Map {1} does not exist"
+	}
+	
+	// RelayAll - You can use this section for theming relay all, which is why there are alot of extra unused parameters you can use. You can also set the translation string to "" to completely disable an event.
+	"Player Connected"
+	{
+		"#format"		"{1:s},{2:s},{3:d}" // {1} Name, {2} SteamID, {3} UserID
+		"en"			"{1} connected."
+	}
+	"Player Disconnected"
+	{
+		"#format"		"{1:s},{2:s},{3:d},{4:s}" // {1} Name, {2} SteamID, {3} UserID, {4} Disconnect reason
+		"en"			"{1} disconnected ({4})."
+	}
+	"Changed Name"
+	{
+		"#format" "{1:s},{2:s},{3:d},{4:s}" // {1} Old Name, {2} SteamID, {3} UserID, {4} New name
+		"en"			"{1} changed name to {4}" 
+	}
+	"Map Changing"
+	{
+		"en"			"-- Map Changing --"
+	}
+	"Map Changed"
+	{
+		"#format" "{1:s}"
+		"en"			"-- Map Changed to {1} --"
+	}
+	
+	// rcon
+	"RCON Busy"
+	{
+		"en"			"RCON is busy, please try again"
+	}
+	
+	// Ban
+	"Invalid Player"
+	{
+		"#format" "{1:s}"
+		"en"			"Invalid player: {1}"
+	}
+}
