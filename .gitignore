@@ -22,6 +22,7 @@ tf/addons/*/configs/sourcebans/sb_admins.cfg
 tf/addons/*/configs/sourcebans/sb_admin_groups.cfg
 tf/addons/*/configs/sourcebans/sourcebans.cfg
 tf/addons/*/backup/*
+tf/addons/*/configs/sourceirc*
 !tf/addons/sourcemod/scripting/
 !tf/addons/sourcemod/plugins/*
 !tf/addons/sourcemod/plugins/**/*
