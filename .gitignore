@@ -8,7 +8,6 @@ tf/*
 !tf/addons
 !tf/custom
 tf/addons/*/scripting/**/*.smx
-tf/addons/*/plugins/*.smx
 
 tf/cfg/*
 !tf/cfg/base.cfg
@@ -24,7 +23,7 @@ tf/addons/*/configs/sourcebans/sb_admin_groups.cfg
 tf/addons/*/configs/sourcebans/sourcebans.cfg
 tf/addons/*/backup/*
 !tf/addons/sourcemod/scripting/
-!tf/addons/sourcemod/plugins/
+!tf/addons/sourcemod/plugins/*
 !tf/maps
 !tf/maps/*
 tf/maps/graphs
