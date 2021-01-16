@@ -14,9 +14,8 @@ tf/cfg/*
 !tf/cfg/stv.cfg
 !tf/cfg/servers
 !tf/cfg/sourcemod
-!tf/cfg/pure_server_whitelist.txt
-!cfg/pure_server_*
-!cfg/trusted_keys_base.txt
+!tf/cfg/pure_server_*
+!tf/cfg/trusted_keys_base.txt
 
 tf/addons/*/data/sqlite/clientprefs-sqlite.sq3
 tf/addons/*/data/_*.data
