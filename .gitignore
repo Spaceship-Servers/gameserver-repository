@@ -16,6 +16,9 @@ tf/cfg/*
 !tf/cfg/sourcemod
 !tf/cfg/pure_server_*
 !tf/cfg/trusted_keys_base.txt
+!tf/cfg/motd_html.txt
+!tf/cfg/motd_text.txt
+
 
 tf/addons/*/data/sqlite/clientprefs-sqlite.sq3
 tf/addons/*/data/_*.data
