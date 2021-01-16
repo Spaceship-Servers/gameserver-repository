@@ -7,7 +7,7 @@ tf/*
 !tf/cfg
 !tf/addons
 !tf/custom
-!cfg/pure_server_full.txt
+!cfg/pure_server_*
 !cfg/trusted_keys_base.txt
 tf/addons/*/scripting/**/*.smx
 
