@@ -1,0 +1,19 @@
+"Games"
+{
+    "tf"
+    {
+        "Offsets"
+        {
+            "CTeam::AddPlayer"
+            {
+                "linux"  "202"
+                "windows"   "201"
+            }
+            "CTeam::RemovePlayer"
+            {
+                "linux"  "203"
+                "windows"   "202"
+            }
+        }
+    }
+}
