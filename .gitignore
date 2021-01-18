@@ -18,7 +18,7 @@ tf/cfg/*
 !tf/cfg/trusted_keys_base.txt
 !tf/cfg/motd_html.txt
 !tf/cfg/motd_text.txt
-
+!tf/cfg/custom_whitelist_10131.txt
 
 tf/addons/*/data/sqlite/clientprefs-sqlite.sq3
 tf/addons/*/data/_*.data
