@@ -1,0 +1,1 @@
+native void GetPrettyMapName(const char[] map, char[] buffer, int size);
