@@ -19,7 +19,7 @@ tf/cfg/*
 !tf/cfg/motd_html.txt
 !tf/cfg/motd_text.txt
 !tf/cfg/custom_whitelist_10131.txt
-
+!tf/cfg/itemtest.cfg
 tf/addons/*/data/sqlite/clientprefs-sqlite.sq3
 tf/addons/*/data/_*.data
 tf/addons/*/configs/sourcebans/sb_admins.cfg
