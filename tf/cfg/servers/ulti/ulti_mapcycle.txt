@@ -1,5 +1,5 @@
-ultiduo_baloo_v2
 koth_ultiduo_r_b7
+ultiduo_baloo_v2
 ultiduo_seclusion_b3_fixed_window
 ultiduo_lookout_b1
 ultiduo_grove_b4
