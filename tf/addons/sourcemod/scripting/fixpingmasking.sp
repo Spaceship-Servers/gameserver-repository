@@ -36,7 +36,7 @@ public void PlayerResource_OnThinkPost(int entity)
         if (IsValidClient(client))
         {
             // get scoreboard ping
-            int ping = GetEntProp(entity, Prop_Send, "m_iPing", _, client);
+            int ping = GetEntProp(entity, Prop_Send, "m_iPing", 1, client);
 
             // THIS SHOULD NEVER OCCUR, it is a sanity check
             if (ping > 999)
@@ -51,7 +51,7 @@ public void PlayerResource_OnThinkPost(int entity)
             // get actual value of cl cmdrate
             GetClientInfo(client, "cl_cmdrate", char_cmdrate, sizeof(char_cmdrate));
             // convert it to float
-            float fl_cmdrate = StringToFloat(char_cmdrate);
+            int int_cmdrate = StringToInt(char_cmdrate);
             // check if client is masking
             if
             (
@@ -59,7 +59,7 @@ public void PlayerResource_OnThinkPost(int entity)
                 MatchRegex(pingmaskRegex, char_cmdrate) <= 0
                 ||
                 // is their cmdrate below optimal(ish) settings?
-                fl_cmdrate < 60.0
+                int_cmdrate < 60
                 ||
                 // is their ping messed up in some other way?
                 ping < 5
@@ -68,7 +68,7 @@ public void PlayerResource_OnThinkPost(int entity)
                 // clients want to see ping, not rtt, so slice it in half
                 int newping = RoundToNearest((GetClientLatency(client, NetFlow_Both) * 1000) * 0.5);
                 // set the scoreboard ping to our new value
-                SetEntProp(entity, Prop_Send, "m_iPing", newping, client, _);
+                SetEntProp(entity, Prop_Send, "m_iPing", newping, client, 1);
                 // debug
                 // LogMessage("Corrected client %N's ping. original ping: %i - new ping: %i", client, ping, newping);
             }
