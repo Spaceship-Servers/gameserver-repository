@@ -2,81 +2,81 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <sdkhooks>
 #include <sdktools>
-#include <regex>
-
-Regex pingmaskRegex;
 
 public Plugin myinfo =
 {
-	name 		= "Fix ping masking",
-	author 		= "sappho",
-	description = "Fix fake ping values for clients that are ping masking - originally from Steph's AntiCheat",
-	version 	= "0.0.1"
+    name        = "Fix ping masking",
+    author      = "sappho",
+    description = "Fix fake ping values for clients that are ping masking",
+    version     = "0.1.0"
 };
+
+int imaxcmdrate;
+int imincmdrate;
 
 public void OnPluginStart()
 {
-    // set up regex to find nonnumeric values
-    pingmaskRegex = new Regex("^\\d*\\.?\\d*$");
-    // get player resource entity
-    int PlayerResourceEnt = GetPlayerResourceEntity();
-    // hook it
-    SDKHook(PlayerResourceEnt, SDKHook_ThinkPost, PlayerResource_OnThinkPost);
-}
+    HookConVarChange(FindConVar("sv_mincmdrate"), CmdRateChange);
+    HookConVarChange(FindConVar("sv_maxcmdrate"), CmdRateChange);
 
-// this runs every 20ms (i think)
-public void PlayerResource_OnThinkPost(int entity)
-{
+    UpdateCmdRate();
+
     // loop thru all clients
     for (int client = 1; client <= MaxClients; client++)
     {
         // don't check bots
         if (IsValidClient(client))
         {
-            // get scoreboard ping
-            int ping = GetEntProp(entity, Prop_Send, "m_iPing", 1, client);
-
-            // THIS SHOULD NEVER OCCUR, it is a sanity check
-            if (ping > 999)
-            {
-                KickClient(client, "Your ping is too high - %i > 999", ping);
-            }
-
-            // cl_cmdrate needs to not have any non numerical chars (xcept the . sign if its a float) in it
-            // otherwise player ping gets messed up on the scoreboard
-            // set up char
-            char char_cmdrate[8];
-            // get actual value of cl cmdrate
-            GetClientInfo(client, "cl_cmdrate", char_cmdrate, sizeof(char_cmdrate));
-            // convert it to float
-            int int_cmdrate = StringToInt(char_cmdrate);
-            // check if client is masking
-            if
-            (
-                // is their cmdrate fucked up?
-                MatchRegex(pingmaskRegex, char_cmdrate) <= 0
-                ||
-                // is their cmdrate below optimal(ish) settings?
-                int_cmdrate < 60
-                ||
-                // is their ping messed up in some other way?
-                ping < 5
-            )
-            {
-                // clients want to see ping, not rtt, so slice it in half
-                int newping = RoundToNearest((GetClientLatency(client, NetFlow_Both) * 1000) * 0.5);
-                // set the scoreboard ping to our new value
-                SetEntProp(entity, Prop_Send, "m_iPing", newping, client, 1);
-                // debug
-                // LogMessage("Corrected client %N's ping. original ping: %i - new ping: %i", client, ping, newping);
-            }
+            OnClientSettingsChanged(client);
         }
     }
 }
 
-// IsValidClient Stock
+void UpdateCmdRate()
+{
+    imincmdrate = GetConVarInt(FindConVar("sv_mincmdrate"));
+    imaxcmdrate = GetConVarInt(FindConVar("sv_maxcmdrate"));
+}
+
+void CmdRateChange(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    UpdateCmdRate();
+}
+
+public void OnClientSettingsChanged(int client)
+{
+    char scmdrate[4];
+    // get actual value of cl cmdrate
+    GetClientInfo(client, "cl_cmdrate", scmdrate, sizeof(scmdrate));
+    // convert it to int
+    int icmdrate = StringToInt(scmdrate);
+    // clamp it
+    int iclamprate = Math_Clamp(icmdrate, imincmdrate, imaxcmdrate);
+    char sclamprate[4];
+    // convert it to string
+    IntToString(iclamprate, sclamprate, sizeof(sclamprate));
+
+    if
+    (
+        // cmdrate is == to optimal clamped rate
+        icmdrate == iclamprate
+        &&
+        // client string is exactly equal to string of optimal cmdrate
+        StrEqual(scmdrate, sclamprate)
+    )
+    {
+        return;
+    }
+
+    // if client has unoptimal cmdrate, clamp it.
+    SetClientInfo(client, "cl_cmdrate", sclamprate);
+
+    // check our work - debug only
+    // GetClientInfo(client, "cl_cmdrate", sclamprate, sizeof(sclamprate));
+    // LogMessage("client cmdrate is %s", sclamprate);
+}
+
 bool IsValidClient(int client)
 {
     return
@@ -85,4 +85,33 @@ bool IsValidClient(int client)
         && IsClientInGame(client)
         && !IsFakeClient(client)
     );
+}
+
+// stolen from smlib
+int Math_Clamp(int value, int min, int max)
+{
+    value = Math_Min(value, min);
+    value = Math_Max(value, max);
+
+    return value;
+}
+
+int Math_Min(int value, int min)
+{
+    if (value < min)
+    {
+        value = min;
+    }
+
+    return value;
+}
+
+int Math_Max(int value, int max)
+{
+    if (value > max)
+    {
+        value = max;
+    }
+
+    return value;
 }
