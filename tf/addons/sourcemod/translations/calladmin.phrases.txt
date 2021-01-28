@@ -100,9 +100,9 @@
 	}
 	"CallAdmin_ConfirmCall"
 	{
-		"en"		"Are you sure you want to call an admin?, abuse will be punished"
-		"de"		"Bist du sicher dass du einen Admin rufen willst?, Missbrauch wird bestraft"
-		"fr"		"Voulez-vous vraiment appeler un admin ?, les abus seront sanctionnés"
+		"en"		"Are you sure you want to call an admin? Abuse of this feature will be punished!"
+		"de"		"Bist du sicher dass du einen Admin rufen willst? Missbrauch wird bestraft"
+		"fr"		"Voulez-vous vraiment appeler un admin ? Les abus seront sanctionnés"
 		"ru"		"Вы уверены, что хотите отправить жалобу администратору? Помните, что существует наказание за ложные вызовы"
 	}
 	"CallAdmin_Yes"
