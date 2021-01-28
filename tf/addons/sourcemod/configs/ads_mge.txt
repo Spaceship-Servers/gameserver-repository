@@ -27,7 +27,7 @@
     }
     "3"
     {
-        "chat"          "{skyblue}Someone causing trouble? Something broken? Type {fullred}!calladmin{skyblue} to summon an admin to the server! ABUSING THIS WILL GET YOU TEMP BANNED!"
+        "chat"          "{skyblue}Someone causing trouble? Type {fullred}/call{skyblue} to report a player - abuse will get you banned!"
     }
     "4"
     {
