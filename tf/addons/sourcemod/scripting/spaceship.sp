@@ -7,7 +7,7 @@
 #include <updater>
 
 #define PLUGIN_VERSION  "0.0.5"
-#define UPDATE_URL      "https://raw.githubusercontent.com/stephanieLGBT/spaceship-servers-plugin/master/updatefile.txt"
+#define UPDATE_URL      "https://raw.githubusercontent.com/sapphonie/spaceship-servers-plugin/master/updatefile.txt"
 
 // bracket color
 #define bColor "1F1F2A"
@@ -84,7 +84,7 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
     {
         if (StrContains(sArgs, "!calladmin", false) != -1)
         {
-            PrintColoredChat(Cl, sTag ... "Try typing !call to report a player. To report a server issue, join the Discord by typing !discord");
+            PrintColoredChat(Cl, sTag ... "This command is now used only for reporting players. To report a server issue, join the Discord by typing !discord");
         }
         if
         (
