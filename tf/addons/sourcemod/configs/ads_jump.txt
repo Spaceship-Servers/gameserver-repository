@@ -1,0 +1,40 @@
+// Advertisements 2.0
+// by Tsunami
+//
+// Types
+// -----
+// center: Center message
+// chat: Chat message
+// hint: Hint message
+// menu: Menu message
+// top: Top message
+//
+// Flags (optional)
+// -----
+// Accepts flags of admins that will not see the advertisement.
+// When omitted everyone will see the advertisement.
+// When left empty only admins will see the advertisement.
+
+"Advertisements"
+{
+    "1"
+    {
+        "chat"          "{orange}Problems? Questions? Suggestions? Join the {green}discord! {#ff007f}https://discord.gg/Dn4wRu3"
+    }
+    "2"
+    {
+        "chat"          "{white}These servers are powered by contributions from {hotpink}gamers like you. {white}Visit {hotpink}https://sappho.io/donate{white} if you'd like to donate."
+    }
+    "3"
+    {
+        "chat"          "{skyblue}Someone causing trouble? Type {fullred}/call{skyblue} to report a player - abuse will get you banned!"
+    }
+    "4"
+    {
+        "chat"          "{fuchsia}All STV demos older than 30 minutes {plum}are now available over at {#ff007f}https://sappho.io/stvdemos/{plum}!"
+    }
+    "5"
+    {
+        "chat"          "{greenyellow}You can toggle cross server IRC chat on or off with {white}/irc{greenyellow}! Your settings will be saved from server to server!"
+    }
+}
