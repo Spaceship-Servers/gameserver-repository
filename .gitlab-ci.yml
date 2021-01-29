@@ -29,9 +29,9 @@ stages:
                     if [ `git rev-parse --abbrev-ref HEAD` == $CI_COMMIT_REF_NAME ]; then
 
 
-                        echo "setting git config"
-                        git config --global user.email "support@creators.tf"
-                        git config --global user.name "Creators.TF Production"
+                        # echo "setting git config"
+                        # git config --global user.email "support@creators.tf"
+                        # git config --global user.name "Creators.TF Production"
 
                         COMMIT_OLD=`git rev-parse HEAD`;
 
@@ -40,6 +40,9 @@ stages:
 
                         echo "cleaning cfg folder"
                         git clean -d -f -x tf/cfg/
+
+                        echo "cleaning maps folder"
+                        git clean -d -f tf/maps
 
                         # git gc
 
