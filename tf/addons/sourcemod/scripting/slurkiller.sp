@@ -63,7 +63,7 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
         else if (hasClientBeenWarned[Cl])
         {
             char reason[512];
-            Format(reason, sizeof(reason), "Auto Silenced for hate speech, user said: \"%s\"", sArgs);
+            Format(reason, sizeof(reason), "Auto Silenced for hate speech, user said: %s", sArgs);
             SourceComms_SetClientGag (Cl, true, 4320, true, reason);
             SourceComms_SetClientMute(Cl, true, 4320, true, reason);
         }
