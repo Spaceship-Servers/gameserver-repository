@@ -7,7 +7,7 @@ koth_coalplant_b8
 cp_freight_final1
 koth_ramjam_rc1
 cp_snakewater_final1
-koth_clearcut_b15c
+koth_clearcut_b15d
 cp_metalworks
 koth_bagel_rc3
 cp_sunshine
