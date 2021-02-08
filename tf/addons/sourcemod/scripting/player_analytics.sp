@@ -288,6 +288,7 @@ public Action Timer_HandleConnect(Handle timer, any userid) {
 			Format(escapedBuffers[i], sizeof(escapedBuffers[]), "'%s'", escapedBuffers[i]);
 		}
 	}
+	Escape(const char[] string, char[] buffer, int maxlength, int& written)
 
 	char query[512];
 	Format(query, sizeof(query), "INSERT INTO `player_analytics` SET server_ip = '%s', name = %s, auth = %s, connect_time = %d, connect_date = '%s', connect_method = %s, numplayers = %d, map = '%s', flags = '%s', ip = '%s', city = %s, region = %s, country = %s, country_code = %s, country_code3 = %s, premium = %s, html_motd_disabled = %s, os = %s",
