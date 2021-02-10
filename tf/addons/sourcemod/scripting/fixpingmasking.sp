@@ -6,11 +6,12 @@
 
 public Plugin myinfo =
 {
-    name        = "Fix ping masking",
-    author      = "sappho",
-    description = "Fix fake ping values for clients that are ping masking",
-    version     = "0.1.0"
-};
+    name             =  "[StAC] Fix ping masking",
+    author           =  "sappho",
+    description      =  "Fix fake ping values for clients that are ping masking",
+    version          =  "1.0.0",
+    url              =  "https://github.com/sapphonie/StAC-tf2"
+}
 
 int imaxcmdrate;
 int imincmdrate;
