@@ -7,7 +7,7 @@ public Plugin myinfo =
     name             =  "LockMap - Remove Objectives",
     author           =  "steph&nie",
     description      =  "Remove objectives from maps - made for Spaceship Servers",
-    version          =  "0.0.1",
+    version          =  "0.0.2",
     url              =  "https://sappho.io"
 }
 
@@ -25,6 +25,31 @@ char g_entIter[][] =
     "prop_dynamic",
     "team_control_point"
 };
+
+public void OnPluginStart()
+{
+    DoAllEnts()
+}
+
+// func to iterate thru all ents and act on them with DoEnt()
+void DoAllEnts()
+{
+    // iterate thru list of entities to act on
+    for (int i = 0; i < sizeof(g_entIter); i++)
+    {
+        // init variable
+        int ent = -1;
+        // does this entity exist?
+        while ((ent = FindEntityByClassname(ent, g_entIter[i])) > 0)
+        {
+            if (IsValidEntity(ent) && ent > 0)
+            {
+                //LogMessage("ent %i found", ent);
+                DoEnt(i, ent);
+            }
+        }
+    }
+}
 
 // catch ents that spawn after map start / plugin load
 public void OnEntityCreated(int entity, const char[] className)
