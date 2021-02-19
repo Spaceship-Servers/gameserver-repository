@@ -6,8 +6,8 @@ public Plugin myinfo =
 {
     name             =  "LockMap - Remove Objectives",
     author           =  "steph&nie",
-    description      =  "Remove objectives from maps - made for Spaceship Servers",
-    version          =  "0.0.2",
+    description      =  "Remove objectives from maps - made for Spaceship Servers, ported from SOAP-TF2DM",
+    version          =  "0.0.4",
     url              =  "https://sappho.io"
 }
 
@@ -60,19 +60,33 @@ public void OnEntityCreated(int entity, const char[] className)
         // does it match any of the ents?
         if (StrContains(className, g_entIter[i]) != -1)
         {
-            LogMessage("grabbed entity %s", className);
+            LogMessage("grabbed entity %i %s", entity, className);
 
-            // make pack
-            DataPack pack = CreateDataPack();
-            // prepare pack
-            WritePackCell(pack, i);
-            WritePackCell(pack, entity);
-            // reset pack pos to 0
-            ResetPack(pack, false);
-            // pass it to request frame
-            RequestFrame(WaitAFrame_DoEnt, pack);
-            // break out of the loop
-            // break;
+            if (IsValidEntity(entity))
+            {
+                int entref;
+                if (entity < 0)
+                {
+                    entref = entity;
+                }
+                else
+                {
+                    entref = EntIndexToEntRef(entity);
+                }
+                int realent = EntRefToEntIndex(entref);
+                LogMessage("%i / %i", realent, GetMaxEntities());
+                // make pack
+                DataPack pack = CreateDataPack();
+                // prepare pack
+                WritePackCell(pack, i);
+                WritePackCell(pack, entref);
+                // reset pack pos to 0
+                ResetPack(pack, false);
+                // pass it to request frame
+                RequestFrame(WaitAFrame_DoEnt, pack);
+                // break out of the loop
+                break;
+            }
         }
     }
 }
@@ -82,9 +96,15 @@ void WaitAFrame_DoEnt(DataPack pack)
     // read i
     int i = ReadPackCell(pack);
     // read i
-    int entity = ReadPackCell(pack);
+    int entref = ReadPackCell(pack);
     delete pack;
 
+    int entity = EntRefToEntIndex(entref);
+    if (!IsValidEntity(entity))
+    {
+        LogMessage("ent is invalid");
+        return;
+    }
     DoEnt(i, entity);
 }
 
@@ -98,7 +118,6 @@ DoEnt(int i, int entity)
         {
             RemoveEntity(entity);
         }
-        // move trigger zones out of player reach because otherwise the point gets capped in dm servers and it's annoying
         // we don't remove / disable because both cause issues/bugs otherwise
         else if (StrContains(g_entIter[i], "trigger_capture", false) != -1)
         {
@@ -114,7 +133,7 @@ DoEnt(int i, int entity)
                 RemoveEntity(entity);
             }
         }
-        // yeet control points
+        // yeet control point icons
         else if (StrContains(g_entIter[i], "team_control_point") != -1)
         {
             RemoveEntity(entity);
