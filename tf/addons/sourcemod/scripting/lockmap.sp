@@ -7,7 +7,7 @@ public Plugin myinfo =
     name             =  "LockMap - Remove Objectives",
     author           =  "steph&nie",
     description      =  "Remove objectives from maps - made for Spaceship Servers, ported from SOAP-TF2DM",
-    version          =  "0.0.4",
+    version          =  "0.0.5",
     url              =  "https://sappho.io"
 }
 
@@ -60,8 +60,6 @@ public void OnEntityCreated(int entity, const char[] className)
         // does it match any of the ents?
         if (StrContains(className, g_entIter[i]) != -1)
         {
-            LogMessage("grabbed entity %i %s", entity, className);
-
             if (IsValidEntity(entity))
             {
                 int entref;
@@ -73,8 +71,6 @@ public void OnEntityCreated(int entity, const char[] className)
                 {
                     entref = EntIndexToEntRef(entity);
                 }
-                int realent = EntRefToEntIndex(entref);
-                LogMessage("%i / %i", realent, GetMaxEntities());
                 // make pack
                 DataPack pack = CreateDataPack();
                 // prepare pack
