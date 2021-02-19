@@ -9,11 +9,9 @@ public Plugin myinfo =
     name             = "Announcer Countdown",
     author           = "stephanie",
     description      = "Plugin for non objective based servers (like DM/MGE) to announce server timelimit",
-    version          = "0.0.1",
+    version          = "0.0.3",
     url              = "https://sappho.io"
 }
-
-Handle Timer_CheckMapTimeLeft;
 
 static char soundstoCache[][] =
 {
@@ -27,13 +25,17 @@ static char soundstoCache[][] =
     //"vo/announcer_ends_8sec.mp3",
     //"vo/announcer_ends_9sec.mp3",
     "vo/announcer_ends_10sec.mp3",
-    "vo/announcer_ends_20sec.mp3",
+    //"vo/announcer_ends_20sec.mp3",
     "vo/announcer_ends_30sec.mp3",
     "vo/announcer_ends_60sec.mp3",
-    "vo/announcer_ends_2min.mp3",
+    //"vo/announcer_ends_2min.mp3",
     "vo/announcer_ends_5min.mp3"
 };
 
+public void OnPluginStart()
+{
+    CreateTimer(1.0, CheckMapTimeLeft, _, TIMER_REPEAT);
+}
 
 public void OnMapStart()
 {
@@ -41,26 +43,7 @@ public void OnMapStart()
     {
         PrecacheSound(soundstoCache[i]);
     }
-
-    doTimer();
 }
-
-public void OnMapTimeLeftChanged()
-{
-    doTimer();
-}
-
-void doTimer()
-{
-    if (Timer_CheckMapTimeLeft != null)
-    {
-        CloseHandle(Timer_CheckMapTimeLeft);
-        Timer_CheckMapTimeLeft = null;
-        //LogMessage("deleted existing timer");
-    }
-    Timer_CheckMapTimeLeft = CreateTimer(1.0, CheckMapTimeLeft, _, TIMER_REPEAT);
-}
-
 
 public Action CheckMapTimeLeft(Handle timer)
 {
@@ -74,11 +57,8 @@ public Action CheckMapTimeLeft(Handle timer)
         return Plugin_Handled;
     }
 
-    int mins;
-    int secs;
-    mins = totalsecs / 60;
-    secs = totalsecs % 60;
-
+    int mins = totalsecs / 60;
+    int secs = totalsecs % 60;
 
     //PrintToServer("Timeleft for current map: %i min %i sec", mins, secs);
 
