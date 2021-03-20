@@ -1,4 +1,3 @@
 bball_tf_v2
 ctf_ballin_skyfall
 ctf_bball_alpine_b4
-ctf_bball2
