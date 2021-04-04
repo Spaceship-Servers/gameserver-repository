@@ -14,7 +14,7 @@ enum OS {
 	OS_Mac = 1,
 	OS_Linux = 2,
 	OS_Total = 3
-};
+};	
 
 public Plugin myinfo = {
 	name		= "Player Analytics",
@@ -53,18 +53,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	} else {
 		g_DB = SQL_Connect("default", true, error, err_max);
 	}
-
+	
 	if(g_DB == INVALID_HANDLE) {
 		return APLRes_Failure;
 	}
-
+	
 	SQL_SetCharset(g_DB, "utf8mb4");
-	SQL_TQuery(g_DB, OnTableCreated, "CREATE TABLE IF NOT EXISTS `player_analytics` (id int(11) NOT NULL AUTO_INCREMENT, server_ip varchar(32) NOT NULL, name varchar(64), auth varchar(32), connect_time int(11) NOT NULL, connect_date date NOT NULL, connect_method varchar(64) DEFAULT NULL, numplayers tinyint(4) NOT NULL, map varchar(64) NOT NULL, duration int(11) DEFAULT NULL, flags varchar(32) NOT NULL, ip varchar(32) NOT NULL, city varchar(45), region varchar(45), country varchar(45), country_code varchar(2), country_code3 varchar(3), premium tinyint(1), html_motd_disabled tinyint(1), os varchar(32), PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8");
+	SQL_TQuery(g_DB, OnTableCreated, "CREATE TABLE IF NOT EXISTS `player_analytics` (id int(11) NOT NULL AUTO_INCREMENT, server_ip varchar(32) NOT NULL, name varchar(64), auth varchar(32), connect_time int(11) NOT NULL, connect_date date NOT NULL, connect_method varchar(64) DEFAULT NULL, numplayers tinyint(4) NOT NULL, map varchar(64) NOT NULL, duration int(11) DEFAULT NULL, flags varchar(32) NOT NULL, ip varchar(32) NOT NULL, city varchar(45), region varchar(45), country varchar(45), country_code varchar(2), country_code3 varchar(3), premium tinyint(1), html_motd_disabled tinyint(1), os varchar(32), PRIMARY KEY (id)) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4");
 #endif
-
+	
 	RegPluginLibrary("player_analytics");
 	CreateNative("PA_GetConnectionID", Native_GetConnectionID);
-
+	
 	return APLRes_Success;
 }
 
@@ -79,7 +79,7 @@ public OnTableCreated(Handle:owner, Handle:hndl, const String:error[], any:data)
 public void OnPluginStart() {
 	int ip = GetConVarInt(FindConVar("hostip"));
 	Format(g_IP, sizeof(g_IP), "%d.%d.%d.%d:%d", ((ip & 0xFF000000) >> 24) & 0xFF, ((ip & 0x00FF0000) >> 16) & 0xFF, ((ip & 0x0000FF00) >>  8) & 0xFF, ((ip & 0x000000FF) >>  0) & 0xFF, GetConVarInt(FindConVar("hostport")));
-
+	
 	GetGameFolderName(g_GameFolder, sizeof(g_GameFolder));
 	g_OSGamedata = LoadGameConfigFile("detect_os.games");
 	if(g_OSGamedata == INVALID_HANDLE) {
@@ -102,13 +102,13 @@ public void OnClientConnected(int client) {
 	if(IsFakeClient(client)) {
 		return;
 	}
-
+	
 	g_MOTDDisabled[client] = -1;
 	g_ConnectTime[client] = GetTime();
 	g_NumPlayers[client] = GetRealClientCount();
 	g_RowID[client] = -1;
 	g_OS[client] = OS_Unknown;
-
+	
 	char buffer[30];
 	if(GetClientInfo(client, "cl_connectmethod", buffer, sizeof(buffer))) {
 #if !defined DEBUG
@@ -126,10 +126,10 @@ public void OnClientPutInServer(int client) {
 	if(IsFakeClient(client)) {
 		return;
 	}
-
+	
 	QueryClientConVar(client, "cl_disablehtmlmotd", OnMOTDQueried);
 	g_MOTDTimer[client] = CreateTimer(30.0, Timer_MOTDTimeout, GetClientUserId(client));
-
+	
 	for(int i = 0; i < _:OS_Total; i++) {
 		QueryClientConVar(client, g_OSConVar[i], OnOSQueried);
 	}
@@ -140,13 +140,13 @@ public void OnMOTDQueried(QueryCookie cookie, int client, ConVarQueryResult resu
 	if(g_MOTDTimer[client] == INVALID_HANDLE) {
 		return; // Timed out
 	}
-
+	
 	if(result == ConVarQuery_Okay) {
 		g_MOTDDisabled[client] = (bool:StringToInt(cvarValue)) ? 1 : 0;
 	} else {
 		g_MOTDDisabled[client] = -1;
 	}
-
+	
 	CloseHandle(g_MOTDTimer[client]);
 	g_MOTDTimer[client] = INVALID_HANDLE;
 }
@@ -156,7 +156,7 @@ public Action Timer_MOTDTimeout(Handle timer, any userid) {
 	if(client == 0) {
 		return;
 	}
-
+	
 	g_MOTDDisabled[client] = -1;
 	g_MOTDTimer[client] = INVALID_HANDLE;
 }
@@ -165,7 +165,7 @@ public void OnOSQueried(QueryCookie cookie, int client, ConVarQueryResult result
 	if(g_OSTimer[client] == INVALID_HANDLE) {
 		return; // Timed out
 	}
-
+	
 	if(result == ConVarQuery_NotFound) {
 		g_OSQueries[client]++;
 		if(g_OSQueries[client] >= _:OS_Total) {
@@ -191,7 +191,7 @@ public Action Timer_OSTimeout(Handle timer, any userid) {
 	if(client == 0) {
 		return;
 	}
-
+	
 	g_OSTimer[client] = INVALID_HANDLE;
 }
 
@@ -199,7 +199,7 @@ public void OnClientPostAdminCheck(int client) {
 	if(IsFakeClient(client)) {
 		return;
 	}
-
+	
 	CreateTimer(1.0, Timer_HandleConnect, GetClientUserId(client), TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
@@ -208,7 +208,7 @@ public Action Timer_HandleConnect(Handle timer, any userid) {
 	if(client == 0) {
 		return Plugin_Stop;
 	}
-
+	
 	if(g_MOTDTimer[client] != INVALID_HANDLE || g_OSTimer[client] != INVALID_HANDLE || g_ConnectTime[client] == 0) {
 		return Plugin_Continue;
 	}
@@ -223,7 +223,7 @@ public Action Timer_HandleConnect(Handle timer, any userid) {
 	char country_name[45];
 	char country_code[3];
 	char country_code3[4];
-
+	
 	char buffers[10][256];
 	FormatTime(date, sizeof(date), "%Y-%m-%d");
 	GetCurrentMap(map, sizeof(map));
@@ -237,38 +237,29 @@ public Action Timer_HandleConnect(Handle timer, any userid) {
 	}
 	flagstring[num] = '\0';
 	GetClientIP(client, ip, sizeof(ip));
-
+	
 	if(GetFeatureStatus(FeatureType_Native, "GeoipGetRecord") != FeatureStatus_Available || !GeoipGetRecord(ip, city, region, country_name, country_code, country_code3)) {
 		GeoipCountry(ip, country_name, sizeof(country_name));
 	}
-
+	
 	strcopy(buffers[2], sizeof(buffers[]), city);
 	strcopy(buffers[3], sizeof(buffers[]), region);
 	strcopy(buffers[4], sizeof(buffers[]), country_name);
 	strcopy(buffers[5], sizeof(buffers[]), country_code);
 	strcopy(buffers[6], sizeof(buffers[]), country_code3);
-
-
-	if(STEAMWORKS_AVAILABLE() && SteamWorks_IsLoaded()) {
-		int premium_appid;
-		if (StrEqual(g_GameFolder, "csgo"))
-			premium_appid = 624820;
-		else if (StrEqual(g_GameFolder, "tf"))
-			premium_appid = 459;
-		else
-			premium_appid = 1; // Nobody has this.
-
-		if(k_EUserHasLicenseResultDoesNotHaveLicense == SteamWorks_HasLicenseForApp(client, premium_appid)) {
+	
+	if(STEAMWORKS_AVAILABLE() && SteamWorks_IsLoaded() && StrEqual(g_GameFolder, "csgo")) {
+		if(k_EUserHasLicenseResultDoesNotHaveLicense == SteamWorks_HasLicenseForApp(client, 624820)) {
 			strcopy(buffers[7], sizeof(buffers[]), "0");
 		} else {
 			strcopy(buffers[7], sizeof(buffers[]), "1");
 		}
 	}
-
+	
 	if(g_MOTDDisabled[client] != -1) {
 		IntToString(g_MOTDDisabled[client], buffers[8], sizeof(buffers[]));
 	}
-
+	
 	if(g_OS[client] == OS_Windows) {
 		strcopy(buffers[9], sizeof(buffers[]), "Windows");
 	} else if(g_OS[client] == OS_Mac) {
@@ -276,7 +267,7 @@ public Action Timer_HandleConnect(Handle timer, any userid) {
 	} else if(g_OS[client] == OS_Linux) {
 		strcopy(buffers[9], sizeof(buffers[]), "Linux");
 	}
-
+	
 	char escapedBuffers[10][513];
 	for(int i = 0; i < sizeof(buffers); i++) {
 		if(strlen(buffers[i]) == 0) {
@@ -288,12 +279,11 @@ public Action Timer_HandleConnect(Handle timer, any userid) {
 			Format(escapedBuffers[i], sizeof(escapedBuffers[]), "'%s'", escapedBuffers[i]);
 		}
 	}
-	Escape(const char[] string, char[] buffer, int maxlength, int& written)
-
+	
 	char query[512];
 	Format(query, sizeof(query), "INSERT INTO `player_analytics` SET server_ip = '%s', name = %s, auth = %s, connect_time = %d, connect_date = '%s', connect_method = %s, numplayers = %d, map = '%s', flags = '%s', ip = '%s', city = %s, region = %s, country = %s, country_code = %s, country_code3 = %s, premium = %s, html_motd_disabled = %s, os = %s",
 		g_IP, escapedBuffers[0], escapedBuffers[1], g_ConnectTime[client], date, g_ConnectMethod[client], g_NumPlayers[client], map, flagstring, ip, escapedBuffers[2], escapedBuffers[3], escapedBuffers[4], escapedBuffers[5], escapedBuffers[6], escapedBuffers[7], escapedBuffers[8], escapedBuffers[9]);
-
+	
 #if !defined DEBUG
 	SQL_TQuery(g_DB, OnRowInserted, query, GetClientUserId(client));
 #else
@@ -318,14 +308,14 @@ public OnRowInserted(Handle:owner, Handle:hndl, const String:error[], any:userid
 	if(client == 0) {
 		return;
 	}
-
+	
 	if(hndl == INVALID_HANDLE) {
 		LogError("Unable to insert row for client %L. %s", client, error);
 		return;
 	}
-
+	
 	g_RowID[client] = SQL_GetInsertId(hndl);
-
+	
 	Handle fwd = CreateGlobalForward("PA_OnConnectionLogged", ET_Ignore, Param_Cell, Param_Cell);
 	Call_StartForward(fwd);
 	Call_PushCell(client);
@@ -340,7 +330,7 @@ public void OnClientDisconnect(int client) {
 		g_ConnectTime[client] = 0;
 		return;
 	}
-
+	
 	char query[256];
 	Format(query, sizeof(query), "UPDATE `player_analytics` SET duration = %d WHERE id = %d", GetTime() - g_ConnectTime[client], g_RowID[client]);
 #if !defined DEBUG
@@ -348,7 +338,7 @@ public void OnClientDisconnect(int client) {
 #else
 	PrintToServer("%s", query);
 #endif
-
+	
 	g_ConnectTime[client] = 0;
 }
 
@@ -366,6 +356,6 @@ public Native_GetConnectionID(Handle:plugin, numParams) {
 		ThrowNativeError(SP_ERROR_PARAM, "Client index %d is invalid, not connected, or fake", client);
 		return -1;
 	}
-
+	
 	return g_RowID[client];
 }
