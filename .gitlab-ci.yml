@@ -84,8 +84,8 @@ stages:
 
                         echo "chmodding"
                         chmod 744 start.sh;
-                        chmod 744 str0.py || true;
-                        chmod 744 str0.ini || true;
+                        chmod 744 str0.py;
+                        chmod 744 str0.ini;
 
                         echo "running str0 to scrub steamclient spam"
                         python3 ./str0.py ./bin/steamclient.so -c ./str0.ini
