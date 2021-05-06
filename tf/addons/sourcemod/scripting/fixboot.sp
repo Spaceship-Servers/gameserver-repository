@@ -6,7 +6,7 @@ bool firstmap = true;
 
 public void OnMapStart()
 {
-    CreateTimer(3.0, GoToNextMap);
+    CreateTimer(5.0, GoToNextMap);
 }
 
 Action GoToNextMap(Handle timer)
@@ -14,6 +14,7 @@ Action GoToNextMap(Handle timer)
     if (firstmap)
     {
         firstmap = false;
+	ServerCommand("sm exts load cleaner");
         ServerCommand("changelevel_next");
     }
 }
