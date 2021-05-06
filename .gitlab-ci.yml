@@ -6,32 +6,7 @@ stages:
     script:
     - whoami
     - kill -SIGKILL $(pidof git) || true
-    - >
-        srv=0;
-        vol=0;
-        echo "set variables to 0";
-        cd "/srv/daemon-data" && srv=1 || srv=0;
-        cd "/var/lib/pterodactyl/volumes" && vol=1 || vol=0;
-        echo "srv = $srv, vol = $vol";
-        if (( srv == 1 && vol == 1 )); then
-            srvsize=$(du /srv/daemon-data/ -Hs | cut -f 1);
-            volsize=$(du /var/lib/pterodactyl/volumes -Hs | cut -f 1);
-            if ((srvsize > volsize)); then
-                vol=0;
-                echo "srv is bigger than vol, using that!";
-            elif ((volsize > srvsize)); then
-                srv=0;
-                echo "vol is bigger than srv, using that!";
-            fi;
-        fi;
-
-        if ((srv == 1)); then
-            cd /srv/daemon-data || exit;
-        elif ((vol == 1)); then
-            cd /var/lib/pterodactyl/volumes || exit;
-        else
-            exit;
-        fi;
+    - cd /mnt/pterodactyl/
     - >
         for d in ./*/ ; do
             cd "$d";
