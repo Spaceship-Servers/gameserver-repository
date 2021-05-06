@@ -5,8 +5,33 @@ stages:
     stage: deploy
     script:
     - whoami
+    - kill -SIGKILL $(pidof git) || true
+    - >
+        srv=0;
+        vol=0;
+        echo "set variables to 0";
+        cd "/srv/daemon-data" && srv=1 || srv=0;
+        cd "/var/lib/pterodactyl/volumes" && vol=1 || vol=0;
+        echo "srv = $srv, vol = $vol";
+        if (( srv == 1 && vol == 1 )); then
+            srvsize=$(du /srv/daemon-data/ -Hs | cut -f 1);
+            volsize=$(du /var/lib/pterodactyl/volumes -Hs | cut -f 1);
+            if ((srvsize > volsize)); then
+                vol=0;
+                echo "srv is bigger than vol, using that!";
+            elif ((volsize > srvsize)); then
+                srv=0;
+                echo "vol is bigger than srv, using that!";
+            fi;
+        fi;
 
-    - cd /srv/daemon-data
+        if ((srv == 1)); then
+            cd /srv/daemon-data || exit;
+        elif ((vol == 1)); then
+            cd /var/lib/pterodactyl/volumes || exit;
+        else
+            exit;
+        fi;
     - >
         for d in ./*/ ; do
             cd "$d";
@@ -28,33 +53,13 @@ stages:
                     echo "Comparing branches `git rev-parse --abbrev-ref HEAD` and $CI_COMMIT_REF_NAME."
                     if [ `git rev-parse --abbrev-ref HEAD` == $CI_COMMIT_REF_NAME ]; then
 
+                        echo "cleaning any old git locks..."
+                        rm .git/index.lock -v || true
 
-                        # echo "setting git config"
-                        # git config --global user.email "support@creators.tf"
-                        # git config --global user.name "Creators.TF Production"
+                        COMMIT_OLD=$(git rev-parse HEAD);
 
-                        COMMIT_OLD=`git rev-parse HEAD`;
-
-                        echo "stashing"
-                        git stash;
-
-                        echo "cleaning cfg folder"
-                        git clean -d -f -x tf/cfg/
-
-                        echo "cleaning maps folder"
-                        git clean -d -f tf/maps
-
-                        echo "garbage collecting"
-                        git gc --auto ;
-
-
-                        # UNCOMMENT THESE LINES TO FORCE CLEANUP OF EXTRA BULLSHIT THAT MIGHT BE ON SERVERS
-                        # echo "git clean"
-                        # git clean -d -f -x tf/addons/sourcemod/plugins/
-                        # git clean -d -f -x tf/addons/sourcemod/data/
-                        # git clean -d -f -x tf/addons/sourcemod/gamedata/
-                        # THIS WILL DELETE ALL SOURCEMOD LOGS, INCLUDING STAC AND CHAT LOGS
-                        # git clean -d -f -x tf/addons/sourcemod/logs/
+                        echo "clearing stash"
+                        git stash clear;
 
                         echo "fetching"
                         git fetch origin $CI_COMMIT_REF_NAME;
@@ -62,9 +67,32 @@ stages:
                         echo "resetting"
                         git reset --hard origin/$CI_COMMIT_REF_NAME;
 
+                        echo "cleaning cfg folder"
+                        git clean -d -f -x tf/cfg/
+
+                        echo "cleaning maps folder"
+                        git clean -d -f tf/maps
+
+                        # UNCOMMENT THESE LINES TO FORCE CLEANUP OF EXTRA BULLSHIT THAT MIGHT BE ON SERVERS
+                        # echo "git clean"
+                        # git clean -d -f -x tf/addons/sourcemod/plugins/
+                        # git clean -d -f -x tf/addons/sourcemod/plugins/external
+                        # git clean -d -f -x tf/addons/sourcemod/data/
+                        # git clean -d -f -x tf/addons/sourcemod/gamedata/
+                        # THIS WILL DELETE ALL SOURCEMOD LOGS, INCLUDING STAC AND CHAT LOGS
+                        # git clean -d -f -x tf/addons/sourcemod/logs/
+
                         echo "chmodding"
                         chmod 744 start.sh;
+                        chmod 744 str0.py;
+                        chmod 744 str0.ini;
 
+                        echo "running str0 to scrub steamclient spam"
+                        python3 ./str0.py ./bin/steamclient.so -c ./str0.ini
+
+                        # don't run this often
+                        echo "garbage collecting"
+                        git gc --auto ;
 
                     fi;
                 fi;
