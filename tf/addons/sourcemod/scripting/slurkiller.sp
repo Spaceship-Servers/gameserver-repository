@@ -17,7 +17,7 @@ public Plugin myinfo =
     name             = "Slur Killer",
     author           = "steph&nie",
     description      = ".",
-    version          = "1.1.2",
+    version          = "1.2.3",
     url              = "https://sappho.io/"
 };
 
@@ -26,6 +26,7 @@ Regex nword;
 Regex fslur;
 Regex tslur;
 Regex cslur;
+Regex nazi;
 
 bool hasClientBeenWarned[MAXPLAYERS+1];
 
@@ -33,10 +34,11 @@ public void OnPluginStart()
 {
     // set up regex
     // regex modified from: https://github.com/Blank-Cheque/Slurs
-    nword  = new Regex("n[!\\|\\\\ila4o10][gq]{2}+([e3]r)?s?",              PCRE_CASELESS | PCRE_MULTILINE);
-    fslur  = new Regex("f+[a@4]+(g+|q{2,}|qg+|gq+)",                        PCRE_CASELESS | PCRE_MULTILINE);
-    tslur  = new Regex("(tran{2})|t+r+[a4@]+n+([il1][e3]+|y+|[e3]r+)s?",    PCRE_CASELESS | PCRE_MULTILINE);
-    cslur  = new Regex("\\bc[o0]{2}ns?\\b",                                 PCRE_CASELESS | PCRE_MULTILINE);
+    nword  = new Regex("[n|ñ]+[i!\\|1l]+[gq]{2,}.*r+",                                PCRE_CASELESS | PCRE_MULTILINE | PCRE_UTF8);
+    fslur  = new Regex("f+[a@4]+[gq]+(\b|[o0a]+t+)",                                  PCRE_CASELESS | PCRE_MULTILINE | PCRE_UTF8);
+    tslur  = new Regex("(tr[ao0]{2,}n)|t+r+[a4@]n+([il1][e3]+|y+|[e3]r+)s?",          PCRE_CASELESS | PCRE_MULTILINE | PCRE_UTF8);
+    cslur  = new Regex("\\bc[o0]{2}ns?\\b",                                           PCRE_CASELESS | PCRE_MULTILINE | PCRE_UTF8);
+    nazi   = new Regex("(ᛋᛋ|atomwaffen|1488|卐|卍|⚡⚡|white pride|kekistan)",        PCRE_CASELESS | PCRE_MULTILINE | PCRE_UTF8);
 }
 
 public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArgs)
@@ -45,6 +47,14 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
     if (!IsValidClient(Cl))
     {
         return Plugin_Continue;
+    }
+
+    if (MatchRegex(nazi, sArgs) > 0)
+    {
+        char reason[512];
+        Format(reason, sizeof(reason), "Auto banned for nazism, user said: %s", sArgs);
+        SBPP_BanPlayer(0, Cl, 0, reason);
+        return Plugin_Handled;
     }
 
     if
@@ -63,9 +73,9 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
         else if (hasClientBeenWarned[Cl])
         {
             char reason[512];
-            Format(reason, sizeof(reason), "Auto Silenced for hate speech, user said: %s", sArgs);
-            SourceComms_SetClientGag (Cl, true, 4320, true, reason);
-            SourceComms_SetClientMute(Cl, true, 4320, true, reason);
+            Format(reason, sizeof(reason), "Auto silenced for hate speech, user said: %s", sArgs);
+            SourceComms_SetClientGag (Cl, true, 10080, true, reason);
+            SourceComms_SetClientMute(Cl, true, 10080, true, reason);
         }
         return Plugin_Handled;
     }
