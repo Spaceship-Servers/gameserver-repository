@@ -3,7 +3,7 @@
 !start.sh
 !.gitignore
 !.gitlab-ci.yml
-!gh.sh
+!scripts/
 !tf
 tf/*
 !tf/cfg
