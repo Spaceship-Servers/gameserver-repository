@@ -1,16 +1,8 @@
 stages:
+    - fastdl
     - deploy
     - github
-    - fastdl
 
-github:
-  stage: github
-  script: ./scripts/gh.sh
-  only:
-    - master
-  needs: []
-  tags:
-    - chi
 
 fastdl:
   stage: fastdl
@@ -24,6 +16,16 @@ fastdl:
 deploy:
   stage: deploy
   script: ./scripts/ci.sh
+  only:
+    - master
+  needs:
+    - fastdl
+  tags:
+    - chi
+
+github:
+  stage: github
+  script: ./scripts/gh.sh
   only:
     - master
   needs: []
