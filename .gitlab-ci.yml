@@ -5,7 +5,7 @@ stages:
 
 github:
   stage: github
-  script: ./gh.sh
+  script: ./scripts/gh.sh
   only:
     - master
   needs: []
@@ -13,92 +13,19 @@ github:
     - chi
 
 fastdl:
-  stage: github
-  script: ./fastdl.sh
+  stage: fastdl
+  script: ./scripts/fastdl.sh
   only:
     - master
   needs: []
   tags:
     - chi
 
-.deploy_template: &deploy_template
-    stage: deploy
-    needs: []
-    script:
-    - whoami
-    - kill -SIGKILL $(pidof git) || true
-    - cd /mnt/pterodactyl/
-    - >
-        for d in ./*/ ; do
-            cd "$d";
-            echo "Checking: $d"
-            if [ -d ".git" ]; then
-
-                CI_LOCAL_REMOTE=`git remote get-url origin`;
-                CI_LOCAL_REMOTE="${CI_LOCAL_REMOTE##*@}";
-                CI_LOCAL_REMOTE=`echo $CI_LOCAL_REMOTE | tr : /`
-                CI_LOCAL_REMOTE=${CI_LOCAL_REMOTE%.git}
-
-                CI_REMOTE_REMOTE="$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
-                CI_REMOTE_REMOTE=`echo $CI_REMOTE_REMOTE | tr : /`
-                CI_REMOTE_REMOTE=${CI_REMOTE_REMOTE%.git}
-
-                echo "Comparing remotes $CI_LOCAL_REMOTE and $CI_REMOTE_REMOTE."
-                if [ $CI_LOCAL_REMOTE == $CI_REMOTE_REMOTE ]; then
-
-                    echo "Comparing branches `git rev-parse --abbrev-ref HEAD` and $CI_COMMIT_REF_NAME."
-                    if [ `git rev-parse --abbrev-ref HEAD` == $CI_COMMIT_REF_NAME ]; then
-
-                        echo "cleaning any old git locks..."
-                        rm .git/index.lock -v || true
-
-                        COMMIT_OLD=$(git rev-parse HEAD);
-
-                        echo "clearing stash"
-                        git stash clear;
-
-                        echo "fetching"
-                        git fetch origin $CI_COMMIT_REF_NAME;
-
-                        echo "resetting"
-                        git reset --hard origin/$CI_COMMIT_REF_NAME;
-
-                        echo "cleaning cfg folder"
-                        git clean -d -f -x tf/cfg/
-
-                        echo "cleaning maps folder"
-                        git clean -d -f tf/maps
-
-                        # UNCOMMENT THESE LINES TO FORCE CLEANUP OF EXTRA BULLSHIT THAT MIGHT BE ON SERVERS
-                        # echo "git clean"
-                        # git clean -d -f -x tf/addons/sourcemod/plugins/
-                        # git clean -d -f -x tf/addons/sourcemod/plugins/external
-                        # git clean -d -f -x tf/addons/sourcemod/data/
-                        # git clean -d -f -x tf/addons/sourcemod/gamedata/
-                        # THIS WILL DELETE ALL SOURCEMOD LOGS, INCLUDING STAC AND CHAT LOGS
-                        # git clean -d -f -x tf/addons/sourcemod/logs/
-
-                        echo "chmodding"
-                        chmod 744 start.sh;
-                        chmod 744 str0.py;
-                        chmod 744 str0.ini;
-
-                        echo "running str0 to scrub steamclient spam"
-                        python3 ./str0.py ./bin/steamclient.so -c ./str0.ini
-
-                        # don't run this often
-                        echo "garbage collecting"
-                        git gc --auto ;
-
-                    fi;
-                fi;
-            fi;
-            cd ../;
-        done
-
-deploy-chi:
-    tags:
+deploy:
+  stage: deploy
+  script: ./scripts/ci.sh
+  only:
+    - master
+  needs: []
+  tags:
     - chi
-    <<: *deploy_template
-
-    
