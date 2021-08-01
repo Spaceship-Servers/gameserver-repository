@@ -8,7 +8,7 @@ bootstrap ()
     cd /home/gitlab-runner/spaceship-bare || exit 255
 
     echo "-> fetching master"
-    git fetch origin master
+    git fetch origin master:master -f
 }
 
 # used to use BFG for this
