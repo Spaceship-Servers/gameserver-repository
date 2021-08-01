@@ -46,6 +46,5 @@
     {
         "chat"          "{coral}Don't like the current map? Type {purple}!rtv{coral} to force a map vote!"
     }
-
 }
 
