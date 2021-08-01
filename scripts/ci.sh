@@ -47,7 +47,6 @@ for dir in ./*/ ; do
         info "Pulling git repo"
         # DON'T QUOTE THIS
         bash ${SCRIPT_DIR}/pull.sh
-        ;;
     else
         important "Branches do not match, doing nothing"
     fi
