@@ -1,8 +1,19 @@
 stages:
+    - github
     - deploy
+
+github:
+  stage: github
+  script: ./gh.sh
+  only:
+    - master
+  needs: []
+  tags:
+    - chi
 
 .deploy_template: &deploy_template
     stage: deploy
+    needs: []
     script:
     - whoami
     - kill -SIGKILL $(pidof git) || true
