@@ -1,4 +1,4 @@
-koth_product_rcx
+koth_product_final
 cp_reckoner_rc6
 cp_process_f7
 ctf_turbine_pro_rc4
@@ -11,5 +11,5 @@ koth_clearcut_b15d
 cp_metalworks
 koth_bagel_rc3
 cp_sunshine
-koth_cascade_v2_b5
+koth_cascade_rc2
 cp_villa_b17a
