@@ -26,9 +26,9 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
         }
         else
         {
-            PrintToImportant("{hotpink}[StAC] {red}[Detection]{white} Blocked newline print from player %L", Cl);
-            StacDetectionDiscordNotify(userid, "client tried to print a newline character", 1);
-            StacLog("[StAC] [Detection] Blocked newline print from player %L", Cl);
+            PrintToImportant("{hotpink}[StAC] {red}[Detection]{white} Blocked newline print from player %N", Cl);
+            StacLogSteam(userid);
+            StacDetectionNotify(userid, "client tried to print a newline character", 1);
         }
         return Plugin_Stop;
     }
@@ -65,8 +65,8 @@ public Action OnClientCommand(int Cl, int args)
 
         if (strlen(ClientCommandChar) > 255)
         {
-            StacGeneralPlayerDiscordNotify(userid, "Client sent a very large command - length %i - to the server! Next message is the command.", strlen(ClientCommandChar));
-            StacGeneralPlayerDiscordNotify(userid, "%s", ClientCommandChar);
+            StacGeneralPlayerNotify(userid, "Client sent a very large command - length %i - to the server! Next message is the command.", strlen(ClientCommandChar));
+            StacGeneralPlayerNotify(userid, "%s", ClientCommandChar);
             StacLog("Client sent a very large command - length %i - to the server! Next message is the command.", strlen(ClientCommandChar));
             StacLog("%s", ClientCommandChar);
             return Plugin_Stop;
@@ -161,32 +161,10 @@ public void OnClientSettingsChanged(int Cl)
                     int cmdrate = StringToInt(cvarvalue);
                     if (cmdrate < 10)
                     {
-                        // repeated code lol
-                        StacLog("%N had cl_cmdrate value of %s", Cl, cvarvalue);
+                        oobVarsNotify(userid, userinfoToCheck[cvar], cvarvalue);
                         if (banForMiscCheats)
                         {
-                            char reason[128];
-                            Format(reason, sizeof(reason), "%t", "illegalCmdrateBanMsg");
-                            char pubreason[256];
-                            Format(pubreason, sizeof(pubreason), "%t", "illegalCmdrateBanAllChat", Cl);
-                            // we have to do extra bullshit here so we don't crash when banning clients out of this callback
-                            // make a pack
-                            DataPack pack = CreateDataPack();
-                            // prepare pack
-                            WritePackCell(pack, userid);
-                            WritePackString(pack, reason);
-                            WritePackString(pack, pubreason);
-                            ResetPack(pack, false);
-                            // make data timer
-                            CreateTimer(0.1, Timer_BanUser, pack, TIMER_DATA_HNDL_CLOSE);
-                            return;
-                        }
-                        else
-                        {
-                            PrintToImportant("{hotpink}[StAC] {red}[Detection]{white} Player %L has an illegal {blue}cl_cmdrate{white} value = {red}%s{white}!", Cl, cvarvalue);
-                            char msg[128];
-                            Format(msg, sizeof(msg), "Illegal cl_cmdrate value of '%s'!", cvarvalue);
-                            StacDetectionDiscordNotify(userid, msg, 1);
+                            oobVarBan(userid);
                         }
                     }
                     // userinfo spam
@@ -229,8 +207,9 @@ void userinfoSpamEtc(int userid, const char[] cvar, const char[] oldvalue, const
         );
         if (userinfoSpamDetects[Cl] % 5 == 0)
         {
-            StacDetectionDiscordNotify(userid, "userinfo spam", userinfoSpamDetects[Cl]);
+            StacDetectionNotify(userid, "userinfo spam", userinfoSpamDetects[Cl]);
         }
+        StacLogSteam(userid);
         // BAN USER if they trigger too many detections
         if (userinfoSpamDetects[Cl] >= maxuserinfoSpamDetections && maxuserinfoSpamDetections > 0)
         {
@@ -316,11 +295,13 @@ void MiscCheatsEtcsCheck(int userid)
         // sorry!
 
         // forcibly disables thirdperson with some cheats
+        /* There is no reason to do this. It does nothing but alert cheaters that something is fucky.
         ClientCommand(Cl, "firstperson");
         if (DEBUG)
         {
             StacLog("[StAC] Executed firstperson command on Player %N", Cl);
         }
+        */
         checkInterp(userid);
     }
 }
@@ -339,23 +320,18 @@ void checkInterp(int userid)
             StacLog("%.2f ms interp on %N", lerp, Cl);
         }
 
-        if (lerp == 0.0)
+        // nolerp
+        if (lerp <= 0.1)
         {
-            // repeated code lol
+            char lerpStr[16];
+            FloatToString(lerp, lerpStr, sizeof(lerpStr));
+            oobVarsNotify(userid, "m_fLerpTime", lerpStr);
             if (banForMiscCheats)
             {
-                char reason[128];
-                Format(reason, sizeof(reason), "%t", "nolerpBanMsg");
-                char pubreason[256];
-                Format(pubreason, sizeof(pubreason), "%t", "nolerpBanAllChat", Cl);
-            }
-            else
-            {
-                PrintToImportant("{hotpink}[StAC] {red}[Detection]{white} Player %L is using NoLerp! {blue}m_fLerpTime{white} value = {blue}%f", Cl, lerp);
-                StacDetectionDiscordNotify(userid, "nolerp [netprop]", 1);
+                oobVarBan(userid);
             }
         }
-        if
+        else if
         (
             lerp < min_interp_ms && min_interp_ms != -1
             ||
@@ -364,7 +340,7 @@ void checkInterp(int userid)
         {
             char message[256];
             Format(message, sizeof(message), "Client was kicked for attempted interp exploitation. Their interp: %.2fms", lerp);
-            StacGeneralPlayerDiscordNotify(userid, message);
+            StacGeneralPlayerNotify(userid, message);
             KickClient(Cl, "%t", "interpKickMsg", lerp, min_interp_ms, max_interp_ms);
             MC_PrintToChatAll("%t", "interpAllChat", Cl, lerp);
             StacLog("%t", "interpAllChat", Cl, lerp);
