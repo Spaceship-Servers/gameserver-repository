@@ -24,7 +24,7 @@
 // we have to re pragma because sourcemod sucks lol
 #pragma newdecls required
 
-#define PLUGIN_VERSION  "5.0.3"
+#define PLUGIN_VERSION  "5.1.0"
 
 #define UPDATE_URL      "https://raw.githubusercontent.com/sapphonie/StAC-tf2/master/updatefile.txt"
 
@@ -146,6 +146,9 @@ public void OnPluginStart()
     HudSyncRunCmd       = CreateHudSynchronizer();
     HudSyncRunCmdMisc   = CreateHudSynchronizer();
     HudSyncNetwork      = CreateHudSynchronizer();
+
+    // set up our array we'll use for checking cvars
+    InitCvarArray();
 
     StacLog("[StAC] Plugin vers. ---- %s ---- loaded", PLUGIN_VERSION);
 

@@ -62,6 +62,28 @@ void StacLog(const char[] format, any ...)
     PrintToConsoleAllAdmins("%s", buffer);
 }
 
+void StacLogDemo()
+{
+    if (GetDemoName())
+    {
+        StacLog("Demo file: %s", demoname);
+    }
+}
+
+void StacLogSteam(int userid)
+{
+    int Cl = GetClientOfUserId(userid);
+
+    StacLog
+    ("\
+        \n Player: %L\
+        \n StAC cached SteamID: %s\
+        ",
+        Cl,
+        SteamAuthFor[Cl]
+    );
+}
+
 void StacLogNetData(int userid)
 {
     int Cl = GetClientOfUserId(userid);
@@ -141,6 +163,8 @@ void StacLogMouse(int userid)
         clmouse[Cl][1],
         sensFor[Cl]
     );
+    // log buttons whenever we log mouse
+    StacLogButtons(userid);
 }
 
 void StacLogAngles(int userid)
@@ -215,6 +239,30 @@ void StacLogTickcounts(int userid)
     );
 }
 
+void StacLogButtons(int userid)
+{
+    int Cl = GetClientOfUserId(userid);
+
+    StacLog
+    (
+        "\
+        \nPrevious buttons - use https://sapphonie.github.io/flags.html to convert to readable input\
+        \n0 %i\
+        \n1 %i\
+        \n2 %i\
+        \n3 %i\
+        \n4 %i\
+        \n5 %i\
+        ",
+        clbuttons[Cl][0],
+        clbuttons[Cl][1],
+        clbuttons[Cl][2],
+        clbuttons[Cl][3],
+        clbuttons[Cl][4],
+        clbuttons[Cl][5]
+    );
+}
+
 /********** ISVALIDCLIENT STUFF *********/
 
 bool IsValidClient(int client)
@@ -278,7 +326,7 @@ void BanUser(int userid, char[] reason, char[] pubreason)
         return;
     }
 
-    StacGeneralPlayerDiscordNotify(userid, reason);
+    StacGeneralPlayerNotify(userid, reason);
     // make sure we dont detect on already banned players
     userBanQueued[Cl] = true;
 
@@ -346,6 +394,8 @@ void BanUser(int userid, char[] reason, char[] pubreason)
 
 bool GetDemoName()
 {
+    // TODO: SourceTVManager
+    // TODO: Demoticks
     char tvStatus[512];
     ServerCommandEx(tvStatus, sizeof(tvStatus), "tv_status");
     char demoname_etc[128];
@@ -450,6 +500,18 @@ void PrintToImportant(const char[] format, any ...)
 {
     char buffer[254];
 
+    // print translations in the servers lang first
+    SetGlobalTransTarget(LANG_SERVER);
+    // format it properly
+    VFormat(buffer, sizeof(buffer), format, 2);
+    // print detections to staclog as well
+    if (StrContains(buffer, "detect", false) != -1)
+    {
+        // seperate detections with a lotta whitespace for easier readability
+        StacLog("\n\n----------\n\n%s", buffer);
+    }
+    buffer[0] = '\0';
+
     for (int i = 1; i <= MaxClients; i++)
     {
         // "[StAC] If this cvar is 0 (default), StAC will print detections to admins with sm_ban access and to SourceTV, if extant. If this cvar is 1, it will print only to SourceTV. If this cvar is 2, StAC never print anything in chat to anyone, ever. If this cvar is -1, StAC will print ALL detections to ALL players. \n(recommended 0)",
@@ -467,12 +529,6 @@ void PrintToImportant(const char[] format, any ...)
             VFormat(buffer, sizeof(buffer), format, 2);
             MC_PrintToChat(i, "%s", buffer);
         }
-    }
-    SetGlobalTransTarget(LANG_SERVER);
-    VFormat(buffer, sizeof(buffer), format, 2);
-    if (StrContains(buffer, "detect", false) != -1)
-    {
-        StacLog("%s", buffer);
     }
 }
 
@@ -545,18 +601,19 @@ public void OnLibraryAdded(const char[] name)
     }
 }
 
-/********** DISCORD **********/
+/********** DETECTIONS & DISCORD **********/
 
-void StacGeneralPlayerDiscordNotify(int userid, const char[] format, any ...)
+void StacGeneralPlayerNotify(int userid, const char[] format, any ...)
 {
-
-    static char generalTemplate[1024] = \
-    "{ \"embeds\": [ { \"title\": \"StAC Message\", \"color\": 16738740, \"fields\": [ { \"name\": \"Player\", \"value\": \"%N\" } , { \"name\": \"SteamID\", \"value\": \"%s\" }, { \"name\": \"Message\", \"value\": \"%s\" }, { \"name\": \"Hostname\", \"value\": \"%s\" }, { \"name\": \"IP\", \"value\": \"%s\" } , { \"name\": \"Current Demo Recording\", \"value\": \"%s\" } ] } ] }";
+    StacLogDemo();
 
     if (!DISCORD)
     {
         return;
     }
+    static char generalTemplate[1024] = \
+    "{ \"embeds\": [ { \"title\": \"StAC Message\", \"color\": 16738740, \"fields\": [ { \"name\": \"Player\", \"value\": \"%N\" } , { \"name\": \"SteamID\", \"value\": \"%s\" }, { \"name\": \"Message\", \"value\": \"%s\" }, { \"name\": \"Hostname\", \"value\": \"%s\" }, { \"name\": \"IP\", \"value\": \"%s\" } , { \"name\": \"Current Demo Recording\", \"value\": \"%s\" } ] } ] }";
+
     char msg[1024];
 
     char message[256];
@@ -566,7 +623,7 @@ void StacGeneralPlayerDiscordNotify(int userid, const char[] format, any ...)
     char ClName[64];
     GetClientName(Cl, ClName, sizeof(ClName));
     Discord_EscapeString(ClName, sizeof(ClName));
-    GetDemoName();
+
     // we technically store the url in this so it has to be bigger
     char steamid[96];
     // ok we store these on client connect & auth, this shouldn't be null
@@ -595,15 +652,17 @@ void StacGeneralPlayerDiscordNotify(int userid, const char[] format, any ...)
     SendMessageToDiscord(msg);
 }
 
-void StacDetectionDiscordNotify(int userid, char[] type, int detections)
+void StacDetectionNotify(int userid, char[] type, int detections)
 {
-    static char detectionTemplate[1024] = \
-    "{ \"embeds\": [ { \"title\": \"StAC Detection!\", \"color\": 16738740, \"fields\": [ { \"name\": \"Player\", \"value\": \"%N\" } , { \"name\": \"SteamID\", \"value\": \"%s\" }, { \"name\": \"Detection type\", \"value\": \"%s\" }, { \"name\": \"Detection\", \"value\": \"%i\" }, { \"name\": \"Hostname\", \"value\": \"%s\" }, { \"name\": \"IP\", \"value\": \"%s\" } , { \"name\": \"Current Demo Recording\", \"value\": \"%s\" } , { \"name\": \"Unix timestamp of detection\", \"value\": \"%i\" } ] } ] }";
+    StacLogDemo();
 
     if (!DISCORD)
     {
         return;
     }
+
+    static char detectionTemplate[1024] = \
+    "{ \"embeds\": [ { \"title\": \"StAC Detection!\", \"color\": 16738740, \"fields\": [ { \"name\": \"Player\", \"value\": \"%N\" } , { \"name\": \"SteamID\", \"value\": \"%s\" }, { \"name\": \"Detection type\", \"value\": \"%s\" }, { \"name\": \"Detection\", \"value\": \"%i\" }, { \"name\": \"Hostname\", \"value\": \"%s\" }, { \"name\": \"IP\", \"value\": \"%s\" } , { \"name\": \"Current Demo Recording\", \"value\": \"%s\" } , { \"name\": \"Unix timestamp of detection\", \"value\": \"%i\" } ] } ] }";
 
     char msg[1024];
 
@@ -611,7 +670,7 @@ void StacDetectionDiscordNotify(int userid, char[] type, int detections)
     char ClName[64];
     GetClientName(Cl, ClName, sizeof(ClName));
     Discord_EscapeString(ClName, sizeof(ClName));
-    GetDemoName();
+
     // we technically store the url in this so it has to be bigger
     char steamid[96];
     // ok we store these on client connect & auth, this shouldn't be null
