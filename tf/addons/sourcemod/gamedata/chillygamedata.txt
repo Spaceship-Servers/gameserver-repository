@@ -6,12 +6,12 @@
         {
             "CTeam::AddPlayer"
             {
-                "linux"  "203"
+                "linux"     "203"
                 "windows"   "202"
             }
             "CTeam::RemovePlayer"
             {
-                "linux"  "204"
+                "linux"     "204"
                 "windows"   "203"
             }
         }
