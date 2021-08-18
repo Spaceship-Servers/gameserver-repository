@@ -33,6 +33,9 @@ while getopts ":sahv" flag; do
 done
 
 
+git config --global user.email "sappho@sappho.io"
+git config --global user.name "Spaceship TF Prod"
+
 info "Finding empty objects"
 numemptyobjs=$(find .git/objects/ -type f -empty | wc -l)
 if (( numemptyobjs > 0 )); then
