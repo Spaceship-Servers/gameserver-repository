@@ -1,6 +1,7 @@
 stages:
     - fastdl
     - deploy
+    - gitguardian
     - github
 
 
@@ -23,11 +24,21 @@ deploy:
   tags:
     - chi
 
+gitguardian:
+  image: gitguardian/ggshield:latest
+  stage: gitguardian
+  script: ggshield scan ci
+  needs: []
+  tags:
+  - chi-docker
+  only:
+  - master
+
 github:
   stage: github
   script: ./scripts/gh.sh
   only:
     - master
-  needs: []
+  needs: [gitguardian]
   tags:
     - chi
