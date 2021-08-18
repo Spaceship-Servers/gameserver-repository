@@ -54,7 +54,7 @@ bootstrap ()
 
     git checkout gh-master
     git checkout -b stripped-master
-    git merge -X theirs gl_master --no-edit --squash --no-ff
+    git merge -X theirs gl_master --no-edit --squash
 
 
     ok "bootstrapped!"
