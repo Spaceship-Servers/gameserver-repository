@@ -67,14 +67,33 @@ if ${gitshallow}; then
     gitgc=true
 fi
 
+ourbranch=$(git rev-parse --abbrev-ref HEAD)
+
+info "-> detatching"
+git switch --detach HEAD
+
+info "-> deleting our branch"
+git branch -D $(ourbranch)
+
+important "-> fetching gl"
+
+info "-> fetching gl origin"
+git pull -X theirs origin ${ourbranch} --no-ff -f --no-edit --progress
+
+info "-> checking out our branch"
+git checkout ${ourbranch}
+
+info "-> pulling our branch to make sure"
+git pull origin ${ourbranch}
+
 info "updating submodules..."
 git submodule update --init --recursive
 
-info "fetching..."
-git fetch origin "${CI_COMMIT_REF_NAME}" --depth 25
-
-info "resetting..."
-git reset --hard "origin/${CI_COMMIT_REF_NAME}"
+#info "fetching..."
+#git fetch origin "${CI_COMMIT_REF_NAME}" --depth 25
+#
+#info "resetting..."
+#git reset --hard "origin/${CI_COMMIT_REF_NAME}"
 
 info "cleaning cfg folder..."
 git clean -d -f -x tf/cfg/
