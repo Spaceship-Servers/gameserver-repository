@@ -8,7 +8,7 @@ source scripts/helpers.sh
 tmp="/home/gitlab-runner/spaceship-gh"
 
 gl_origin="git@gitlab.com:sapphonie/Spaceship-Servers.git"
-gh_origin="git@github.com:sapp"
+gh_origin="git@github.com:sapphonie/Spaceship-Servers.git"
 
 bootstrap ()
 {
