@@ -73,7 +73,7 @@ info "-> detatching"
 git switch --detach HEAD
 
 info "-> deleting our branch"
-git branch -D $(ourbranch)
+git branch -D ${ourbranch}
 
 important "-> fetching gl"
 
