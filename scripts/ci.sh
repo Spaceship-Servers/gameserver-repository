@@ -8,8 +8,7 @@ source ${SCRIPT_DIR}/helpers.sh
 
 # Variable initialisation
 
-# this is clever and infinitely smarter than what it was before, good job
-WORK_DIR="/mnt/pterodactyl"
+WORK_DIR="/srv/daemon-data"
 
 debug "working dir: ${WORK_DIR}"
 
