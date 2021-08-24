@@ -12,13 +12,15 @@
 // bracket color
 #define bColor "1F1F2A"
 // text color
-#define tColor "696996"
+#define tColor "8dc0f7"
 // actual tag
 #define sTag "\x07" ... bColor ... "[" ... "\x07" ... tColor ... "Spaceship Servers" ... "\x07" ... bColor ... "]" ... COLOR_DEFAULT ... " "
 // discord link
 #define discordLink "discord.gg/Dn4wRu3"
 // pretty discord link (colored)
 #define pDiscord COLOR_DODGERBLUE ... discordLink ... COLOR_DEFAULT
+// pretty server list
+#define pServers COLOR_LIGHTSEAGREEN ... "https://sappho.io/spaceship" ... COLOR_DEFAULT
 
 public Plugin myinfo =
 {
@@ -73,8 +75,8 @@ public Action WelcomeClient(Handle timer, int userid)
     if (IsValidClient(Cl))
     {
         PrintColoredChat(Cl, sTag ... "Welcome to \x07" ... tColor ... "%s", hostname);
-        PrintColoredChat(Cl, sTag ... "To turn off cross server IRC chat, type " ... COLOR_GREEN ... "/irc" ... COLOR_DEFAULT ... ".");
-        PrintColoredChat(Cl, sTag ... "To see information about the discord, type " ... COLOR_SKYBLUE ... "!discord" ... COLOR_DEFAULT ... ".");
+        // PrintColoredChat(Cl, sTag ... "To turn off cross server IRC chat, type " ... COLOR_GREEN ... "/irc" ... COLOR_DEFAULT ... ".");
+        // PrintColoredChat(Cl, sTag ... "To see information about the discord, type " ... COLOR_SKYBLUE ... "!discord" ... COLOR_DEFAULT ... ".");
     }
 }
 
@@ -93,7 +95,17 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
             StrContains(sArgs, "/discord", false) != -1
         )
         {
-            PrintColoredChat(Cl, sTag ... "Join the Discord over at " ... pDiscord ... "!");
+            PrintColoredChat(Cl, sTag ... "Join the Discord over at " ... pDiscord ... ".");
+            return Plugin_Stop;
+        }
+        if
+        (
+            StrContains(sArgs, "!server", false) != -1
+            ||
+            StrContains(sArgs, "/server", false) != -1
+        )
+        {
+            PrintColoredChat(Cl, sTag ... "The current list of Spaceship Servers can be found at " ... pServers ... ".");
             return Plugin_Stop;
         }
     }
