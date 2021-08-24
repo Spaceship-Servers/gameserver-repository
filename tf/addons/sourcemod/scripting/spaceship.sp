@@ -10,7 +10,7 @@
 #define UPDATE_URL      "https://raw.githubusercontent.com/sapphonie/spaceship-servers-plugin/master/updatefile.txt"
 
 // bracket color
-#define bColor "1F1F2A"
+#define bColor "ea8cff"
 // text color
 #define tColor "8dc0f7"
 // actual tag
