@@ -26,7 +26,7 @@ tf/addons/*/data/sqlite/clientprefs-sqlite.sq3
 tf/addons/*/data/_*.data
 tf/addons/*/configs/sourcebans/sb_admins.cfg
 tf/addons/*/configs/sourcebans/sb_admin_groups.cfg
-tf/addons/*/configs/sourcebans/sourcebans.cfg
+#tf/addons/*/configs/sourcebans/sourcebans.cfg
 tf/addons/*/backup/*
 tf/addons/*/configs/sourceirc*
 !tf/addons/sourcemod/scripting/
