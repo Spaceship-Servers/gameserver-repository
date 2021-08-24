@@ -69,34 +69,42 @@ if ${gitshallow}; then
     info "setting git gc to automatically run..."
     gitgc=true
 fi
+revparse_branch=$(git rev-parse --abbrev-ref HEAD)
+ourbranch=$(git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$(git rev-parse HEAD)/ {print \$2}")
 
-ourbranch=$(git rev-parse --abbrev-ref HEAD)
 
-info "-> detatching"
-git switch --detach HEAD
+# fix HEAD issues
+if [[ "${revparse_branch}" == "HEAD" ]]; then
+    error "SERVER BRANCH = ${revparse_branch} (real: ${ourbranch})"
+    hook "SERVER BRANCH = ${revparse_branch} (real: ${ourbranch})"
+fi
 
-info "-> deleting our branch"
+
+info "-> detaching"
+git checkout --detach HEAD -f
+
+info "-> deleting our old branch"
 git branch -D ${ourbranch}
 
-important "-> fetching gl"
+info "-> checking out ${ourbranch}"
+git checkout -B ${ourbranch} origin/${ourbranch}
 
-info "-> fetching gl origin"
-git pull -X theirs origin ${ourbranch} --no-ff -f --no-edit --progress
+info "-> fetching ${ourbranch}"
+git fetch origin ${ourbranch} --progress
 
-info "-> checking out our branch"
-git checkout ${ourbranch}
+info "-> resetting to origin/${ourbranch}"
+git reset --hard origin/${ourbranch}
 
-info "-> pulling our branch to make sure"
-git pull origin ${ourbranch}
+info "-> merging origin/${ourbranch} into current branch"
+git merge -X theirs -v FETCH_HEAD
+
 
 info "updating submodules..."
 git submodule update --init --recursive
 
-#info "fetching..."
-#git fetch origin "${CI_COMMIT_REF_NAME}" --depth 25
-#
-#info "resetting..."
-#git reset --hard "origin/${CI_COMMIT_REF_NAME}"
+
+
+
 
 info "cleaning cfg folder..."
 git clean -d -f -x tf/cfg/
