@@ -2,7 +2,7 @@ stages:
 #    - fastdl
     - deploy
 #    - gitguardian
-    - github
+#    - github
 
 
 #fastdl:
@@ -32,12 +32,12 @@ deploy:
 #  - chi-docker
 #  only:
 #  - master
-
-github:
-  stage: github
-  script: ./scripts/gh.sh
-  only:
-    - master
-  needs: []
-  tags:
-    - chi-new
+#
+#github:
+#  stage: github
+#  script: ./scripts/gh.sh
+#  only:
+#    - master
+#  needs: []
+#  tags:
+#    - chi-new
