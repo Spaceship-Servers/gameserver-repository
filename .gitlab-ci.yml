@@ -19,8 +19,7 @@ deploy:
   script: ./scripts/ci.sh
   only:
     - master
-  needs:
-    - fastdl
+  needs: []
   tags:
     - chi-new
 
