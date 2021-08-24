@@ -5,14 +5,14 @@ stages:
     - github
 
 
-fastdl:
-  stage: fastdl
-  script: ./scripts/fastdl.sh
-  only:
-    - master
-  needs: []
-  tags:
-    - chi-new
+#fastdl:
+#  stage: fastdl
+#  script: ./scripts/fastdl.sh
+#  only:
+#    - master
+#  needs: []
+#  tags:
+#    - chi-new
 
 deploy:
   stage: deploy
