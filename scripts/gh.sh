@@ -5,7 +5,7 @@ source scripts/helpers.sh
 # written by sappho.io
 
 # TODO: use tmpfs
-tmp="/home/pterodactyl/spaceship-gh"
+tmp="/home/gitlab-runner/spaceship-gh"
 
 gl_origin="git@gitlab.com:sapphonie/Spaceship-Servers.git"
 gh_origin="git@github.com:sapphonie/Spaceship-Servers.git"
