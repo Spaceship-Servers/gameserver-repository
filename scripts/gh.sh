@@ -166,6 +166,7 @@ push ()
     git push gh_origin stripped-master:master --force --progress
 }
 
+whoami
 bootstrap
 stripchunkyblobs
 movebinaries_out
