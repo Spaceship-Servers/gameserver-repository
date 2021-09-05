@@ -1,8 +1,8 @@
 stages:
-#    - fastdl
+    - fastdl
     - deploy
 #    - gitguardian
-#    - github
+    - github
 
 
 fastdl:
