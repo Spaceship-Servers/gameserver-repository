@@ -9,7 +9,7 @@ export TERM="screen"
 # TODO: use tmpfs
 tmp="/home/gitlab-runner/spaceship-gh"
 
-source ${tmp}/scripts/helpers.sh
+source ${tmp}/gs/scripts/helpers.sh
 
 
 debug "setting git config..."
