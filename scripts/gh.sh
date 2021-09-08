@@ -36,7 +36,7 @@ bootstrap ()
     fi
 
     info "-> detatching"
-    git switch --detach HEAD
+    git checkout HEAD --detach
 
     info "-> deleting stripped-master"
     git branch -D stripped-master
