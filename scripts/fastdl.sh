@@ -7,4 +7,4 @@ pwd
 fastdl_loc="/var/www/sappho.io/files/tf"
 
 # only copy new files
-rsync -avu --verbose ./tf/maps/* ${fastdl_loc}/maps
+rsync -vu --verbose ./tf/maps/* ${fastdl_loc}/maps
