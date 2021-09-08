@@ -3,7 +3,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 
 # webhook url
-WEBHOOK_URL="***REPLACED PRIVATE URL***"
+WEBHOOK_URL="***REPLACED PRIVATE URL***-"
 # todo: use ci vars
 PROJ_URL="https://gitlab.com/sapphonie/Spaceship-Servers"
 
