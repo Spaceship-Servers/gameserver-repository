@@ -33,8 +33,4 @@
     {
         "chat"          "{fuchsia}All STV demos older than 30 minutes {plum}are now available over at {#ff007f}https://sappho.io/stvdemos/{plum}!"
     }
-    "5"
-    {
-        "chat"          "{greenyellow}You can toggle cross server IRC chat on or off with {white}/irc{greenyellow}! Your settings will be saved from server to server!"
-    }
 }
