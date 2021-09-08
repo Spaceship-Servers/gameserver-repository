@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+source <(curl -s https://raw.githubusercontent.com/CreatorsTF/gameservers/master/scripts/helpers.sh)
 #
 export TERM="screen"
 
@@ -9,7 +9,7 @@ export TERM="screen"
 # TODO: use tmpfs
 tmp="/home/gitlab-runner/spaceship-gh"
 
-source ${tmp}/gs/scripts/helpers.sh
+#source ${tmp}/gs/scripts/helpers.sh
 
 
 debug "setting git config..."
@@ -229,6 +229,7 @@ push ()
     git push gh_origin stripped-master:master --progress --force
 }
 
+whoami
 bootstrap_raw
 bootstrap_stripped
 stripchunkyblobs
