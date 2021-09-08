@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source /home/server/helpers.sh
 
 #
 export TERM="screen"
@@ -9,6 +8,9 @@ export TERM="screen"
 
 # TODO: use tmpfs
 tmp="/home/gitlab-runner/spaceship-gh"
+
+source ${tmp}/scripts/helpers.sh
+
 
 debug "setting git config..."
 git config --global user.email "sappho@sappho.io"
