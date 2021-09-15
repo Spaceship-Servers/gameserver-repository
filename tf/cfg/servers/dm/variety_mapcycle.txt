@@ -13,15 +13,16 @@ koth_bagel_rc3
 cp_sunshine
 koth_cascade_rc2
 cp_villa_b17a
+// all the pl maps lol
+pl_upward
+pl_swiftwater_final1
+pl_vigil_rc7
+pl_badwater
+// some custom stuff
 cp_follower
-dm_bloodcov_b1a
-cp_follower
-// pl_waste_v2
-plr_bananabay
-tc_hydro
-koth_nucleus
-koth_king
 koth_ashville_rc2d
-de_nuke
-cp_sulfur_rc2
-cp_chad_a15
+// below don't have spawns yet
+// cp_sulfur_rc2
+// ctf_2fort_neocity
+// dm_bloodcov_b1a
+// de_nuke
