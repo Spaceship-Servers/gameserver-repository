@@ -1,0 +1,4 @@
+*.smx filter=lfs diff=lfs merge=lfs -diff
+*.bsp filter=lfs diff=lfs merge=lfs -diff
+*.so  filter=lfs diff=lfs merge=lfs -diff
+*.dll filter=lfs diff=lfs merge=lfs -diff
