@@ -18,9 +18,15 @@ pl_upward
 pl_swiftwater_final1
 pl_vigil_rc7
 pl_badwater
+// some wacky stuff
+arena_lumberyard
+cp_fastlane
+cp_granary
 // some custom stuff
 cp_follower
-koth_ashville_rc2d
+// cp_glassworks_rc6a
+// cp_croissant_rc6
+// koth_ashville_rc2d
 // below don't have spawns yet
 // cp_sulfur_rc2
 // ctf_2fort_neocity
