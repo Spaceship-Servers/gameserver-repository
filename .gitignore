@@ -2,6 +2,7 @@
 !LICENSE
 !start.sh
 !.gitignore
+!.gitattributes
 !.gitlab-ci.yml
 !scripts/
 !tf
