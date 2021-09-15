@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source <(curl -s https://raw.githubusercontent.com/CreatorsTF/gameservers/master/scripts/helpers.sh)
+source <(curl -s https://raw.githubusercontent.com/CreatorsTF/gameservers/stable/scripts/helpers.sh)
 #
 export TERM="screen"
 
