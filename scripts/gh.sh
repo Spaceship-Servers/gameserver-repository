@@ -1,21 +1,25 @@
 #!/bin/bash
 
 source <(curl -s https://raw.githubusercontent.com/CreatorsTF/gameservers/stable/scripts/helpers.sh)
+
 #
 export TERM="screen"
 
 # written by sappho.io
 
 # TODO: use tmpfs
-tmp="/home/gitlab-runner/spaceship-gh"
+tmp="/home/steph/"
 
-#source ${tmp}/gs/scripts/helpers.sh
-
+gh_branch="master"
+#CI_DEFAULT_BRANCH="stable"
 
 debug "setting git config..."
-git config --global user.email "sappho@sappho.io"
-git config --global user.name "Spaceship Servers Gitlab-Runner"
 
+#
+git config --global user.email "sappho@sappho.io"
+git config --global user.name "Spaceship Servers Prod"
+# for pushing lfs properly because we scrub files from history
+git config --global lfs.allowincompletepush true
 gl_origin="git@gitlab.com:sapphonie/Spaceship-Servers.git"
 gh_origin="git@github.com:sapphonie/Spaceship-Servers.git"
 
@@ -29,7 +33,7 @@ bootstrap_raw ()
 
         cd ${tmp}/gs_raw || exit 255
 
-        info "-> moving master to gl_master"
+        info "-> moving ${CI_DEFAULT_BRANCH} to gl_master"
         git checkout -B gl_master
         git branch -D ${CI_DEFAULT_BRANCH}
     else
@@ -46,8 +50,11 @@ bootstrap_raw ()
         git remote add gh_origin ${gh_origin}
     fi
 
+
+
     info "-> detaching"
     git checkout --detach HEAD -f
+
 
     important "-> fetching gl"
 
@@ -67,6 +74,7 @@ bootstrap_raw ()
     git merge -v FETCH_HEAD
 
 
+
     info "-> detaching"
     git checkout --detach HEAD -f
 
@@ -75,22 +83,22 @@ bootstrap_raw ()
     important "-> fetching gh"
 
     info "-> fetching gh origin just in case we need to recreate the branch"
-    git fetch gh_origin --progress master
+    git fetch gh_origin --progress ${gh_branch}
 
-    info "-> checking out gh origin master"
-    git checkout -B gh_master gh_origin/master
+    info "-> checking out gh origin ${gh_branch}"
+    git checkout -B gh_master gh_origin/${gh_branch} ||
 
-    info "-> resetting to gl origin master"
-    git reset --hard gh_origin/master
+    info "-> resetting to gl origin ${gh_branch}"
+    git reset --hard gh_origin/${gh_branch}
 
     info "-> fetching gl origin again"
-    git fetch gh_origin --progress master
+    git fetch gh_origin --progress ${gh_branch}
 
     info "-> merging into current branch"
     git merge -v FETCH_HEAD
 
     info "checking out into master"
-    git checkout -B gl_master gl_origin/master
+    git checkout -B gl_master gl_origin/${CI_DEFAULT_BRANCH}
 }
 
 bootstrap_stripped ()
@@ -120,6 +128,9 @@ bootstrap_stripped ()
     info "-> moving master to stripped-master"
     git checkout -f gl_master
     git checkout -B stripped-master
+
+#    info "-> lfs migrating"
+#    git lfs migrate export --include="*" --everything
 }
 
 # used to use BFG for this
@@ -226,14 +237,13 @@ push ()
 {
     # donezo
     ok "-> pushing to gh"
-    git push gh_origin stripped-master:master --progress --force
+    git push gh_origin stripped-master:${gh_branch} --progress --force
 }
 
-whoami
-bootstrap_raw         || exit 255
-bootstrap_stripped    || exit 255
-stripchunkyblobs      || exit 255
-stripfiles            || exit 255
-stripsecrets          || exit 255
-syncdisk              || exit 255
-push
+bootstrap_raw       || exit 255
+bootstrap_stripped  || exit 255
+stripchunkyblobs    || exit 255
+stripfiles          || exit 255
+stripsecrets        || exit 255
+syncdisk            || exit 255
+push                || exit 1
