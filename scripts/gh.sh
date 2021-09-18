@@ -11,7 +11,7 @@ export TERM="screen"
 tmp="/home/gitlab-runner/spaceship"
 
 gh_branch="master"
-#CI_DEFAULT_BRANCH="stable"
+# CI_DEFAULT_BRANCH="master"
 
 debug "setting git config..."
 
@@ -50,7 +50,7 @@ bootstrap_raw ()
         git remote add gh_origin ${gh_origin}
     fi
 
-
+    git lfs install --force
 
     info "-> detaching"
     git checkout --detach HEAD -f
@@ -106,13 +106,12 @@ bootstrap_stripped ()
     info "rm-ing unclean repo"
     rm -rf ${tmp}/gs_stripped
 
-    info "cloning"
-    git clone ${tmp}/gs_raw ${tmp}/gs_stripped --progress
+    info "cping"
+    cp -Rfv ${tmp}/gs_raw ${tmp}/gs_stripped
 
     info "cd-ing"
     cd ${tmp}/gs_stripped
     info "done"
-
 
     if ! git remote | grep gl_origin > /dev/null; then
         info "-> adding gitlab remote"
@@ -148,11 +147,7 @@ sensfiles="--invert-paths --paths-from-file paths.txt --use-base-name"
 
 stripchunkyblobs ()
 {
-    info "-> [gfr] stripping big blobs"
-
-    ${gfr} ${bigblobs}
-
-    ok "-> [gfr] stripped big blobs"
+    info "-> [gfr] stripping big blobs" && ${gfr} ${bigblobs} && ok "-> [gfr] stripped big blobs"
 }
 
 
@@ -173,10 +168,7 @@ stripfiles ()
     } >> paths.txt
 
     # invert-paths deletes these files
-    ${gfr} ${sensfiles}
-    rm paths.txt
-
-    ok "-> [gfr] stripped sensitive files"
+    ${gfr} ${sensfiles} && rm paths.txt && ok "-> [gfr] stripped sensitive files"
 }
 
 stripsecrets ()
@@ -212,7 +204,7 @@ stripsecrets ()
     -fe="tf/addons/sourcemod/data"                              \
     -fe="tf/addons/sourcemod/gamedata"                          \
     -fe="tf/addons/sourcemod/plugins"                           \
-    -fe="tf/addons/sourcemod/translations"
+    -fe="tf/addons/sourcemod/translations" && rm regex.txt && ok "-> [bfg-ish] stripped sensitive strings"
     # ./this essentially includes only:
     # ./tf/addons/sourcemod/scripting
     # ./tf/cfg/
@@ -221,9 +213,6 @@ stripsecrets ()
     #
     # but i cant figure out how bfgish's include/exclude works because
     # i tried -fi and it did not work as expected
-    rm regex.txt
-
-    ok "-> [bfg-ish] stripped sensitive strings"
 }
 
 syncdisk ()
