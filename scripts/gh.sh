@@ -160,6 +160,7 @@ stripfiles ()
     # echo our regex && literal paths to it
     {
         echo 'regex:private.*';
+        echo 'regex:tokens.*';
         echo 'regex:databases.*';
         echo 'regex:economy.*';
         echo 'discord.cfg';
