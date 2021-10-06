@@ -1,0 +1,24 @@
+"Games"
+{
+	"tf"
+	{
+		"Functions"
+		{
+			"CTFGameMovement::PreventBunnyJumping"
+			{
+				"signature" "CTFGameMovement::PreventBunnyJumping"
+				"callconv" "thiscall"
+				"return" "void"
+				"this" "address"
+			}
+		}
+
+		"Signatures"
+		{
+			"CTFGameMovement::PreventBunnyJumping"
+			{
+				"linux" "@_ZN15CTFGameMovement19PreventBunnyJumpingEv"
+			}
+		}
+	}
+}
