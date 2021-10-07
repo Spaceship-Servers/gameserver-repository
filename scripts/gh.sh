@@ -188,6 +188,7 @@ stripsecrets ()
         echo 'regex:(?m)^.*_password .*$==>// ***REPLACED SRC PASSWORD***';
         echo 'regex:(?m)\"Basic.*\"==>***REPLACED API INFO***';
 ***REPLACED PRIVATE URL******';
+        echo 'regex:(?m)(.*api.*)==>***REPLACED API KEY***';
     } >> regex.txt
 
     # quite dumb that i need to do this lol, this ignores our bins
