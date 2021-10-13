@@ -1,0 +1,5 @@
+"Metamod Plugin"
+{
+	"alias"		"Unlocked Tickrate"
+	"file"		"addons/unlocked_tickrate"
+}
