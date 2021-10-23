@@ -1,4 +1,6 @@
-*.smx filter=lfs diff=lfs merge=lfs -diff
-*.bsp filter=lfs diff=lfs merge=lfs -diff
-*.so  filter=lfs diff=lfs merge=lfs -diff
-*.dll filter=lfs diff=lfs merge=lfs -diff
+*.smx  filter=lfs diff=lfs merge=lfs -diff
+*.bsp  filter=lfs diff=lfs merge=lfs -diff
+*.so   filter=lfs diff=lfs merge=lfs -diff
+*.dll  filter=lfs diff=lfs merge=lfs -diff
+*.mmdb filter=lfs diff=lfs merge=lfs -diff
+*.dat  filter=lfs diff=lfs merge=lfs -diff
