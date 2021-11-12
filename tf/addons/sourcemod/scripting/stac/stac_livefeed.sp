@@ -1,3 +1,5 @@
+#pragma semicolon 1
+
 /********** LIVEFEED **********/
 
 void LiveFeed_PlayerCmd(int userid)
@@ -7,6 +9,7 @@ void LiveFeed_PlayerCmd(int userid)
     float srvangles[3];
     GetClientEyeAngles(Cl, srvangles);
 
+    // this is so ugly lol
     static char RareButtonNames[][] =
     {
         "",
@@ -118,18 +121,7 @@ void LiveFeed_PlayerCmd(int userid)
 
     for (int LiveFeedViewer = 1; LiveFeedViewer <= MaxClients; LiveFeedViewer++)
     {
-        if
-        (
-            // only show to admins in spec
-            (
-                IsValidAdmin(LiveFeedViewer)
-                &&
-                GetClientTeam(LiveFeedViewer) < 2
-            )
-            // and sourcetv
-            ||
-            IsValidSrcTV(LiveFeedViewer)
-        )
+        if (IsValidLiveFeedViewer(LiveFeedViewer))
         {
             // ONPLAYERRUNCMD
             SetHudTextParams
@@ -230,7 +222,7 @@ void LiveFeed_NetInfo(int userid)
     }
     for (int LiveFeedViewer = 1; LiveFeedViewer <= MaxClients; LiveFeedViewer++)
     {
-        if (IsValidAdmin(LiveFeedViewer) || IsValidSrcTV(LiveFeedViewer))
+        if (IsValidLiveFeedViewer(LiveFeedViewer))
         {
             // NETINFO
             SetHudTextParams
@@ -279,4 +271,28 @@ void LiveFeed_NetInfo(int userid)
             );
         }
     }
+}
+
+bool IsValidLiveFeedViewer(int client)
+{
+    if
+    (
+        // only show to admins that are dead or in spec
+        (
+            IsValidAdmin(client)
+            &&
+            (
+                TF2_GetClientTeam(client) == TFTeam_Spectator
+                ||
+                !IsPlayerAlive(client)
+            )
+        )
+        ||
+        // and sourcetv
+        IsValidSrcTV(client)
+    )
+    {
+        return true;
+    }
+    return false;
 }
