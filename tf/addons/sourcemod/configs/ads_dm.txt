@@ -33,8 +33,12 @@
     {
         "chat"          "{fuchsia}All STV demos older than 10 minutes {plum}are now available over at {#ff007f}https://sappho.io/stvdemos/{plum}!"
     }
-    // dm exclusive
     "5"
+    {
+        "chat"          "{skyblue}Spaceship Servers{white} is now renting out {coral}Source {dimgray}(TF2, CS:GO, etc.){white} and {forestgreen}Minecraft {dimgray}(Paper, Spigot, etc.){white} servers! Interested? Contact me at {hotpink}https://sappho.io/contact{white}."
+    }
+    // dm exclusive
+    "6"
     {
         "chat"          "{coral}Don't like the current map? Type {gold}!nominate{coral} to nominate a map to play instead, and {purple}!rtv{coral} to force a map vote!"
     }
