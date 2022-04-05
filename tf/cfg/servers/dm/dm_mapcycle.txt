@@ -9,4 +9,4 @@ cp_metalworks
 cp_sunshine
 cp_villa_b17a
 ctf_turbine_pro_rc4
-koth_bagel_rc3
+koth_bagel_rc5
