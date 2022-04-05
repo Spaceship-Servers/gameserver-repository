@@ -99,6 +99,9 @@ bootstrap_raw ()
 
     info "checking out into master"
     git checkout -B gl_master gl_origin/${CI_DEFAULT_BRANCH}
+
+    info "fetching lfs objects"
+    git lfs fetch --all
 }
 
 bootstrap_stripped ()
