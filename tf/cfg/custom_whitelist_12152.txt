@@ -1,0 +1,15 @@
+"item_whitelist"
+{
+	"unlisted_items_default_to"		"1"
+	"Deflector"		"0"
+	"The Eureka Effect"		"0"
+	"Activated Campaign 3 Pass"		"0"
+	"Taunt: The Homerunner's Hobby"		"0"
+	"Taunt: The Profane Puppeteer"		"0"
+	"Taunt: The Hot Wheeler"		"0"
+	"Taunt: The Drunken Sailor"		"0"
+	"Taunt: Bare Knuckle Beatdown"		"0"
+	"Taunt: Doctor's Defibrillators"		"0"
+	"Taunt: The Mannbulance!"		"0"
+	"Taunt: Shooter's Stakeout"		"0"
+}
