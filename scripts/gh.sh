@@ -165,10 +165,7 @@ stripfiles ()
         echo 'regex:private.*';
         echo 'regex:tokens.*';
         echo 'regex:databases.*';
-        echo 'regex:economy.*';
         echo 'discord.cfg';
-        echo 'discord_seed.sp';
-        echo 'regex:server-staging.*';
     } >> paths.txt
 
     # invert-paths deletes these files
@@ -188,10 +185,9 @@ stripsecrets ()
     # echo our regex to it
     # i want to simplify this
     {
-        echo 'regex:(?m)^.*_password .*$==>// ***REPLACED SRC PASSWORD***';
-        echo 'regex:(?m)\"Basic.*\"==>***REPLACED API INFO***';
+        echo 'regex:(?m)((rcon|sv|tv)_password \".*)==>// ***REPLACED SRC PASSWORD***';
 ***REPLACED PRIVATE URL******';
-        echo 'regex:(?m)(.*api.*)==>***REPLACED API KEY***';
+***REPLACED API KEY***
     } >> regex.txt
 
     # quite dumb that i need to do this lol, this ignores our bins
