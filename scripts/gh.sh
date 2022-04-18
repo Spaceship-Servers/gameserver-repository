@@ -5,6 +5,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # Helper functions
 source ${SCRIPT_DIR}/discord_helpers.sh
+source ${SCRIPT_DIR}/helpers.sh
 
 #
 export TERM="screen"
