@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source <(curl -s https://raw.githubusercontent.com/CreatorsTF/gameservers/stable/scripts/helpers.sh)
+# source <(curl -s https://raw.githubusercontent.com/CreatorsTF/gameservers/stable/scripts/helpers.sh)
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Helper functions
+source ${SCRIPT_DIR}/discord_helpers.sh
 
 #
 export TERM="screen"
