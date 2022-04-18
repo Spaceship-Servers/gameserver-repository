@@ -1,0 +1,66 @@
+
+"Games"
+{
+    "tf"
+    {
+        "Functions"
+        {
+            // int thiscall CNetChan::ProcessPacketHeader(CNetChan * this, netadr_s *)
+            "ProcessPacketHeader"
+            {
+                "signature"     "CNetChan::ProcessPacketHeader"
+                "callconv"      "thiscall"
+                "return"        "int"
+                "this"          "address"
+                "arguments"
+                {
+                    "netpacket_t"
+                    {
+                        "type"      "objectptr"
+                    }
+                }
+            }
+            // int thiscall CNetChan::ProcessPacket(CNetChan *, netadr_s *, bool)
+            "ProcessPacket"
+            {
+                "signature"     "CNetChan::ProcessPacket"
+                "callconv"      "thiscall"
+                "return"        "void"
+                "this"          "address"
+                "arguments"
+                {
+                    "netpacket_t"
+                    {
+                        "type"      "objectptr"
+                    }
+                    "bool"
+                    {
+                        "type"      "bool"
+                    }
+                }
+            }
+        }
+
+        "Signatures"
+        {
+            "CNetChan::ProcessPacketHeader"
+            {
+                "library"   "engine"
+                "linux"     "@_ZN8CNetChan19ProcessPacketHeaderEP11netpacket_s"
+            }
+            "CNetChan::ProcessPacket"
+            {
+                "library"   "engine"
+                "linux"     "@_ZN8CNetChan13ProcessPacketEP11netpacket_sb"
+            }
+            "netadr_s::ToString"
+            {
+                "library"   "engine"
+                "linux"     "@_ZNK8netadr_s8ToStringEb"
+            }
+        }
+    }
+}
+
+
+
