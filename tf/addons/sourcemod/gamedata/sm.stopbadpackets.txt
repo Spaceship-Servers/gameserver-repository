@@ -1,0 +1,165 @@
+
+"Games"
+{
+    "tf"
+    {
+        "Functions"
+        {
+            // int thiscall CNetChan::ProcessPacketHeader(CNetChan * this, netadr_s *)
+            "ProcessPacketHeader"
+            {
+                "signature"     "CNetChan::ProcessPacketHeader"
+                "callconv"      "thiscall"
+                "return"        "int"
+                "this"          "address"
+                "arguments"
+                {
+                    "netpacket_t"
+                    {
+                        "type"      "objectptr"
+                    }
+                }
+            }
+            // int thiscall CNetChan::ProcessPacket(CNetChan *, netadr_s *, bool)
+            "ProcessPacket"
+            {
+                "signature"     "CNetChan::ProcessPacket"
+                "callconv"      "thiscall"
+                "return"        "void"
+                "this"          "address"
+                "arguments"
+                {
+                    "netpacket_t"
+                    {
+                        "type"      "objectptr"
+                    }
+                    "bool"
+                    {
+                        "type"      "bool"
+                    }
+                }
+            }
+        }
+
+        "Signatures"
+        {
+            "CNetChan::ProcessPacketHeader"
+            {
+                "library"   "engine"
+                "linux"     "@_ZN8CNetChan19ProcessPacketHeaderEP11netpacket_s"
+            }
+            "CNetChan::ProcessPacket"
+            {
+                "library"   "engine"
+                "linux"     "@_ZN8CNetChan13ProcessPacketEP11netpacket_sb"
+            }
+            "netadr_s::ToString"
+            {
+                "library"   "engine"
+                "linux"     "@_ZNK8netadr_s8ToStringEb"
+            }
+        }
+
+        "Offsets"
+        {
+            "Offset_ToString"
+            {
+                "linux"     "0x94"
+            }
+            "Offset_PacketSize"
+            {
+                "linux"     "0x34"
+            }
+        }
+    }
+
+    "csgo"
+    {
+        "Functions"
+        {
+            // int thiscall CNetChan::ProcessPacketHeader(CNetChan * this, netadr_s *)
+            "ProcessPacketHeader"
+            {
+                "signature"     "CNetChan::ProcessPacketHeader"
+                "callconv"      "thiscall"
+                "return"        "int"
+                "this"          "address"
+                "arguments"
+                {
+                    "netpacket_t"
+                    {
+                        "type"      "objectptr"
+                    }
+                }
+            }
+            // void thiscall CNetChan::ProcessPacket(CNetChan *, netadr_s *, bool)
+            // void FUN_002a0380(int *param_1,int param_2,char param_3)
+            "ProcessPacket"
+            {
+                "signature"     "CNetChan::ProcessPacket"
+                "callconv"      "thiscall"
+                "return"        "void"
+                "this"          "address"
+                "arguments"
+                {
+                    "netpacket_t"
+                    {
+                        "type"      "objectptr"
+                    }
+                    "bool"
+                    {
+                        "type"      "bool"
+                    }
+                }
+            }
+        }
+
+        "Signatures"
+        {
+            "CNetChan::ProcessPacketHeader"
+            {
+                "library"   "engine"
+                // String: "%s:Dropped %i packets at"
+                // Signature for sub_288DB0:
+                // 55 89 E5 57 56 53 83 EC 5C 8B 5D 0C 8B 7D 08
+                // \x55\x89\xE5\x57\x56\x53\x83\xEC\x5C\x8B\x5D\x0C\x8B\x7D\x08
+                "linux"     "\x55\x89\xE5\x57\x56\x53\x83\xEC\x5C\x8B\x5D\x0C\x8B\x7D\x08"
+            }
+            "CNetChan::ProcessPacket"
+            {
+                "library"   "engine"
+                // String: "UDP <- %s: sz=%5i"
+                // Signature for sub_290380:
+                // 55 89 E5 57 56 53 81 EC EC 00 00 00 0F B6 45 10
+                // \x55\x89\xE5\x57\x56\x53\x81\xEC\xEC\x00\x00\x00\x0F\xB6\x45\x10
+                "linux"     "\x55\x89\xE5\x57\x56\x53\x81\xEC\xEC\x00\x00\x00\x0F\xB6\x45\x10"
+            }
+            "netadr_s::ToString"
+            {
+                "library"   "engine"
+                // String: Bad connectionless packet
+                // Signature for sub_167DD0:
+                // 55 89 E5 83 EC 18 8D 45 10 C7 44 24 04 40 00 00 00
+                // \x55\x89\xE5\x83\xEC\x18\x8D\x45\x10\xC7\x44\x24\x04\x40\x00\x00\x00
+                "linux"     "\x55\x89\xE5\x83\xEC\x18\x8D\x45\x10\xC7\x44\x24\x04\x40\x00\x00\x00"
+            }
+        }
+
+        // crashes. idk
+        "Offsets"
+        {
+            "Offset_ToString"
+            {
+                "linux"     "0x4"
+            }
+            "Offset_PacketSize"
+            {
+                "linux"     "0x54"
+            }
+        }
+    }
+
+}
+
+
+
