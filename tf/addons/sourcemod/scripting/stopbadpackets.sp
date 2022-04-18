@@ -123,12 +123,14 @@ public MRESReturn Detour_ProcessPacket(int pThis, DHookParam hParams)
     // engine time before processing this packet
     preproc_time = GetEngineTime();
 
+    int offset = GameConfGetOffset(hGameData, "Offset_PacketSize");
+
     // Get size of this packet
     Address netpacket = DHookGetParamAddress(hParams, 1);
-    int size = LoadFromAddress((netpacket + view_as<Address>(0x34)), NumberType_Int8);
+    int size = LoadFromAddress((netpacket + view_as<Address>(offset)), NumberType_Int32);
 
     // sanity check
-    if (size < 1)
+    if (size < 0)
     {
         char naughtyaddr[64];
         naughtyaddr = AdrToString(pThis);
@@ -143,7 +145,7 @@ public MRESReturn Detour_ProcessPacket(int pThis, DHookParam hParams)
                 if (StrEqual(ip, naughtyaddr))
                 {
                     char hookmsg[256];
-                    Format(hookmsg, sizeof(hookmsg), "[StopBadPackets] Client -%L- sent a packet with < 1 size! size: %i", client, size);
+                    Format(hookmsg, sizeof(hookmsg), "[StopBadPackets] Client -%L- sent a packet with < 0 size! size: %i", client, size);
                     Discord_SendMessage("badpackets", hookmsg);
 
                     // KickClient(client, "[StopBadPackets] Client %N sent a packet with no size!", client);
@@ -295,7 +297,10 @@ char[] AdrToString(any pThis)
     // char* ip = netadr_s::ToString((netadr_s *)(this + 0x94), false);
 
     // So let's just recreate that.
-    SDKCall(netadr_ToString, (pThis + 0x94), naughtyaddr, sizeof(naughtyaddr), false);
+
+    int offset = GameConfGetOffset(hGameData, "Offset_ToString");
+
+    SDKCall(netadr_ToString, (pThis + offset), naughtyaddr, sizeof(naughtyaddr), false);
     // PrintToServer("%s", naughtyaddr);
     return naughtyaddr;
 }
