@@ -58,17 +58,28 @@
                 "library"   "engine"
                 "linux"     "@_ZNK8netadr_s8ToStringEb"
             }
+            "CNetChan::GetMsgHandler"
+            {
+                "library"   "engine"
+                "linux"     "@_ZNK8CNetChan13GetMsgHandlerEv"
+            }
         }
 
         "Offsets"
         {
-            "Offset_ToString"
-            {
-                "linux"     "0x94"
-            }
             "Offset_PacketSize"
             {
                 "linux"     "0x34"
+            }
+            "Offset_MessageHandler"
+            {
+                "linux"     "0x22DC"
+                "windows"   "0"
+            }
+            "CBaseClient::GetPlayerSlot"
+            {
+                "linux"     "15"
+                "windows"   "14"
             }
         }
     }
@@ -134,27 +145,23 @@
                 // \x55\x89\xE5\x57\x56\x53\x81\xEC\xEC\x00\x00\x00\x0F\xB6\x45\x10
                 "linux"     "\x55\x89\xE5\x57\x56\x53\x81\xEC\xEC\x00\x00\x00\x0F\xB6\x45\x10"
             }
-            "netadr_s::ToString"
-            {
-                "library"   "engine"
-                // String: Bad connectionless packet
-                // Signature for sub_167DD0:
-                // 55 89 E5 83 EC 18 8D 45 10 C7 44 24 04 40 00 00 00
-                // \x55\x89\xE5\x83\xEC\x18\x8D\x45\x10\xC7\x44\x24\x04\x40\x00\x00\x00
-                "linux"     "\x55\x89\xE5\x83\xEC\x18\x8D\x45\x10\xC7\x44\x24\x04\x40\x00\x00\x00"
-            }
         }
 
-        // crashes. idk
         "Offsets"
         {
-            "Offset_ToString"
-            {
-                "linux"     "0x4"
-            }
             "Offset_PacketSize"
             {
                 "linux"     "0x54"
+            }
+            "Offset_MessageHandler"
+            {
+                "linux"     "0x1057"
+                "windows"   "0"
+            }
+            "CBaseClient::GetPlayerSlot"
+            {
+                "linux"     "15"
+                "windows"   "14"
             }
         }
     }
