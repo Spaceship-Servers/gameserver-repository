@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+CIDIR=${pwd}
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # Helper functions
 source ${SCRIPT_DIR}/helpers.sh
@@ -44,8 +46,9 @@ for dir in ./*/ ; do
     if [[ "${CI_COMMIT_HEAD}" == "${CI_COMMIT_REF_NAME}" ]] && [[ "${CI_LOCAL_REMOTE}" == "${CI_REMOTE_REMOTE}" ]]; then
         debug "branches match"
         info "Pulling git repo"
+        rm /tmp/cicici -rfv
         mkdir -p /tmp/cicici
-        cp ./* /tmp/cicici/ -rfv
+        cp ${CIDIR}/* /tmp/cicici/ -rfv
         # DON'T QUOTE THIS
         bash ${SCRIPT_DIR}/pull.sh
     else
