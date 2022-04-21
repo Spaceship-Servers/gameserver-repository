@@ -8,7 +8,7 @@ source ${SCRIPT_DIR}/helpers.sh
 
 # Variable initialisation
 
-WORK_DIR="/srv/daemon-data"
+export WORK_DIR="/srv/daemon-data"
 
 debug "working dir: ${WORK_DIR}"
 
