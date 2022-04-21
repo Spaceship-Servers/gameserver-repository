@@ -84,8 +84,14 @@ public void OnPluginStart()
     PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseClient::GetPlayerSlot");
     PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
     SDKCall_GetPlayerSlot = EndPrepSDKCall();
-    PrintToServer("CBaseClient::GetPlayerSlot set up!");
-
+    if (SDKCall_GetPlayerSlot != INVALID_HANDLE)
+    {
+        PrintToServer("CBaseClient::GetPlayerSlot set up!");
+    }
+    else
+    {
+        SetFailState("Failed to get CBaseClient::GetPlayerSlot offset.");
+    }
 
     sm_max_bad_packets_sec =
     CreateConVar
