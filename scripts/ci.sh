@@ -53,8 +53,7 @@ for dir in ./*/ ; do
         find ./tf/addons/ -name *.so -exec rm {} -v \;
 
         info "-> copying mm/sm to server!"
-        rsync -avzc /tmp/mmsm_xtracted/* ./tf/
-
+        rsync -rvzc /tmp/mmsm_xtracted/* ./tf/
 
         info "-> fetching origin"
         git fetch origin
