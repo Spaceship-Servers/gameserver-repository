@@ -81,10 +81,10 @@ fi
 
 
 info "-> removing all .so files so we don't crash!"
-find ./tf/ -name *.so
+find ./tf/ -name *.so -exec rm {} -v \;
 
 info "-> copying metamod and sourcemod to server"
-cp /tmp/mmsm_xtracted/* ./tf/ -rfv
+cp /tmp/mmsm_xtracted/* ./tf/ -rf
 
 info "-> detaching"
 git checkout --detach HEAD -f
