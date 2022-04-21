@@ -15,13 +15,6 @@ debug "working dir: ${WORK_DIR}"
 
 info "Copying repo and metamod and sourcemod to /tmp/cicici"
 
-info "-> copying metamod and sourcemod to server"
-rm /tmp/cicici -rf
-mkdir -p /tmp/cicici
-rsync -avzc /tmp/mmsm_xtracted/* /tmp/cicici/
-rsync -avzc ${CI_PROJECT_DIR}/* /tmp/cicici/
-
-
 
 # go to our directory with (presumably) gameservers in it or die trying
 cd "${WORK_DIR}" || { error "can't cd to workdir ${WORK_DIR}!!!"; hook "can't cd to workdir ${WORK_DIR}"; exit 1; }
@@ -61,6 +54,10 @@ for dir in ./*/ ; do
 
         info "-> copying mm/sm to server!"
         rsync -avzc /tmp/mmsm_xtracted/* ./tf/
+
+
+        info "-> fetching origin"
+        git fetch origin
 
         info "-> hard resetting"
         git reset --hard origin/HEAD
