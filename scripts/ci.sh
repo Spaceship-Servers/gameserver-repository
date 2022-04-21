@@ -59,7 +59,7 @@ for dir in ./*/ ; do
         find ./tf/addons/ -name *.so -exec rm {} -v \;
 
         info "-copying server from cicici"
-        rsync -avzc --delete        \
+        rsync -rtvzc --delete       \
         --exclude="*.vpk"           \
         --exclude="*.inf"           \
         --exclude="bin/"            \
