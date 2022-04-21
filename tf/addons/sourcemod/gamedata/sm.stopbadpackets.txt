@@ -53,16 +53,6 @@
                 "library"   "engine"
                 "linux"     "@_ZN8CNetChan13ProcessPacketEP11netpacket_sb"
             }
-            "netadr_s::ToString"
-            {
-                "library"   "engine"
-                "linux"     "@_ZNK8netadr_s8ToStringEb"
-            }
-            "CNetChan::GetMsgHandler"
-            {
-                "library"   "engine"
-                "linux"     "@_ZNK8CNetChan13GetMsgHandlerEv"
-            }
         }
 
         "Offsets"
