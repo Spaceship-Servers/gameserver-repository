@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-CIDIR=${pwd}
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # Helper functions
@@ -48,7 +47,7 @@ for dir in ./*/ ; do
         info "Pulling git repo"
         rm /tmp/cicici -rfv
         mkdir -p /tmp/cicici
-        cp ${CIDIR}/* /tmp/cicici/ -rfv
+        cp ${CI_PROJECT_DIR}/* /tmp/cicici/ -rfv
         # DON'T QUOTE THIS
         bash ${SCRIPT_DIR}/pull.sh
     else
