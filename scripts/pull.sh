@@ -89,58 +89,59 @@ cp /tmp/mmsm_xtracted/* ./tf/ -rf
 info "-copying server from cicici"
 cp /tmp/cicici/tf ./ -rfv
 
-exit
-
-info "-> detaching"
-git checkout --detach HEAD -f
-
-info "-> deleting our old branch"
-git branch -D ${ourbranch}
-
-info "-> checking out ${ourbranch}"
-git checkout -B ${ourbranch} origin/${ourbranch}
-
-info "-> fetching ${ourbranch}"
-git fetch origin ${ourbranch} --progress
-
-info "-> resetting to origin/${ourbranch}"
-git reset --hard origin/${ourbranch}
-
-info "-> merging origin/${ourbranch} into current branch"
-git merge -X theirs -v FETCH_HEAD
-
-
-info "updating submodules..."
-git submodule update --init --recursive
-
-
-
-
-
-info "cleaning cfg folder..."
-git clean -d -f -x tf/cfg/
-
-info "cleaning maps folder..."
-git clean -d -f tf/maps/
-
-# ignore the output if it already scrubbed it
-debug "running str0 to scrub steamclient spam"
-python3 ./scripts/str0.py ./bin/steamclient.so -c ./scripts/str0.ini | grep -v "Failed to locate string"
-
-info "git pruning"
-git prune
-
-# don't run this often
-info "garbage collecting"
-if ${gitgc_aggressive}; then
-    debug "running aggressive git gc!!!"
-    git gc --aggressive --prune=all
-elif ${gitgc}; then
-    debug "running git gc on user request"
-    git gc
-else
-    debug "auto running git gc"
-    git gc --auto
-fi
-
+# exit
+# 
+# info "-> detaching"
+# git checkout --detach HEAD -f
+# 
+# info "-> deleting our old branch"
+# git branch -D ${ourbranch}
+# 
+# info "-> checking out ${ourbranch}"
+# git checkout -B ${ourbranch} origin/${ourbranch}
+# 
+# info "-> fetching ${ourbranch}"
+# git fetch origin ${ourbranch} --progress
+# 
+# info "-> resetting to origin/${ourbranch}"
+# git reset --hard origin/${ourbranch}
+# 
+# info "-> merging origin/${ourbranch} into current branch"
+# git merge -X theirs -v FETCH_HEAD
+# 
+# 
+# info "updating submodules..."
+# git submodule update --init --recursive
+# 
+# 
+# 
+# 
+# 
+# info "cleaning cfg folder..."
+# git clean -d -f -x tf/cfg/
+# 
+# info "cleaning maps folder..."
+# git clean -d -f tf/maps/
+# 
+# # ignore the output if it already scrubbed it
+# debug "running str0 to scrub steamclient spam"
+# python3 ./scripts/str0.py ./bin/steamclient.so -c ./scripts/str0.ini | grep -v "Failed to locate string"
+# 
+# info "git pruning"
+# git prune
+# 
+# # don't run this often
+# info "garbage collecting"
+# if ${gitgc_aggressive}; then
+#     debug "running aggressive git gc!!!"
+#     git gc --aggressive --prune=all
+# elif ${gitgc}; then
+#     debug "running git gc on user request"
+#     git gc
+# else
+#     debug "auto running git gc"
+#     git gc --auto
+# fi
+# 
 ok "git repo updated on this server (${PWD})"
+# 
