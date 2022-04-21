@@ -58,9 +58,6 @@ for dir in ./*/ ; do
         info "-> removing all .so files so we don't crash!"
         find ./tf/addons/ -name *.so -exec rm {} -v \;
 
-        info "-> copying metamod and sourcemod to server"
-        rsync -avzc /tmp/mmsm_xtracted/* ./tf/
-
         info "-copying server from cicici"
         rsync -avzc --delete        \
         --exclude="*.vpk"           \
@@ -69,7 +66,6 @@ for dir in ./*/ ; do
         --exclude="custom/"         \
         --exclude="download/"       \
         --exclude="downloadlists/"  \
-        --exclude="maps/"           \
         --exclude="materials/"      \
         --exclude="media/"          \
         --exclude="replay/"         \
@@ -78,6 +74,9 @@ for dir in ./*/ ; do
         --exclude="stvdemos/"       \
         --exclude="workshop/"       \
         /tmp/cicici/tf ./
+
+        info "-> copying metamod and sourcemod to server"
+        rsync -avzc /tmp/mmsm_xtracted/* ./tf/
 
         # DON'T QUOTE THIS
         # bash ${SCRIPT_DIR}/pull.sh
