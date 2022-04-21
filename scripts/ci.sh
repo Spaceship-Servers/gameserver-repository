@@ -13,12 +13,13 @@ export WORK_DIR="/srv/daemon-data"
 
 debug "working dir: ${WORK_DIR}"
 
+info "Copying repo and metamod and sourcemod to /tmp/cicici"
 
-
-info "Copying repo to /tmp/cicici"
-rm /tmp/cicici -rfv
+info "-> copying metamod and sourcemod to server"
+rm /tmp/cicici -rf
 mkdir -p /tmp/cicici
-cp ${CI_PROJECT_DIR}/* /tmp/cicici/ -rf
+rsync -avzc /tmp/mmsm_xtracted/* /tmp/cicici/
+rsync -avzc ${CI_PROJECT_DIR}/* /tmp/cicici/
 
 
 
@@ -59,7 +60,7 @@ for dir in ./*/ ; do
         find ./tf/addons/ -name *.so -exec rm {} -v \;
 
         info "-copying server from cicici"
-        rsync -rtvzc --delete       \
+        rsync -rvzc --delete        \
         --exclude="*.vpk"           \
         --exclude="*.inf"           \
         --exclude="bin/"            \
@@ -68,6 +69,7 @@ for dir in ./*/ ; do
         --exclude="downloadlists/"  \
         --exclude="materials/"      \
         --exclude="media/"          \
+        --exclude="maps/"           \
         --exclude="replay/"         \
         --exclude="resource/"       \
         --exclude="scripts/"        \
@@ -75,8 +77,6 @@ for dir in ./*/ ; do
         --exclude="workshop/"       \
         /tmp/cicici/tf ./
 
-        info "-> copying metamod and sourcemod to server"
-        rsync -avzc /tmp/mmsm_xtracted/* ./tf/
 
         # DON'T QUOTE THIS
         # bash ${SCRIPT_DIR}/pull.sh
