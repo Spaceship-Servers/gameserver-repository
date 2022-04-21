@@ -13,6 +13,15 @@ export WORK_DIR="/srv/daemon-data"
 
 debug "working dir: ${WORK_DIR}"
 
+
+
+info "Copying repo to /tmp/cicici"
+rm /tmp/cicici -rfv
+mkdir -p /tmp/cicici
+cp ${CI_PROJECT_DIR}/* /tmp/cicici/ -rf
+
+
+
 # go to our directory with (presumably) gameservers in it or die trying
 cd "${WORK_DIR}" || { error "can't cd to workdir ${WORK_DIR}!!!"; hook "can't cd to workdir ${WORK_DIR}"; exit 1; }
 
@@ -45,11 +54,33 @@ for dir in ./*/ ; do
     if [[ "${CI_COMMIT_HEAD}" == "${CI_COMMIT_REF_NAME}" ]] && [[ "${CI_LOCAL_REMOTE}" == "${CI_REMOTE_REMOTE}" ]]; then
         debug "branches match"
         info "Pulling git repo"
-        rm /tmp/cicici -rfv
-        mkdir -p /tmp/cicici
-        cp ${CI_PROJECT_DIR}/* /tmp/cicici/ -rfv
+
+        info "-> removing all .so files so we don't crash!"
+        find ./tf/addons/ -name *.so -exec rm {} -v \;
+
+        info "-> copying metamod and sourcemod to server"
+        rsync -avzc /tmp/mmsm_xtracted/* ./tf/
+
+        info "-copying server from cicici"
+        rsync -avzc --delete        \
+        --exclude="*.vpk"           \
+        --exclude="*.inf"           \
+        --exclude="bin/"            \
+        --exclude="custom/"         \
+        --exclude="download/"       \
+        --exclude="downloadlists/"  \
+        --exclude="maps/"           \
+        --exclude="materials/"      \
+        --exclude="media/"          \
+        --exclude="replay/"         \
+        --exclude="resource/"       \
+        --exclude="scripts/"        \
+        --exclude="stvdemos/"       \
+        --exclude="workshop/"       \
+        /tmp/cicici/tf ./
+
         # DON'T QUOTE THIS
-        bash ${SCRIPT_DIR}/pull.sh
+        # bash ${SCRIPT_DIR}/pull.sh
     else
         important "Branches do not match, doing nothing"
     fi
