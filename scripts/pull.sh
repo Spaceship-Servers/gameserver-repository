@@ -84,7 +84,7 @@ info "-> removing all .so files so we don't crash!"
 find ${WORK_DIR}/*/tf/ -name *.so
 
 info "-> copying metamod and sourcemod to server"
-cp /tmp/${destfolder}/* ./tf/
+cp /tmp/${destfolder}/* ${WORK_DIR}/tf/ -rfv
 
 info "-> detaching"
 git checkout --detach HEAD -f

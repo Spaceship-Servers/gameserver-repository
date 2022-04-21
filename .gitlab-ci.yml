@@ -1,5 +1,6 @@
 stages:
     - fastdl
+    - getmmsm
     - deploy
 #    - gitguardian
     - github
@@ -14,12 +15,21 @@ fastdl:
   tags:
     - chi-new
 
+getmmsm:
+  stage: getmmsm
+  script: ./scripts/getmmsm.sh
+  only:
+    - master
+  needs: []
+  tags:
+    - chi-new
+
 deploy:
   stage: deploy
   script: ./scripts/ci.sh
   only:
     - master
-  needs: []
+  needs: [getmmsm]
   tags:
     - chi-new
 
