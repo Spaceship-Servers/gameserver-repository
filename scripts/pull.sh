@@ -4,7 +4,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # Helper functions
 source ${SCRIPT_DIR}/helpers.sh
 
-# Variable initialisation
+Variable initialisation
 gitshallow=false
 gitgc=false
 gitgc_aggressive=false
@@ -31,6 +31,9 @@ while getopts ":sahv" flag; do
         ?) usage                        ;;
     esac
 done
+
+
+
 
 
 git config --global user.email "sappho@sappho.io"
@@ -69,79 +72,45 @@ if ${gitshallow}; then
     info "setting git gc to automatically run..."
     gitgc=true
 fi
-revparse_branch=$(git rev-parse --abbrev-ref HEAD)
-ourbranch=$(git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$(git rev-parse HEAD)/ {print \$2}")
-
-
-# fix HEAD issues
-if [[ "${revparse_branch}" == "HEAD" ]]; then
-    error "SERVER BRANCH = ${revparse_branch} (real: ${ourbranch})"
-    hook "SERVER BRANCH = ${revparse_branch} (real: ${ourbranch})"
-fi
-
 
 info "-> removing all .so files so we don't crash!"
-find ./tf/ -name *.so -exec rm {} -v \;
+find ./tf/addons/ -name *.so -exec rm {} -v \;
 
-info "-> copying metamod and sourcemod to server"
-cp /tmp/mmsm_xtracted/* ./tf/ -rf
+info "-> copying mm/sm to server!"
+rsync -rvzc /tmp/mmsm_xtracted/* ./tf/
 
-info "-copying server from cicici"
-cp /tmp/cicici/tf ./ -rfv
+info "-> fetching origin"
+git fetch origin
 
-# exit
-# 
-# info "-> detaching"
-# git checkout --detach HEAD -f
-# 
-# info "-> deleting our old branch"
-# git branch -D ${ourbranch}
-# 
-# info "-> checking out ${ourbranch}"
-# git checkout -B ${ourbranch} origin/${ourbranch}
-# 
-# info "-> fetching ${ourbranch}"
-# git fetch origin ${ourbranch} --progress
-# 
-# info "-> resetting to origin/${ourbranch}"
-# git reset --hard origin/${ourbranch}
-# 
-# info "-> merging origin/${ourbranch} into current branch"
-# git merge -X theirs -v FETCH_HEAD
-# 
-# 
-# info "updating submodules..."
-# git submodule update --init --recursive
-# 
-# 
-# 
-# 
-# 
-# info "cleaning cfg folder..."
-# git clean -d -f -x tf/cfg/
-# 
-# info "cleaning maps folder..."
-# git clean -d -f tf/maps/
-# 
-# # ignore the output if it already scrubbed it
-# debug "running str0 to scrub steamclient spam"
-# python3 ./scripts/str0.py ./bin/steamclient.so -c ./scripts/str0.ini | grep -v "Failed to locate string"
-# 
-# info "git pruning"
-# git prune
-# 
-# # don't run this often
-# info "garbage collecting"
-# if ${gitgc_aggressive}; then
-#     debug "running aggressive git gc!!!"
-#     git gc --aggressive --prune=all
-# elif ${gitgc}; then
-#     debug "running git gc on user request"
-#     git gc
-# else
-#     debug "auto running git gc"
-#     git gc --auto
-# fi
-# 
+info "-> hard resetting"
+git reset --hard origin/HEAD
+
+info "updating submodules..."
+git submodule update --init --recursive
+
+info "cleaning cfg folder..."
+git clean -d -f -x tf/cfg/
+
+info "cleaning maps folder..."
+git clean -d -f tf/maps/
+# ignore the output if it already scrubbed it
+debug "running str0 to scrub steamclient spam"
+python3 ./scripts/str0.py ./bin/steamclient.so -c ./scripts/str0.ini | grep -v "Failed to locate string"
+
+info "git pruning"
+git prune
+
+# don't run this often
+info "garbage collecting"
+if ${gitgc_aggressive}; then
+    debug "running aggressive git gc!!!"
+    git gc --aggressive --prune=all
+elif ${gitgc}; then
+    debug "running git gc on user request"
+    git gc
+else
+    debug "auto running git gc"
+    git gc --auto
+fi
+
 ok "git repo updated on this server (${PWD})"
-# 

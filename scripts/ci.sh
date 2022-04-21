@@ -48,21 +48,8 @@ for dir in ./*/ ; do
     if [[ "${CI_COMMIT_HEAD}" == "${CI_COMMIT_REF_NAME}" ]] && [[ "${CI_LOCAL_REMOTE}" == "${CI_REMOTE_REMOTE}" ]]; then
         debug "branches match"
         info "Pulling git repo"
-
-        info "-> removing all .so files so we don't crash!"
-        find ./tf/addons/ -name *.so -exec rm {} -v \;
-
-        info "-> copying mm/sm to server!"
-        rsync -rvzc /tmp/mmsm_xtracted/* ./tf/
-
-        info "-> fetching origin"
-        git fetch origin
-
-        info "-> hard resetting"
-        git reset --hard origin/HEAD
-
         # DON'T QUOTE THIS
-        # bash ${SCRIPT_DIR}/pull.sh
+        bash ${SCRIPT_DIR}/pull.sh -s -v -h
     else
         important "Branches do not match, doing nothing"
     fi
