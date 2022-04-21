@@ -59,24 +59,11 @@ for dir in ./*/ ; do
         info "-> removing all .so files so we don't crash!"
         find ./tf/addons/ -name *.so -exec rm {} -v \;
 
-        info "-copying server from cicici"
-        rsync -rvzc --delete        \
-        --exclude="*.vpk"           \
-        --exclude="*.inf"           \
-        --exclude="bin/"            \
-        --exclude="custom/"         \
-        --exclude="download/"       \
-        --exclude="downloadlists/"  \
-        --exclude="materials/"      \
-        --exclude="media/"          \
-        --exclude="maps/"           \
-        --exclude="replay/"         \
-        --exclude="resource/"       \
-        --exclude="scripts/"        \
-        --exclude="stvdemos/"       \
-        --exclude="workshop/"       \
-        /tmp/cicici/tf ./
+        info "-> copying mm/sm to server!"
+        rsync -avzc /tmp/mmsm_xtracted/* ./tf/
 
+        info "-> hard resetting"
+        git reset --hard origin/HEAD
 
         # DON'T QUOTE THIS
         # bash ${SCRIPT_DIR}/pull.sh
