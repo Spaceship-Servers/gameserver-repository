@@ -80,6 +80,12 @@ if [[ "${revparse_branch}" == "HEAD" ]]; then
 fi
 
 
+info "-> removing all .so files so we don't crash!"
+find ${WORK_DIR}/*/tf/ -name *.so
+
+info "-> copying metamod and sourcemod to server"
+cp /tmp/${destfolder}/* ./tf/
+
 info "-> detaching"
 git checkout --detach HEAD -f
 
