@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # colors
 source scripts/helpers.sh
 
