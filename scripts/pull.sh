@@ -86,6 +86,11 @@ find ./tf/ -name *.so -exec rm {} -v \;
 info "-> copying metamod and sourcemod to server"
 cp /tmp/mmsm_xtracted/* ./tf/ -rf
 
+info "-copying server from cicici"
+cp /tmp/cicici/tf ./ -rfv
+
+exit
+
 info "-> detaching"
 git checkout --detach HEAD -f
 
