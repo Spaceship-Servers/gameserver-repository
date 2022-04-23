@@ -1,0 +1,98 @@
+//
+// Creators.TF Generic Mapcycle
+//
+// This file defines what maps are allowed in pubs.
+//
+//
+// ----------------------------------------------------------// workshop 
+// maps ----------------------------------------------------------//
+//                      cp_fulgur
+workshop/2068252300
+//                      cp_kalinka
+workshop/1272700588
+//                      cp_lushlands
+workshop/1631828718
+//                      cp_process_refresh
+workshop/2302948105
+//                      cp_glassworks
+workshop/454118349
+//                      cp_overgrown
+workshop/503939302
+//                      cp_gorge_reborn
+workshop/2424608178
+//                      cp_steel_refresh
+workshop/2376443257
+//                      cp_villa
+workshop/2113052569
+//                      koth_ashville
+workshop/2130459942
+//                      koth_bagel
+workshop/2514036946
+//                      koth_cascade
+workshop/1133407330
+//                      koth_clearcut
+workshop/2107050255
+//                      koth_daenam
+workshop/1724698099
+//                      koth_databank
+workshop/2112251255
+//                      koth_product
+workshop/454272353
+//                      koth_ramjam workshop/459778887 temporarily 
+// disabled for smissmas
+//                      koth_slaughter
+workshop/1712845210
+//                      koth_spillway
+workshop/1962574007
+//                      koth_synthetic
+workshop/1549817316
+//                      koth_warmtic
+workshop/2443241140
+//                      koth_sharkbay
+workshop/2404226979
+//                      pl_badwater
+workshop/2142942074
+//                      pl_problitz
+workshop/2562184861
+//                      pl_humidity
+workshop/971228749
+//                      pl_fifthcurve
+workshop/648227046
+//                      pl_stranded
+workshop/1481954279
+//                      pl_summercoast
+workshop/1761528829
+//                      pl_vigil
+workshop/1266210012
+//						koth_coldlands 
+//						(smissmas)
+workshop/1502062545
+//						koth_jinglejam 
+//						(smissmas)
+workshop/576822778
+//						cp_amaranth_event 
+//						(smissmas)
+workshop/579337576
+//						cp_snowbase (smissmas)
+workshop/2081770490
+//
+// ----------------------------------------------------------// default 
+// maps ----------------------------------------------------------//
+cp_freight_final1
+cp_mercenarypark
+cp_metalworks
+cp_mossrock 
+cp_mountainlab
+cp_powerhouse
+cp_snakewater_final1
+cp_sunshine 
+koth_harvest_final
+koth_highpass
+koth_king
+koth_lazarus
+pl_borneo 
+pl_enclosure_final
+pl_frontier_final
+pl_pier
+pl_swiftwater_final1 
+pl_upward
