@@ -10,7 +10,7 @@ public Plugin myinfo = {
     name        = "StopBadPackets",
     author      = "https://sappho.io",
     description = "Prevent most CNetChan::ProcessPacket/Header based exploits",
-    version     = "0.0.1",
+    version     = "0.0.2",
     url         = "https://sappho.io"
 };
 
