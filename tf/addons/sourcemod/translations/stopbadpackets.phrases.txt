@@ -4,7 +4,7 @@
     "packetFlood_ToAll"
     {
         "#format"   "{1:N},{2:i}"
-        "en"        "[StopBadPackets] {1} sent {2} packets to the server in the last second! Kicking to prevent a server Dos"
+        "en"        "[StopBadPackets] {1} sent {2} packets to the server in the last second! Kicking to prevent a server DoS"
     }
     "packetFlood_Player"
     {
@@ -16,7 +16,7 @@
     "bogonSizedPackets_ToAll"
     {
         "#format"   "{1:N},{2:i}"
-        "en"        "[StopBadPackets] {1} sent {2} oddly sized packets to the server in the last second! Kicking to prevent a server Dos"
+        "en"        "[StopBadPackets] {1} sent {2} oddly sized packets to the server in the last second! Kicking to prevent a server DoS"
     }
     "bogonSizedPackets_Player"
     {
@@ -28,7 +28,7 @@
     "invalidPackets_ToAll"
     {
         "#format"   "{1:N},{2:i}"
-        "en"        "[StopBadPackets] {1} sent {2} invalid packets to the server in the last second! Kicking to prevent a server Dos"
+        "en"        "[StopBadPackets] {1} sent {2} invalid packets to the server in the last second! Kicking to prevent a server DoS"
     }
     "invalidPackets_Player"
     {
