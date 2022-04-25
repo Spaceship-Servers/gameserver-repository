@@ -4,7 +4,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # Helper functions
 source ${SCRIPT_DIR}/helpers.sh
 
-Variable initialisation
+# Variable initialisation
 gitshallow=false
 gitgc=false
 gitgc_aggressive=false

@@ -49,7 +49,7 @@ for dir in ./*/ ; do
         debug "branches match"
         info "Pulling git repo"
         # DON'T QUOTE THIS
-        bash ${SCRIPT_DIR}/pull.sh -s -v -h
+        bash ${SCRIPT_DIR}/pull.sh -v
     else
         important "Branches do not match, doing nothing"
     fi
