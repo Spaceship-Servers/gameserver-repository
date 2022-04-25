@@ -1,0 +1,52 @@
+"Phrases"
+{
+    // packet flood
+    "packetFlood_ToAll"
+    {
+        "#format"   "{1:N},{2:i}"
+        "en"        "[StopBadPackets] {1} sent {2} packets to the server in the last second! Kicking to prevent a server Dos"
+    }
+    "packetFlood_Player"
+    {
+        "#format"   "{1:i}"
+        "en"        "[StopBadPackets] You sent {1} packets to the server in the last second! You have been kicked to prevent a server DoS"
+    }
+
+    // weirdly sized packets
+    "bogonSizedPackets_ToAll"
+    {
+        "#format"   "{1:N},{2:i}"
+        "en"        "[StopBadPackets] {1} sent {2} oddly sized packets to the server in the last second! Kicking to prevent a server Dos"
+    }
+    "bogonSizedPackets_Player"
+    {
+        "#format"   "{1:i}"
+        "en"        "[StopBadPackets] You sent {1} oddly sized packets to the server in the last second! You have been kicked to prevent a server DoS"
+    }
+
+    // invalid packets
+    "invalidPackets_ToAll"
+    {
+        "#format"   "{1:N},{2:i}"
+        "en"        "[StopBadPackets] {1} sent {2} invalid packets to the server in the last second! Kicking to prevent a server Dos"
+    }
+    "invalidPackets_Player"
+    {
+        "#format"   "{1:i}"
+        "en"        "[StopBadPackets] You sent {1} invalid packets to the server in the last second! You have been kicked to prevent a server DoS"
+    }
+
+    // processing time
+    "processingTime_ToAll"
+    {
+        "#format"   "{1:.2f},{2:i},{3:N}"
+        "en"        "[StopBadPackets] The server spent {1}ms over {2} packets in the past second processing network data from client {3}. Kicking to prevent a server DoS"
+    }
+    "processingTime_Player"
+    {
+        "#format"   "{1:.2f},{2:i}"
+        "en"        "[StopBadPackets] The server spent {1}ms over {2} packets in the last second processing your network data. You have been kicked to prevent a server DoS"
+    }
+}
+
+
