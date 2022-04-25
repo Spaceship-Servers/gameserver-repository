@@ -204,7 +204,6 @@ public MRESReturn Hook_ProcessPacketHeader( int pThis, DHookReturn hReturn, DHoo
         int client = GetClientFromThis( pThis );
         if ( IsValidClient( client ))
         {
-            LogMessage("invalid packet for %N", client);
             evilPacketsFor[ client ]++;
         }
     }
@@ -276,9 +275,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                // PrintToChatAll( publicmsg );
-                // PrintToConsole( client, clientmsg );
-                // KickClient    ( client, clientmsg );
+                PrintToChatAll( publicmsg );
+                PrintToConsole( client, clientmsg );
+                KickClient    ( client, clientmsg );
             }
 
             // Oddly sized packets next
@@ -298,9 +297,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                // PrintToChatAll( publicmsg );
-                // PrintToConsole( client, clientmsg );
-                // KickClient    ( client, clientmsg );
+                PrintToChatAll( publicmsg );
+                PrintToConsole( client, clientmsg );
+                KickClient    ( client, clientmsg );
             }
 
             // Invalid packets next
@@ -320,9 +319,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                // PrintToChatAll( publicmsg );
-                // PrintToConsole( client, clientmsg );
-                // KickClient    ( client, clientmsg );
+                PrintToChatAll( publicmsg );
+                PrintToConsole( client, clientmsg );
+                KickClient    ( client, clientmsg );
             }
 
             else if
@@ -341,9 +340,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                // PrintToChatAll( publicmsg );
-                // PrintToConsole( client, clientmsg );
-                // KickClient    ( client, clientmsg );
+                PrintToChatAll( publicmsg );
+                PrintToConsole( client, clientmsg );
+                KickClient    ( client, clientmsg );
             }
         }
         resetVals( client );
