@@ -188,14 +188,16 @@ public void OnPluginStart()
     // Timer for punishing clients
     CreateTimer( 1.0, CheckPackets, _, TIMER_REPEAT );
 
-    // For determining pps -> server tickrate ratios
-    tickInterval = GetTickInterval();
-    tps = 1 / tickInterval;
-
     // For determining how long a packet took to process
     profiler = CreateProfiler();
 }
 
+public void OnMapStart()
+{
+    // For determining pps -> server tickrate ratios
+    tickInterval = GetTickInterval();
+    tps = 1 / tickInterval;
+}
 
 public MRESReturn Detour_ProcessPacketHeader( int pThis, DHookReturn hReturn, DHookParam hParams )
 {
@@ -283,9 +285,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                // PrintToChatAll( publicmsg );
-                // PrintToConsole( client, clientmsg );
-                // KickClient    ( client, clientmsg );
+                PrintToChatAll( publicmsg );
+                PrintToConsole( client, clientmsg );
+                KickClient    ( client, clientmsg );
             }
 
             // Oddly sized packets next
@@ -305,9 +307,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                // PrintToChatAll( publicmsg );
-                // PrintToConsole( client, clientmsg );
-                // KickClient    ( client, clientmsg );
+                PrintToChatAll( publicmsg );
+                PrintToConsole( client, clientmsg );
+                KickClient    ( client, clientmsg );
             }
 
             // Invalid packets next
@@ -327,9 +329,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                // PrintToChatAll( publicmsg );
-                // PrintToConsole( client, clientmsg );
-                // KickClient    ( client, clientmsg );
+                PrintToChatAll( publicmsg );
+                PrintToConsole( client, clientmsg );
+                KickClient    ( client, clientmsg );
             }
 
             else if
