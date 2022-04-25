@@ -283,9 +283,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                PrintToChatAll( publicmsg );
-                PrintToConsole( client, clientmsg );
-                KickClient    ( client, clientmsg );
+                // PrintToChatAll( publicmsg );
+                // PrintToConsole( client, clientmsg );
+                // KickClient    ( client, clientmsg );
             }
 
             // Oddly sized packets next
@@ -305,9 +305,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                PrintToChatAll( publicmsg );
-                PrintToConsole( client, clientmsg );
-                KickClient    ( client, clientmsg );
+                // PrintToChatAll( publicmsg );
+                // PrintToConsole( client, clientmsg );
+                // KickClient    ( client, clientmsg );
             }
 
             // Invalid packets next
@@ -327,9 +327,9 @@ public Action CheckPackets( Handle timer )
                 Discord_SendMessage( "badpackets", publicmsg );
 
                 PrintToServer ( publicmsg );
-                PrintToChatAll( publicmsg );
-                PrintToConsole( client, clientmsg );
-                KickClient    ( client, clientmsg );
+                // PrintToChatAll( publicmsg );
+                // PrintToConsole( client, clientmsg );
+                // KickClient    ( client, clientmsg );
             }
 
             else if
