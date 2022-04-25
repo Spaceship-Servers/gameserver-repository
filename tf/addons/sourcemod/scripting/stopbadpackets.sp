@@ -6,6 +6,14 @@
 #include <discord>
 #include <profiler>
 
+public Plugin myinfo = {
+    name        = "StopBadPackets",
+    author      = "https://sappho.io",
+    description = "Prevent most CNetChan::ProcessPacket/Header based exploits",
+    version     = "0.0.1",
+    url         = "https://sappho.io"
+};
+
 Handle hGameData;
 
 Handle SDKCall_GetPlayerSlot;
