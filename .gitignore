@@ -43,22 +43,34 @@ tf/maps/graphs
 
 # ignore stock maps that we use
 
-tf/maps/cp_freight_final1.bsp
-tf/maps/cp_metalworks.bsp
-tf/maps/cp_snakewater_final1.bsp
-tf/maps/cp_sunshine.bsp
 tf/maps/itemtest.bsp
-tf/maps/koth_harvest_final.bsp
 
-tf/maps/pl_upward.bsp
-tf/maps/pl_swiftwater_final1.bsp
-tf/maps/pl_vigil_rc7.bsp
-tf/maps/pl_badwater.bsp
 
 tf/maps/arena_lumberyard.bsp
 tf/maps/cp_fastlane.bsp
 tf/maps/cp_granary.bsp
-tf/maps/cp_follower.bsp
+
+
+tf/maps/cp_freight_final1.bsp
+tf/maps/cp_gorge.bsp
+tf/maps/cp_mercenarypark.bsp
+tf/maps/cp_metalworks.bsp
+tf/maps/cp_mossrock.bsp
+tf/maps/cp_mountainlab.bsp
+tf/maps/cp_powerhouse.bsp
+tf/maps/cp_snakewater_final1.bsp
+tf/maps/cp_sunshine.bsp
+tf/maps/koth_cascade.bsp
+tf/maps/koth_harvest_final.bsp
+tf/maps/koth_highpass.bsp
+tf/maps/koth_king.bsp
+tf/maps/koth_lazarus.bsp
+tf/maps/pl_borneo.bsp
+tf/maps/pl_enclosure_final.bsp
+tf/maps/pl_frontier_final.bsp
+tf/maps/pl_pier.bsp
+tf/maps/pl_swiftwater_final1.bsp
+tf/maps/pl_upward.bsp
 
 #
 !str0*
