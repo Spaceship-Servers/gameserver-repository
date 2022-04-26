@@ -1,5 +1,5 @@
-// Mapcycle
-// not stock
+////////// Pub Mapcycle //////////
+//// not stock ////
 cp_fulgur_rc2a
 // cp_kalinka
 cp_glassworks_rc6a
@@ -29,7 +29,7 @@ pl_stranded_rc5
 pl_summercoast_rc8d
 pl_vigil_rc9
 
-// stock
+//// stock ////
 cp_freight_final1
 cp_gorge
 cp_mercenarypark
