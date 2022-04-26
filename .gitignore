@@ -49,12 +49,16 @@ tf/maps/cp_snakewater_final1.bsp
 tf/maps/cp_sunshine.bsp
 tf/maps/itemtest.bsp
 tf/maps/koth_harvest_final.bsp
-tf/maps/mvm_bigrock.bsp
-tf/maps/mvm_coaltown.bsp
-tf/maps/mvm_decoy.bsp
-tf/maps/mvm_mannhattan.bsp
-tf/maps/mvm_mannworks.bsp
-tf/maps/mvm_rottenburg.bsp
+
+tf/maps/pl_upward.bsp
+tf/maps/pl_swiftwater_final1.bsp
+tf/maps/pl_vigil_rc7.bsp
+tf/maps/pl_badwater.bsp
+
+tf/maps/arena_lumberyard.bsp
+tf/maps/cp_fastlane.bsp
+tf/maps/cp_granary.bsp
+tf/maps/cp_follower.bsp
 
 #
 !str0*
@@ -67,6 +71,7 @@ tf/maps/mvm_rottenburg.bsp
 # tf/addons/unlocked_tickrate.so
 # tf/addons/metamod/unlocked_tickrate.vdf
 
+# Sourcemod bullshit
 
 tf/addons/sourcemod/GPLv2.txt
 tf/addons/sourcemod/GPLv3.txt
