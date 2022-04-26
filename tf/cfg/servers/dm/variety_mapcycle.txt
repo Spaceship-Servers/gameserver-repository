@@ -18,7 +18,7 @@ koth_bagel_rc5
 pl_upward
 pl_swiftwater_final1
 pl_vigil_rc7
-pl_badwater
+pl_badwater_pro_v9
 // some wacky stuff
 arena_lumberyard
 cp_fastlane
