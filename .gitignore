@@ -50,6 +50,7 @@ tf/maps/arena_lumberyard.bsp
 tf/maps/cp_fastlane.bsp
 tf/maps/cp_granary.bsp
 
+tf/maps/ctf_landfall.bsp
 
 tf/maps/cp_freight_final1.bsp
 tf/maps/cp_gorge.bsp
@@ -66,6 +67,7 @@ tf/maps/koth_highpass.bsp
 tf/maps/koth_king.bsp
 tf/maps/koth_lazarus.bsp
 tf/maps/pl_borneo.bsp
+tf/maps/pl_cactuscanyon.bsp
 tf/maps/pl_enclosure_final.bsp
 tf/maps/pl_frontier_final.bsp
 tf/maps/pl_pier.bsp
