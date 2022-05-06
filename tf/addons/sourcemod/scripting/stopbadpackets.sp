@@ -10,7 +10,7 @@ public Plugin myinfo = {
     name        = "StopBadPackets",
     author      = "https://sappho.io",
     description = "Prevents most CNetChan::ProcessPacket/Header based exploits",
-    version     = "0.0.4",
+    version     = "0.0.5",
     url         = "https://sappho.io"
 };
 
@@ -146,7 +146,7 @@ void DoGamedata()
     PrepSDKCall_SetFromConf( hGameData, SDKConf_Virtual, "CBaseClient::GetPlayerSlot" );
     PrepSDKCall_SetReturnInfo( SDKType_PlainOldData, SDKPass_Plain );
     SDKCall_GetPlayerSlot = EndPrepSDKCall();
-    if ( SDKCall_GetPlayerSlot != INVALID_HANDLE)
+    if ( SDKCall_GetPlayerSlot != INVALID_HANDLE )
     {
         PrintToServer( "CBaseClient::GetPlayerSlot set up!" );
     }
@@ -234,11 +234,11 @@ void DoCvars()
 
 
     // Hook our cvars
-    HookConVarChange(sm_max_pps_ratio,                      OurCvarsChanged);
-    HookConVarChange(sm_max_pps_ratio_drop,                 OurCvarsChanged);
-    HookConVarChange(sm_max_bogon_sized_pps_ratio,          OurCvarsChanged);
-    HookConVarChange(sm_max_invalid_pps_ratio,              OurCvarsChanged);
-    HookConVarChange(sm_max_packet_processing_time_msec,    OurCvarsChanged);
+    HookConVarChange( sm_max_pps_ratio,                      OurCvarsChanged );
+    HookConVarChange( sm_max_pps_ratio_drop,                 OurCvarsChanged );
+    HookConVarChange( sm_max_bogon_sized_pps_ratio,          OurCvarsChanged );
+    HookConVarChange( sm_max_invalid_pps_ratio,              OurCvarsChanged );
+    HookConVarChange( sm_max_packet_processing_time_msec,    OurCvarsChanged );
 
     // Update our cvars
     OurCvarsChanged(null, "", "");
@@ -246,11 +246,11 @@ void DoCvars()
 
 void OurCvarsChanged( ConVar convar, const char[] oldValue, const char[] newValue )
 {
-    max_pps_ratio                   = GetConVarFloat(sm_max_pps_ratio);
-    max_pps_ratio_drop              = GetConVarFloat(sm_max_pps_ratio_drop);
-    max_bogon_sized_pps_ratio       = GetConVarFloat(sm_max_bogon_sized_pps_ratio);
-    max_invalid_pps_ratio           = GetConVarFloat(sm_max_invalid_pps_ratio);
-    max_packet_processing_time_msec = GetConVarFloat(sm_max_packet_processing_time_msec);
+    max_pps_ratio                   = GetConVarFloat( sm_max_pps_ratio );
+    max_pps_ratio_drop              = GetConVarFloat( sm_max_pps_ratio_drop );
+    max_bogon_sized_pps_ratio       = GetConVarFloat( sm_max_bogon_sized_pps_ratio );
+    max_invalid_pps_ratio           = GetConVarFloat( sm_max_invalid_pps_ratio );
+    max_packet_processing_time_msec = GetConVarFloat( sm_max_packet_processing_time_msec );
 }
 
 public void OnMapStart()
@@ -338,6 +338,12 @@ public MRESReturn Detour_ProcessPacket( int pThis, DHookParam hParams )
         // return MRES_Supercede;
     }
 
+    // Ignore packets that ProcessPacketHeader has already deemed garbage ( we already have counted them as evilPackets in our ProcessPacketHeader detour )
+    if ( ret <= -1 )
+    {
+        return MRES_Supercede;
+    }
+
     // Ignore packets with unused packet headers
     // AS FAR AS I CAN TELL, none of these flags are used ANYWHERE, in TF2 nor CSGO
     // https://cs.sappho.io/search?project=hl2_src&full=PACKET_FLAG_COMPRESSED&defs=&refs=&path=&hist=&type=&xrd=&nn=1&si=full&si=full
@@ -358,12 +364,6 @@ public MRESReturn Detour_ProcessPacket( int pThis, DHookParam hParams )
 
         return MRES_Ignored;
         // return MRES_Supercede;
-    }
-
-    // Ignore packets that ProcessPacketHeader has already deemed garbage ( we already have counted them as evilPackets in our ProcessPacketHeader detour )
-    if ( ret <= -1 )
-    {
-        return MRES_Supercede;
     }
 
     // Check if this client is spamming the server
@@ -405,6 +405,14 @@ public Action CheckPackets( Handle timer )
     {
         if ( IsValidClient( client ) )
         {
+            // if for some godforsaken reason there aren't any packets from this client, don't check anything from them.
+            // i think this might be caused by the server running admin checks or something?
+            if ( packets[ client ] == 0 )
+            {
+                resetVals(client);
+                continue;
+            }
+
             float proctime_ms = proctimeThisSecondFor[client] * 1000;
 
             // Packet flood first
