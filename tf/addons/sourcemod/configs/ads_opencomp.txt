@@ -33,16 +33,12 @@
     {
         "chat"          "{fuchsia}All STV demos older than 30 minutes {plum}are now available over at {#ff007f}https://sappho.io/stvdemos/{plum}!"
     }
-    "5"
-    {
-        "chat"          "{skyblue}Spaceship Servers{white} is now renting out {coral}Source {dimgray}(TF2, CS:GO, etc.){white} and {forestgreen}Minecraft {dimgray}(Paper, Spigot, etc.){white} servers! Interested? Contact me at {hotpink}https://sappho.io/contact{white}."
-    }
 // rtv exclusive
-    "6"
+    "5"
     {
         "chat"          "{#add8e6}Wanna play a certain map? Type {gold}!​nominate{#add8e6} to nominate it!"
     }
-    "7"
+    "6"
     {
         "chat"          "{coral}Don't like the current map? Type {purple}!rtv{coral} to force a map vote!"
     }
