@@ -27,42 +27,42 @@ methodmap ByteBuffer {
 	property int Cursor {
 		public get() {
 			CheckBuffer(this);
-			return g_Cursor[this];
+			return g_Cursor[view_as<int>(this)];
 		}
 		
 		public set(int value) {
 			CheckBuffer(this);
-			g_Cursor[this] = value;
+			g_Cursor[view_as<int>(this)] = value;
 		}
 	}
 	
 	property bool LittleEndian {
 		public get() {
 			CheckBuffer(this);
-			return g_IsLE[this];
+			return g_IsLE[view_as<int>(this)];
 		}
 		
 		public set(bool value) {
 			CheckBuffer(this);
-			g_IsLE[this] = value;
+			g_IsLE[view_as<int>(this)] = value;
 		}
 	}
 	
 	property bool BigEndian {
 		public get() {
 			CheckBuffer(this);
-			return !g_IsLE[this];
+			return !g_IsLE[view_as<int>(this)];
 		}
 		
 		public set(bool value) {
 			CheckBuffer(this);
-			g_IsLE[this] = !value;
+			g_IsLE[view_as<int>(this)] = !value;
 		}
 	}
 	
 	public void WriteByte(int data) {
 		CheckBuffer(this);
-		g_Buffer[this][this.Cursor] = data & 0x000000FF;
+		g_Buffer[view_as<int>(this)][this.Cursor] = data & 0x000000FF;
 		this.Cursor++;
 	}
 	
@@ -104,7 +104,7 @@ methodmap ByteBuffer {
 	
 	public int ReadByte() {
 		CheckBuffer(this);
-		int value = g_Buffer[this][this.Cursor] & 0xFF;
+		int value = g_Buffer[view_as<int>(this)][this.Cursor] & 0xFF;
 		this.Cursor++;
 		return value;
 	}
@@ -165,7 +165,7 @@ methodmap ByteBuffer {
 		
 		int i;
 		for(i = 0; i < maxlen; i++) {
-			output[i] = g_Buffer[this][i];
+			output[i] = g_Buffer[view_as<int>(this)][i];
 		}
 		
 		return i;
@@ -203,11 +203,11 @@ methodmap ByteBuffer {
 	
 	public void Close() {
 		CheckBuffer(this);
-		g_InUse[this] = false;
+		g_InUse[view_as<int>(this)] = false;
 	}
 }
 
-ByteBuffer CreateByteBuffer(bool littleEndian = true, const char data[] = "", int dataSize = 0) {
+ByteBuffer CreateByteBuffer(bool littleEndian = true, const char[] data = "", int dataSize = 0) {
 	int id = -1;
 	for(int i = 0; i < MAX_BUFFERS; i++) {
 		if(!g_InUse[i]) {
@@ -240,7 +240,7 @@ ByteBuffer CreateByteBuffer(bool littleEndian = true, const char data[] = "", in
 }
 
 static void CheckBuffer(ByteBuffer index) {
-	if(!g_InUse[index]) {
+	if(!g_InUse[view_as<int>(index)]) {
 		ThrowError("Cannot read/write from closed buffer %d", index);
 	}
 }

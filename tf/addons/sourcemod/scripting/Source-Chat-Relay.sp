@@ -401,6 +401,9 @@ public void OnPluginStart()
 		Param_String);
 
 	g_evEngine = GetEngineVersion();
+
+	// hook real player disconnects
+	HookEvent("player_disconnect", ePlayerDisconnect);
 }
 
 public void OnConfigsExecuted()
@@ -483,6 +486,8 @@ void ConnectRelay()
 public Action Timer_Reconnect(Handle timer)
 {
 	ConnectRelay();
+
+	return Plugin_Continue;
 }
 
 void StartReconnectTimer()
@@ -493,28 +498,28 @@ void StartReconnectTimer()
 	CreateTimer(10.0, Timer_Reconnect);
 }
 
-public int OnSocketDisconnected(Handle socket, any arg)
+public void OnSocketDisconnected(Handle socket, any arg)
 {
 	StartReconnectTimer();
 
 	PrintToServer("Source Chat Relay: Socket disconnected");
 }
 
-public int OnSocketError(Handle socket, int errorType, int errorNum, any ary)
+public void OnSocketError(Handle socket, int errorType, int errorNum, any ary)
 {
 	StartReconnectTimer();
 
 	LogError("Source Chat Relay socket error %i (errno %i)", errorType, errorNum);
 }
 
-public int OnSocketConnected(Handle socket, any arg)
+public void OnSocketConnected(Handle socket, any arg)
 {
 	AuthenticateMessage(g_sToken).Dispatch();
 
 	PrintToServer("Source Chat Relay: Socket Connected");
 }
 
-public int OnSocketReceive(Handle socket, const char[] receiveData, int dataSize, any arg)
+public void OnSocketReceive(Handle socket, const char[] receiveData, int dataSize, any arg)
 {
 	HandlePackets(receiveData, dataSize);
 }
@@ -640,6 +645,29 @@ public void OnClientConnected(int iClient)
 	EventMessage("Player Connected", sName).Dispatch();
 }
 
+
+// player is OUT of the server
+public void ePlayerDisconnect(Handle event, const char[] name, bool dontBroadcast)
+{
+	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+
+	if (!g_cPlayerEvent.BoolValue)
+		return;
+
+	if (!g_cBotPlayerEvent.BoolValue && IsFakeClient(iClient))
+		return;
+
+	char sName[MAX_NAME_LENGTH];
+
+	if (!GetClientName(iClient, sName, sizeof sName))
+	{
+		return;
+	}
+
+	EventMessage("Player Disconnected", sName).Dispatch();
+}
+
+/*
 public void OnClientDisconnect(int iClient)
 {
 	if (!g_cPlayerEvent.BoolValue)
@@ -657,6 +685,7 @@ public void OnClientDisconnect(int iClient)
 
 	EventMessage("Player Disconnected", sName).Dispatch();
 }
+*/
 
 public void OnMapEnd()
 {
