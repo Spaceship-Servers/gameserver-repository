@@ -1,5 +1,7 @@
 #!/bin/bash
 
+whoami
+
 # source <(curl -s https://raw.githubusercontent.com/CreatorsTF/gameservers/stable/scripts/helpers.sh)
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
