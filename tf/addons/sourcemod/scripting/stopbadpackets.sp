@@ -289,17 +289,12 @@ public MRESReturn Hook_ProcessPacketHeader( int pThis, DHookReturn hReturn, DHoo
 
 public MRESReturn Detour_ProcessPacket( int pThis, DHookParam hParams )
 {
+    // Profile irregardless of if this is a real client or not
+    // Otherwise bugs with clients connecting pop up
+    StartProfiling(profiler);
+
     // Get our client
     int client          = GetClientFromThis( pThis );
-
-    // Don't run anything on non connected/invalid/fake clients
-    if ( !IsValidClient( client ) )
-    {
-        return MRES_Ignored;
-    }
-
-    // let's see how long this packet takes to process
-    StartProfiling( profiler );
 
     // inc our total packet count for our client
     packets[ client ]++;
@@ -390,11 +385,9 @@ public MRESReturn Hook_ProcessPacket( int pThis, DHookParam hParams )
 {
     int client = GetClientFromThis( pThis );
 
-    if ( IsValidClient( client ) )
-    {
-        StopProfiling( profiler );
-        proctimeThisSecondFor[ client ] += GetProfilerTime( profiler );
-    }
+    StopProfiling(profiler);
+
+    proctimeThisSecondFor[ client ] += GetProfilerTime(profiler);
 
     return MRES_Ignored;
 }
@@ -405,14 +398,6 @@ public Action CheckPackets( Handle timer )
     {
         if ( IsValidClient( client ) )
         {
-            // if for some godforsaken reason there aren't any packets from this client, don't check anything from them.
-            // i think this might be caused by the server running admin checks or something?
-            if ( packets[ client ] == 0 )
-            {
-                resetVals(client);
-                continue;
-            }
-
             float proctime_ms = proctimeThisSecondFor[client] * 1000;
 
             // Packet flood first
@@ -502,15 +487,18 @@ public Action CheckPackets( Handle timer )
                 KickClient    ( client, clientmsg );
             }
         }
+
         resetVals( client );
     }
     return Plugin_Continue;
 }
 
 // client join
-public void OnClientPutInServer( int client )
+public bool OnClientConnect( int client, char[] rejectmsg, int maxlen )
 {
     resetVals( client );
+
+    return true;
 }
 
 // player left and mapchanges
