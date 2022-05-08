@@ -402,8 +402,9 @@ public void OnPluginStart()
 
 	g_evEngine = GetEngineVersion();
 
-	// hook real player disconnects
-	HookEvent("player_disconnect", ePlayerDisconnect);
+	// hook real player connects and disconnects
+	HookEvent("player_connect", ePlayerJoinLeave);
+	HookEvent("player_disconnect", ePlayerJoinLeave);
 }
 
 public void OnConfigsExecuted()
@@ -627,27 +628,8 @@ public void HandlePackets(const char[] sBuffer, int iSize)
 	base.Close();
 }
 
-public void OnClientConnected(int iClient)
-{
-	if (!g_cPlayerEvent.BoolValue)
-		return;
-
-	if (!g_cBotPlayerEvent.BoolValue && IsFakeClient(iClient))
-		return;
-
-	char sName[MAX_NAME_LENGTH];
-
-	if (!GetClientName(iClient, sName, sizeof sName))
-	{
-		return;
-	}
-
-	EventMessage("Player Connected", sName).Dispatch();
-}
-
-
-// player is OUT of the server
-public void ePlayerDisconnect(Handle event, const char[] name, bool dontBroadcast)
+// player connect/disconnect events
+public void ePlayerJoinLeave(Handle event, const char[] name, bool dontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 
@@ -664,28 +646,15 @@ public void ePlayerDisconnect(Handle event, const char[] name, bool dontBroadcas
 		return;
 	}
 
-	EventMessage("Player Disconnected", sName).Dispatch();
-}
-
-/*
-public void OnClientDisconnect(int iClient)
-{
-	if (!g_cPlayerEvent.BoolValue)
-		return;
-
-	if (!g_cBotPlayerEvent.BoolValue && IsFakeClient(iClient))
-		return;
-
-	char sName[MAX_NAME_LENGTH];
-
-	if (!GetClientName(iClient, sName, sizeof sName))
+	if (StrEqual(name, "player_disconnect"))
 	{
-		return;
+		EventMessage("Player Disconnected", sName).Dispatch();
 	}
-
-	EventMessage("Player Disconnected", sName).Dispatch();
+	else
+	{
+		EventMessage("Player Connected", sName).Dispatch();
+	}
 }
-*/
 
 public void OnMapEnd()
 {
