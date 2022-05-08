@@ -10,7 +10,7 @@ public Plugin myinfo = {
     name        = "StopBadPackets",
     author      = "https://sappho.io",
     description = "Prevents most CNetChan::ProcessPacket/Header based exploits",
-    version     = "0.0.6",
+    version     = "0.0.7",
     url         = "https://sappho.io"
 };
 
@@ -387,7 +387,10 @@ public MRESReturn Hook_ProcessPacket( int pThis, DHookParam hParams )
 
     StopProfiling(profiler);
 
-    proctimeThisSecondFor[ client ] += GetProfilerTime(profiler);
+    if ( client > 0 )
+    {
+        proctimeThisSecondFor[ client ] += GetProfilerTime(profiler);
+    }
 
     return MRES_Ignored;
 }
