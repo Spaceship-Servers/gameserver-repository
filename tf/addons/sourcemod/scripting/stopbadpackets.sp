@@ -289,9 +289,6 @@ public MRESReturn Hook_ProcessPacketHeader( int pThis, DHookReturn hReturn, DHoo
 
 public MRESReturn Detour_ProcessPacket( int pThis, DHookParam hParams )
 {
-    // let's see how long this packet takes to process
-    StartProfiling( profiler );
-
     // Get our client
     int client          = GetClientFromThis( pThis );
 
@@ -300,6 +297,9 @@ public MRESReturn Detour_ProcessPacket( int pThis, DHookParam hParams )
     {
         return MRES_Ignored;
     }
+
+    // let's see how long this packet takes to process
+    StartProfiling( profiler );
 
     // inc our total packet count for our client
     packets[ client ]++;
