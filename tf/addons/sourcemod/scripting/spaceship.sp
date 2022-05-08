@@ -98,6 +98,7 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
             PrintColoredChat(Cl, sTag ... "Join the Discord over at " ... pDiscord ... ".");
             return Plugin_Stop;
         }
+/*
         if
         (
             StrContains(sArgs, "!server", false) != -1
@@ -108,6 +109,7 @@ public Action OnClientSayCommand(int Cl, const char[] command, const char[] sArg
             PrintColoredChat(Cl, sTag ... "The current list of Spaceship Servers can be found at " ... pServers ... ".");
             return Plugin_Stop;
         }
+*/
     }
     return Plugin_Continue;
 }
