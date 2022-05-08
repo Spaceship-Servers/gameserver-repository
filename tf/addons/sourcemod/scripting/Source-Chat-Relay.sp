@@ -640,19 +640,20 @@ public void HandlePackets(const char[] sBuffer, int iSize)
 // player connect/disconnect events
 public void ePlayerJoinLeave(Handle event, const char[] name, bool dontBroadcast)
 {
-	int iClient;
-	bool disconnect;
+	bool connect;
 
-	if (StrEqual(name, "player_disconnect"))
+	int userid = GetEventInt(event, "userid");
+	int iClient = GetClientOfUserId(userid);
+
+	// If the userid is 0 that means they're connecting and we need to get their player slot instead
+	if (!iClient)
 	{
-		iClient = GetClientOfUserId(GetEventInt(event, "userid"));
-		disconnect = true;
+		int slot = GetEventInt(event, "index");
+		iClient = slot+1;
+		connect = true;
 	}
-	else
-	{
-		// index = player slot
-		iClient = GetEventInt(event, "index") + 1;
-	}
+
+	LogMessage("%i", iClient);
 
 	if (!Client_IsValid(iClient))
 	{
@@ -672,13 +673,13 @@ public void ePlayerJoinLeave(Handle event, const char[] name, bool dontBroadcast
 		return;
 	}
 
-	if (disconnect)
+	if (connect)
 	{
-		EventMessage("Player Disconnected", sName).Dispatch();
+		EventMessage("Player Connected", sName).Dispatch();
 	}
 	else
 	{
-		EventMessage("Player Connected", sName).Dispatch();
+		EventMessage("Player Disconnected", sName).Dispatch();
 	}
 }
 
