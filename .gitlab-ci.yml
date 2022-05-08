@@ -51,4 +51,4 @@ github:
     - master
   needs: []
   tags:
-    - chi-new
+    - soplet
