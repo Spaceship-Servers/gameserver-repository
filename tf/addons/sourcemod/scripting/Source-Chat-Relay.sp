@@ -2,7 +2,10 @@
 
 #include <sourcemod>
 #include <socket>
-#include <morecolors> // Morecolors defines a max buffer as well as bytebuffer but bytebuffer does if defined check
+#tryinclude <morecolors> // Morecolors defines a max buffer as well as bytebuffer but bytebuffer does if defined check
+#if !defined _colors_included
+	#include <multicolors>
+#endif
 #include <bytebuffer>
 
 #pragma semicolon 1
@@ -75,9 +78,9 @@ enum IdentificationType
 
 /**
  * Base message structure
- *
+ * 
  * @note The type is declared on every derived message type
- *
+ * 
  * @field type - byte - The message type (enum MessageType)
  * @field EntityName - string - Entity name that's sending the message
  */
@@ -104,12 +107,12 @@ methodmap BaseMessage < ByteBuffer
 
 		for(int i = 0; i < MAX_BUFFER_LENGTH; i++) {
 			cByte = this.ReadByte();
-
+			
 			if(cByte == '\0') {
 				return i + 1;
 			}
 		}
-
+		
 		return MAX_BUFFER_LENGTH;
 	}
 
@@ -152,7 +155,7 @@ methodmap BaseMessage < ByteBuffer
 
 /**
  * Should only sent by clients
- *
+ * 
  * @field Token - string - The authentication token
  */
 methodmap AuthenticateMessage < BaseMessage
@@ -179,7 +182,7 @@ methodmap AuthenticateMessage < BaseMessage
 
 /**
  * This message is only received from the server
- *
+ * 
  * @field Response - byte - The state of the authentication request (enum AuthenticateResponse)
  */
 methodmap AuthenticateMessageResponse < BaseMessage
@@ -199,7 +202,7 @@ methodmap AuthenticateMessageResponse < BaseMessage
 
 /**
  * Bi-directional messaging structure
- *
+ * 
  * @field IDType - byte - Type of ID (enum IdentificationType)
  * @field ID - string - The unique identification of the user (SteamID/Discord Snowflake/etc)
  * @field Username - string - The name of the user
@@ -280,7 +283,7 @@ methodmap ChatMessage < BaseMessage
 
 /**
  * Bi-directional event data
- *
+ * 
  * @field Event - string - The name of the event
  * @field Data - string - The data of the event
  */
@@ -317,7 +320,7 @@ methodmap EventMessage < BaseMessage
 	}
 }
 
-public Plugin myinfo =
+public Plugin myinfo = 
 {
 	name = "Source Chat Relay",
 	author = PLUGIN_AUTHOR,
@@ -343,27 +346,27 @@ public void OnPluginStart()
 	g_cHost = CreateConVar("rf_scr_host", "127.0.0.1", "Relay Server Host", FCVAR_PROTECTED);
 
 	g_cPort = CreateConVar("rf_scr_port", "57452", "Relay Server Port", FCVAR_PROTECTED);
-
+	
 	g_cPrefix = CreateConVar("rf_scr_prefix", "", "Prefix required to send message to Discord. If empty, none is required.", FCVAR_NONE);
-
+	
 	g_cFlag = CreateConVar("rf_scr_flag", "", "If prefix is enabled, this admin flag is required to send message using the prefix", FCVAR_PROTECTED);
 
 	g_cHostname = CreateConVar("rf_scr_hostname", "", "The hostname/displayname to send with messages. If left empty, it will use the server's hostname", FCVAR_NONE);
 
 	// Start basic event convars
 	g_cPlayerEvent = CreateConVar("rf_scr_event_player", "0", "Enable player connect/disconnect events", FCVAR_NONE, true, 0.0, true, 1.0);
-
+	
 	g_cBotPlayerEvent = CreateConVar("rf_scr_event_botplayer", "0", "Enable bot player connect/disconnect events", FCVAR_NONE, true, 0.0, true, 1.0);
 
 	g_cMapEvent = CreateConVar("rf_scr_event_map", "0", "Enable map start/end events", FCVAR_NONE, true, 0.0, true, 1.0);
-
+	
 	AutoExecConfig(true, "Source-Server-Relay");
-
+	
 	g_hSocket = SocketCreate(SOCKET_TCP, OnSocketError);
 
 	SocketSetOption(g_hSocket, SocketReuseAddr, 1);
 	SocketSetOption(g_hSocket, SocketKeepAlive, 1);
-
+	
 	#if defined DEBUG
 	SocketSetOption(g_hSocket, DebugMode, 1);
 	#endif
@@ -415,43 +418,43 @@ public void OnConfigsExecuted()
 		GetConVarString(FindConVar("hostname"), g_sHostname, sizeof g_sHostname);
 
 	g_cHost.GetString(g_sHost, sizeof g_sHost);
-
+	
 	g_cPrefix.GetString(g_sPrefix, sizeof g_sPrefix);
-
+	
 	g_iPort = g_cPort.IntValue;
-
+	
 	char sFlag[8];
-
+	
 	g_cFlag.GetString(sFlag, sizeof sFlag);
-
+	
 	if (strlen(sFlag) != 0)
 	{
 		AdminFlag aFlag;
-
+		
 		g_bFlag = FindFlagByChar(sFlag[0], aFlag);
-
+		
 		g_iFlag = FlagToBit(aFlag);
 	}
-
+	
 	File tFile;
 
 	char sPath[PLATFORM_MAX_PATH], sIP[64];
-
+	
 	Server_GetIPString(sIP, sizeof sIP);
-
+	
 	BuildPath(Path_SM, sPath, sizeof sPath, "data/%s_%d.data", sIP, Server_GetPort());
-
+	
 	if (FileExists(sPath, false))
 	{
 		tFile = OpenFile(sPath, "r", false);
-
+		
 		tFile.ReadString(g_sToken, sizeof g_sToken, -1);
 	} else
 	{
 		tFile = OpenFile(sPath, "w", false);
-
+	
 		GenerateRandomChars(g_sToken, sizeof g_sToken, 64);
-
+	
 		tFile.WriteString(g_sToken, true);
 	}
 
@@ -464,7 +467,7 @@ public void OnConfigsExecuted()
 		// Stop. The map start event will emit on authentication reply packet
 		return;
 	}
-
+	
 	// If socket is already connected, emit map start
 	if (g_cMapEvent.BoolValue)
 	{
@@ -477,7 +480,7 @@ public void OnConfigsExecuted()
 }
 
 void ConnectRelay()
-{
+{	
 	if (!SocketIsConnected(g_hSocket))
 		SocketConnect(g_hSocket, OnSocketConnected, OnSocketReceive, OnSocketDisconnected, g_sHost, g_iPort);
 	else
@@ -495,7 +498,7 @@ void StartReconnectTimer()
 {
 	if (SocketIsConnected(g_hSocket))
 		SocketDisconnect(g_hSocket);
-
+		
 	CreateTimer(10.0, Timer_Reconnect);
 }
 
@@ -557,7 +560,10 @@ public void HandlePackets(const char[] sBuffer, int iSize)
 			Call_Finish(aResult);
 
 			if (aResult >= Plugin_Handled)
+			{
+				base.Close();
 				return;
+			}
 
 			#if defined DEBUG
 			PrintToConsoleAll("====== Chat Message Packet =====");
@@ -568,9 +574,9 @@ public void HandlePackets(const char[] sBuffer, int iSize)
 			#endif
 
 			if (SupportsHexColor(g_evEngine))
-				MC_PrintToChatAll("{gold}[%s] {azure}%s{white}: {grey}%s", sEntity, sName, sMessage);
+				CPrintToChatAll("{gold}[%s] {azure}%s{white}: {grey}%s", sEntity, sName, sMessage);
 			else
-				MC_PrintToChatAll("\x10[%s] \x0C%s\x01: \x08%s", sEntity, sName, sMessage);
+				CPrintToChatAll("\x10[%s] \x0C%s\x01: \x08%s", sEntity, sName, sMessage);
 		}
 		case MessageEvent:
 		{
@@ -593,12 +599,15 @@ public void HandlePackets(const char[] sBuffer, int iSize)
 			Call_Finish(aResult);
 
 			if (aResult >= Plugin_Handled)
+			{
+				base.Close();
 				return;
-
+			}
+			
 			if (SupportsHexColor(g_evEngine))
-				MC_PrintToChatAll("{gold}[%s]{white}: {grey}%s", sEvent, sData);
+				CPrintToChatAll("{gold}[%s]{white}: {grey}%s", sEvent, sData);
 			else
-				MC_PrintToChatAll("\x10[%s]\x01: \x08%s", sEvent, sData);
+				CPrintToChatAll("\x10[%s]\x01: \x08%s", sEvent, sData);
 		}
 		case MessageAuthenticateResponse:
 		{
@@ -631,7 +640,24 @@ public void HandlePackets(const char[] sBuffer, int iSize)
 // player connect/disconnect events
 public void ePlayerJoinLeave(Handle event, const char[] name, bool dontBroadcast)
 {
-	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient;
+	bool disconnect;
+
+	if (StrEqual(name, "player_disconnect"))
+	{
+		iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+		disconnect = true;
+	}
+	else
+	{
+		// index = player slot
+		iClient = GetEventInt(event, "index") + 1;
+	}
+
+	if (!Client_IsValid(iClient))
+	{
+		return;
+	}
 
 	if (!g_cPlayerEvent.BoolValue)
 		return;
@@ -646,7 +672,7 @@ public void ePlayerJoinLeave(Handle event, const char[] name, bool dontBroadcast
 		return;
 	}
 
-	if (StrEqual(name, "player_disconnect"))
+	if (disconnect)
 	{
 		EventMessage("Player Disconnected", sName).Dispatch();
 	}
@@ -672,10 +698,10 @@ public void OnClientSayCommand_Post(int client, const char[] command, const char
 {
 	if (!Client_IsValid(client))
 		return;
-
+		
 	if (!SocketIsConnected(g_hSocket))
 		return;
-
+		
 	if (StrEqual(g_sPrefix, ""))
 		DispatchMessage(client, sArgs);
 	else
@@ -685,12 +711,12 @@ public void OnClientSayCommand_Post(int client, const char[] command, const char
 
 		if (StrContains(sArgs, g_sPrefix) != 0)
 			return;
-
+		
 		char sBuffer[MAX_COMMAND_LENGTH];
-
+		
 		for (int i = strlen(g_sPrefix); i < strlen(sArgs); i++)
 			Format(sBuffer, sizeof sBuffer, "%s%c", sBuffer, sArgs[i]);
-
+		
 		DispatchMessage(client, sBuffer);
 	}
 }
@@ -774,7 +800,7 @@ public int Native_SendEvent(Handle plugin, int numParams)
 void GenerateRandomChars(char[] buffer, int buffersize, int len)
 {
 	char charset[] = "adefghijstuv6789!@#$%^klmwxyz01bc2345nopqr&+=";
-
+	
 	for (int i = 0; i < len; i++)
 		Format(buffer, buffersize, "%s%c", buffer, charset[GetRandomInt(0, sizeof charset)]);
 }
