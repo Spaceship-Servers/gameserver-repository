@@ -8,7 +8,7 @@ stages:
 
 fastdl:
   stage: fastdl
-  script: ./scripts/fastdl.sh
+  script: ionice -c idle nice -19 chrt -i 0 bash ./scripts/fastdl.sh
   only:
     - master
   needs: []
@@ -17,7 +17,7 @@ fastdl:
 
 getmmsm:
   stage: getmmsm
-  script: ./scripts/getmmsm.sh
+  script: ionice -c idle nice -19 chrt -i 0 bash ./scripts/getmmsm.sh
   only:
     - master
   needs: []
@@ -26,7 +26,7 @@ getmmsm:
 
 deploy:
   stage: deploy
-  script: ./scripts/ci.sh
+  script: ionice -c idle nice -19 chrt -i 0 bash ./scripts/ci.sh
   only:
     - master
   needs: [getmmsm]
@@ -46,7 +46,7 @@ deploy:
 
 github:
   stage: github
-  script: ./scripts/gh.sh
+  script: ionice -c idle nice -19 chrt -i 0 bash ./scripts/gh.sh
   only:
     - master
   needs: []
