@@ -1,10 +1,10 @@
 #!/bin/bash
 
 mm_url="https://mms.alliedmods.net/mmsdrop/1.12/mmsource-1.12.0-git1157-linux.tar.gz"
-sm_url="https://www.sourcemod.net/smdrop/1.11/sourcemod-1.11.0-git6871-linux.tar.gz"
+sm_url="https://www.sourcemod.net/smdrop/1.11/sourcemod-1.11.0-git6881-linux.tar.gz"
 
 mm_dest="mm-1.12.1157.tgz"
-sm_dest="sm-1.11.6871.tgz"
+sm_dest="sm-1.11.6881.tgz"
 
 export destfolder="mmsm_xtracted"
 
@@ -17,11 +17,11 @@ echo "cding to destfolder"
 cd /tmp/$destfolder
 
 echo "Curling Metamod Source"
-curl "$mm_url" --output "$mm_dest"
+curl "$mm_url" --output "$mm_dest" --limit-rate 4M
 
 
 echo "Curling SourceMod"
-curl "$sm_url" --output "$sm_dest"
+curl "$sm_url" --output "$sm_dest" --limit-rate 4M
 
 echo "Untarring Metamod Source"
 tar xfv "$mm_dest" # -C "$destfolder"
