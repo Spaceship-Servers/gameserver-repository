@@ -48,8 +48,8 @@ for dir in ./*/ ; do
     if [[ "${CI_COMMIT_HEAD}" == "${CI_COMMIT_REF_NAME}" ]] && [[ "${CI_LOCAL_REMOTE}" == "${CI_REMOTE_REMOTE}" ]]; then
         debug "branches match"
         info "Pulling git repo"
-        # DON'T QUOTE THIS
-        bash ${SCRIPT_DIR}/pull.sh -v
+        # Run this at minimum prio to not starve servers of cpu/io
+        ionice -c idle nice -19 bash ${SCRIPT_DIR}/pull.sh -v
     else
         important "Branches do not match, doing nothing"
     fi
