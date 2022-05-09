@@ -10,7 +10,7 @@ public Plugin myinfo = {
     name        = "StopBadPackets",
     author      = "https://sappho.io",
     description = "Prevents most CNetChan::ProcessPacket/Header based exploits",
-    version     = "0.0.7",
+    version     = "0.0.8",
     url         = "https://sappho.io"
 };
 
@@ -305,7 +305,7 @@ public MRESReturn Detour_ProcessPacket( int pThis, DHookParam hParams )
     int size            = LoadFromAddress( ( netpacket + view_as< Address >( offset ) ), NumberType_Int8 );
 
     // Is it a wacky size?
-    if ( size <= 8 || size >= 2048 )
+    if ( size <= 0 || size >= 2048 )
     {
         bogonSizedPacketsFor[ client ]++;
 
