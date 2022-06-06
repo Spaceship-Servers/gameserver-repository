@@ -22,11 +22,51 @@ public void OnClientPutInServer(int Cl)
         {
             StacLog("%N joined. Checking cvars", Cl);
         }
-        QueryTimer[Cl] = CreateTimer(15.0, Timer_CheckClientConVars, userid);
+        QueryTimer[Cl] = CreateTimer(60.0, Timer_CheckClientConVars_FirstTime, userid);
 
         CreateTimer(10.0, CheckAuthOn, userid);
+
+        // bail if cvar is set to 0
+        if (maxip > 0)
+        {
+            checkIP(Cl);
+        }
     }
     OnClientPutInServer_jaypatch(Cl);
+}
+
+void checkIP(int Cl)
+{
+    int userid = GetClientUserId(Cl);
+    char clientIP[16];
+    GetClientIP(Cl, clientIP, sizeof(clientIP));
+
+    int sameip;
+
+    for (int itercl = 1; itercl <= MaxClients; itercl++)
+    {
+        if (IsValidClient(itercl))
+        {
+            char playersip[16];
+            GetClientIP(itercl, playersip, sizeof(playersip));
+
+            if (StrEqual(clientIP, playersip))
+            {
+                sameip++;
+            }
+        }
+    }
+
+    // maxip is our cached stac_max_connections_from_ip
+    if (sameip > maxip)
+    {
+        char msg[256];
+        Format(msg, sizeof(msg), "Too many connections from the same IP address %s from client %N", clientIP, Cl);
+        StacGeneralPlayerNotify(userid, msg);
+        PrintToImportant("{hotpink}[StAC]{white} Too many connections (%i) from the same IP address {mediumpurple}%s{white} from client %N!", sameip, clientIP, Cl);
+        StacLog(msg);
+        KickClient(Cl, "[StAC] Too many concurrent connections from your IP address!", maxip);
+    }
 }
 
 Action CheckAuthOn(Handle timer, int userid)
@@ -286,6 +326,9 @@ void ClearClBasedVars(int userid)
         userinfoValues[cvar][Cl][3][0] = '\0';
     }
     justclamped             [Cl] = false;
+
+    // has client has waited 60 seconds for their first cvar check
+    hasWaitedForCvarCheck   [Cl] = false;
 }
 
 /********** TIMER FOR NETINFO **********/

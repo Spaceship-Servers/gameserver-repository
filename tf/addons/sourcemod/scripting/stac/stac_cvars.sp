@@ -132,7 +132,7 @@ void initCvars()
     (
         "stac_max_aimsnap_detections",
         buffer,
-        "[StAC] maximum aimsnap detections before banning a client.\n-1 to disable even checking angles (saves cpu), 0 to print to admins/stv but never ban\n(recommended 25 or higher)",
+        "[StAC] maximum aimsnap detections before banning a client.\n-1 to disable even checking angles (saves cpu), 0 to print to admins/stv but never ban\n(recommended 20 or higher)",
         FCVAR_NONE,
         true,
         -1.0,
@@ -410,6 +410,22 @@ void initCvars()
     );
     HookConVarChange(stac_silent, setStacVars);
 
+    // max connections from the same ip
+    IntToString(maxip, buffer, sizeof(buffer));
+    stac_max_connections_from_ip =
+    AutoExecConfig_CreateConVar
+    (
+        "stac_max_connections_from_ip",
+        buffer,
+        "[StAC] Max connections allowed from the same IP address. Useful for autokicking bots, though StAC should do that with cvar checks anyway.\n(recommended 0, you should really only enable this if you're getting swarmed by bots, and StAC isn't doing much against them, in which case, consider opening a bug report!)",
+        FCVAR_NONE,
+        true,
+        0.0,
+        false,
+        _
+    );
+    HookConVarChange(stac_max_connections_from_ip, setStacVars);
+
     // actually exec the cfg after initing cvars lol
     AutoExecConfig_ExecuteFile();
     AutoExecConfig_CleanFile();
@@ -502,6 +518,9 @@ void setStacVars(ConVar convar, const char[] oldValue, const char[] newValue)
 
     // silent mode
     silent                  = GetConVarInt(stac_silent);
+
+    // max conns from same ip
+    maxip                   = GetConVarInt(stac_max_connections_from_ip);
 }
 
 public void GenericCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)

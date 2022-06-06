@@ -11,7 +11,26 @@
     - TURN BINDS
 */
 
-// float srvClangles[TFMAXPLAYERS+1][3][3];
+bool useOnPlayerRunCmdPre = false;
+public void OnPlayerRunCmdPre
+(
+    int Cl,
+    int buttons,
+    int impulse,
+    const float vel[3],
+    const float angles[3],
+    int weapon,
+    int subtype,
+    int cmdnum,
+    int tickcount,
+    int seed,
+    const int mouse[2]
+)
+{
+    useOnPlayerRunCmdPre = true;
+
+    PlayerRunCmd(Cl, buttons, impulse, vel, angles, weapon, subtype, cmdnum, tickcount, seed, mouse);
+}
 
 public Action OnPlayerRunCmd
 (
@@ -29,16 +48,42 @@ public Action OnPlayerRunCmd
 )
 {
     OnPlayerRunCmd_jaypatch(Cl, buttons, impulse, vel, angles, weapon, subtype, cmdnum, tickcount, seed, mouse);
+
     // sanity check, don't let banned clients do anything!
     if (userBanQueued[Cl])
     {
         return Plugin_Handled;
     }
 
+    // only run if OnPlayerRunCmdPre doesn't ever fire (meaning we're not on a sm.1.11.6876 install or newer)
+    if (!useOnPlayerRunCmdPre)
+    {
+        PlayerRunCmd(Cl, buttons, impulse, vel, angles, weapon, subtype, cmdnum, tickcount, seed, mouse);
+    }
+
+    return Plugin_Continue;
+}
+
+
+stock void PlayerRunCmd
+(
+    const int Cl,
+    const int buttons,
+    const int impulse,
+    const float vel[3],
+    const float angles[3],
+    const int weapon,
+    const int subtype,
+    const int cmdnum,
+    const int tickcount,
+    const int seed,
+    const int mouse[2]
+)
+{
     // make sure client is real & not a bot
     if (!IsValidClient(Cl))
     {
-        return Plugin_Continue;
+        return;
     }
 
     // need this basically no matter what
@@ -51,11 +96,10 @@ public Action OnPlayerRunCmd
         {
             StacLog("cmdnum %i, tickcount %i", cmdnum, tickcount);
             StacGeneralPlayerNotify(userid, "Client has invalid usercmd data!");
-            // returning Plugin_Handled allows for airstuck to work again
-            return Plugin_Continue;
+            return;
         }
         timeSinceNullCmd[Cl] = GetEngineTime();
-        return Plugin_Continue;
+        return;
     }
 
     // grab engine time
@@ -138,7 +182,9 @@ public Action OnPlayerRunCmd
         timeSinceTeled[Cl] = GetEngineTime();
     }
 
-    // R O U N D ( fuzzy psilent detection to detect lmaobox silent+ and better detect other forms of silent aim )
+    // round our angles.
+    // fuzzy psilent detection to detect lmaobox silent+ and better detect other forms of silent aim
+    // BONK: use an epsilon??
 
     fuzzyClangles[Cl][2][0] = RoundToPlace(clangles[Cl][2][0], 1);
     fuzzyClangles[Cl][2][1] = RoundToPlace(clangles[Cl][2][1], 1);
@@ -167,26 +213,36 @@ public Action OnPlayerRunCmd
         || engineTime[Cl][0] - 1.0 < timeSinceTeled[Cl]
         // don't touch this client if they've recently run a nullcmd, because they're probably lagging
         // I will tighten this up if cheats decide to try to get around stac by spamming nullcmds.
-        || engineTime[Cl][0] - 0.5 < timeSinceNullCmd[Cl]
+        || engineTime[Cl][0] - 0.1 < timeSinceNullCmd[Cl]
         // don't touch if map or plugin just started - let the server framerate stabilize a bit
         || engineTime[Cl][0] - 2.5 < timeSinceMapStart
         // lets wait a bit if we had a server lag spike in the last 5 seconds
         || engineTime[Cl][0] - ServerLagWaitLength < timeSinceLagSpikeFor[0]
-
         // lets also wait a bit if we had a lag spike in the last 5 seconds on this specific client
         || engineTime[Cl][0] - PlayerLagWaitLength < timeSinceLagSpikeFor[Cl]
-
         // make sure client isn't timing out - duh
         || IsClientTimingOut(Cl)
         // this is just for halloween shit - plenty of halloween effects can and will mess up all of these checks
         || playerInBadCond[Cl] != 0
     )
     {
-        return Plugin_Continue;
+        return;
     }
 
     // not really lag dependant check
     fakeangCheck(userid);
+
+    if
+    (
+        // make sure client doesn't have invalid angles. "invalid" in this case means "any angle is 0.000000", usually caused by plugin / trigger based teleportation
+        !HasValidAngles(Cl)
+        // make sure client doesn't have OUTRAGEOUS ping
+        // most cheater fakeping goes up to 800 so tack on 50 just in case
+        || pingFor[Cl] > 850.0
+    )
+    {
+        return;
+    }
 
     // we don't want to check this if we're repeating tickcount a lot and/or if loss is high, but cmdnums and tickcounts DO NOT NEED TO BE PERFECT for this.
     if (!IsUserLagging(userid, false, false) && isCmdnumInOrder(userid))
@@ -196,23 +252,21 @@ public Action OnPlayerRunCmd
 
     if
     (
-        // make sure client doesn't have invalid angles. "invalid" in this case means "any angle is 0.000000", usually caused by plugin / trigger based teleportation
-        !HasValidAngles(Cl)
         // make sure client isnt using a spin bind
-        || buttons & IN_LEFT
+           buttons & IN_LEFT
         || buttons & IN_RIGHT
         // make sure we're not lagging and that cmdnum is saneish
         || IsUserLagging(userid, true, false)
     )
     // if any of these things are true, don't check angles etc
     {
-        return Plugin_Continue;
+        return;
     }
     aimsnapCheck(userid);
     triggerbotCheck(userid);
     psilentCheck(userid);
 
-    return Plugin_Continue;
+    return;
 }
 
 /*
@@ -243,27 +297,27 @@ void bhopCheck(int userid)
         if
         (
             // last input didn't have a jump
-            !(clbuttons[Cl][1] & IN_JUMP)
+                !(clbuttons[Cl][1] & IN_JUMP)
             // player pressed jump
-            && (clbuttons[Cl][0] & IN_JUMP)
+            &&  (clbuttons[Cl][0] & IN_JUMP)
             // they were on the ground when they jumped
-            && (flags & FL_ONGROUND)
+            &&  (flags & FL_ONGROUND)
         )
         {
             // increment bhops
             bhopDetects[Cl]++;
 
-            // print to admins if halfway to getting banned - or halfway to default bhop amt ( 10 )
+            // print to admins if close to getting banned - or at default bhop amt ( 10 )
             if
             (
                 (
-                    bhopDetects[Cl] >= RoundToFloor(maxBhopDetections / 2.0)
+                    bhopDetects[Cl] >= maxBhopDetections
                     &&
                     !noban
                 )
                 ||
                 (
-                    bhopDetects[Cl] >= 5
+                    bhopDetects[Cl] >= 10
                     &&
                     noban
                 )
@@ -430,7 +484,7 @@ void cmdnumspikeCheck(int userid)
     {
         int spikeamt = clcmdnum[Cl][0] - clcmdnum[Cl][1];
         // https://github.com/sapphonie/StAC-tf2/issues/74
-        if (spikeamt >= 12 || spikeamt < 0)
+        if (spikeamt >= 32 || spikeamt < 0)
         {
             char heldWeapon[256];
             GetClientWeapon(Cl, heldWeapon, sizeof(heldWeapon));
@@ -447,6 +501,7 @@ void cmdnumspikeCheck(int userid)
             StacLogNetData(userid);
             StacLogCmdnums(userid);
             StacLogTickcounts(userid);
+            StacLog("Held weapon: %s", heldWeapon);
 
             if (cmdnumSpikeDetects[Cl] % 5 == 0)
             {
@@ -629,7 +684,7 @@ void psilentCheck(int userid)
     If we try to just detect one frame snaps and nothing else, users can just crank up their sens,
     and wave their mouse around and get detects. so what we do is this:
 
-    if a user has a snap of more than 10 degrees, and that snap is surrounded on one or both sides by "noise delta" of LESS than 5 degrees
+    if a user has a snap of more than 20 degrees, and that snap is surrounded on one or both sides by "noise delta" of LESS than 5 degrees
     ...that counts as an aimsnap. this will catch cheaters, unless they wave their mouse around wildly, making the game miserable to play
     AND obvious that they're avoiding the anticheat.
 
@@ -641,7 +696,7 @@ void aimsnapCheck(int userid)
     if
     (
         // for some reason this just does not behave well in mvm
-        !MVM
+            !MVM
         // only check if we have this check enabled
         &&  maxAimsnapDetections != -1
         // only check if we pressed attack recently
@@ -672,7 +727,7 @@ void aimsnapCheck(int userid)
             didBangOnFrame[Cl][1]
         )
         {
-            float snapsize = 15.0;
+            float snapsize  = 20.0;
             float noisesize = 1.0;
 
             int aDiffToUse = -1;
@@ -777,7 +832,7 @@ void aimsnapCheck(int userid)
 }
 
 /*
-    TRIGGERBOT DETECTION - BETA
+    TRIGGERBOT DETECTION
 */
 void triggerbotCheck(int userid)
 {
@@ -804,7 +859,6 @@ void triggerbotCheck(int userid)
         }
         // grab single tick +attack2 inputs - pyro airblast, demo det, etc
         // this checks for the following pattern:
-        //                      //-----------
         // frame before last    //
         // last frame           // IN_ATTACK2
         // current frame        //
