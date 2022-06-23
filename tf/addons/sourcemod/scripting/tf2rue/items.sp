@@ -275,7 +275,12 @@ void ReloadWhitelist()
     for (int client = 1; client <= MaxClients; client++)
     {
         // ignore bogons
-        if (!IsClientConnected(client) || IsFakeClient(client))
+        if (!IsClientInGame(client) || IsFakeClient(client))
+        {
+            continue;
+        }
+        TFTeam clientTeam = TF2_GetClientTeam(client);
+        if (clientTeam != TFTeam_Blue && clientTeam != TFTeam_Red)
         {
             continue;
         }
@@ -294,11 +299,11 @@ void ReloadWhitelist()
                 TF2_RemoveWearable(client, child);
 
                 // Go back to the first child
-                child = GetEntPropEnt(client, Prop_Data, "m_hMoveChild")
+                child = GetEntPropEnt(client, Prop_Data, "m_hMoveChild");
             }
             else
             {
-                child = GetEntPropEnt(child, Prop_Data, "m_hMovePeer")
+                child = GetEntPropEnt(child, Prop_Data, "m_hMovePeer");
             }
         }
 

@@ -1,21 +1,38 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 #include <dhooks>
 #include <sourcescramble>
 #include <tf2>
+#include <tf2_stocks>
 #include <SteamWorks>
 #include <concolors>
+#include <updater>
+
+public Plugin myinfo =
+{
+    name        = "tf2rue",
+    author      = "https://sappho.io",
+    description = "Replacement for AnAkkk's TFTrue. Currently only handles whitelists.",
+    version     = "0.0.2",
+    url         = "https://sappho.io"
+}
 
 #define tagtag ansi_reset ... "[" ... ansi_bright_red ... "tf" ... ansi_bright_green ... "2" ... ansi_bright_red ... "rue" ... ansi_reset ... "] "
 
 GameData tf2rue_gamedata;
 
+#include <tf2rue/updater.sp>
 #include <tf2rue/items.sp>
+
 // #include <tf2rue/stv.sp>
 // #include <tf2rue/fov.sp>
 
 public void OnPluginStart()
 {
+    InitUpdater();
     DoGamedata();
     DoMemPatches();
     DoConVars();
