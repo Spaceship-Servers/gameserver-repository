@@ -1,3 +1,6 @@
+#pragma newdecls required // use new syntax
+
+
 #if defined _SteamWorks_Included
  #endinput
 #endif
