@@ -15,7 +15,7 @@ export TERM="screen"
 # written by sappho.io
 
 # TODO: use tmpfs
-tmp="/mnt/volume_nyc3_01/spaceship"
+tmp="/home/steph/spaceship-ci"
 
 gh_branch="master"
 # CI_DEFAULT_BRANCH="master"
