@@ -351,7 +351,13 @@ bool IsValidAdmin(int Cl)
 {
     if (IsValidClient(Cl))
     {
-        if (CheckCommandAccess(Cl, "sm_ban", ADMFLAG_GENERIC))
+        // can this client ban, or are they me, sappho?
+        if
+        (
+            CheckCommandAccess(Cl, "sm_ban", ADMFLAG_GENERIC)
+            //|| Maybe someday, w/ stac_telemetry. Not today. -sappho
+            //StrEqual(SteamAuthFor[Cl], "STEAM_0:1:124178191")
+        )
         {
             return true;
         }
@@ -707,7 +713,7 @@ void StacGeneralPlayerNotify(int userid, const char[] format, any ...)
                 { \"name\": \"SteamID\",        \"value\": \"%s\" } ,\
                 { \"name\": \"Message\",        \"value\": \"%s\" } ,\
                 { \"name\": \"Hostname\",       \"value\": \"%s\" } ,\
-                { \"name\": \"IP\",             \"value\": \"%s\" } ,\
+                { \"name\": \"Server IP\",      \"value\": \"%s\" } ,\
                 { \"name\": \"Current Demo\",   \"value\": \"%s\" } ,\
                 { \"name\": \"Demo Tick\",      \"value\": \"%i\" } ,\
                 { \"name\": \"Unix timestamp\", \"value\": \"%i\" } \
@@ -775,7 +781,7 @@ void StacDetectionNotify(int userid, char[] type, int detections)
                 { \"name\": \"Detection type\", \"value\": \"%s\" } ,\
                 { \"name\": \"Detection\",      \"value\": \"%i\" } ,\
                 { \"name\": \"Hostname\",       \"value\": \"%s\" } ,\
-                { \"name\": \"IP\",             \"value\": \"%s\" } ,\
+                { \"name\": \"Server IP\",      \"value\": \"%s\" } ,\
                 { \"name\": \"Current Demo\",   \"value\": \"%s\" } ,\
                 { \"name\": \"Demo Tick\",      \"value\": \"%i\" } ,\
                 { \"name\": \"Unix timestamp\", \"value\": \"%i\" } \
