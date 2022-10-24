@@ -30,9 +30,13 @@ git config --global lfs.allowincompletepush true
 gl_origin="git@gitlab.com:sapphonie/Spaceship-Servers.git"
 gh_origin="git@github.com:sapphonie/Spaceship-Servers.git"
 
-bootstrap_raw ()
+bootstrap_clone ()
 {
-    if [ ! -d "${tmp}/gs_raw" ]; then
+    if [ -d "${tmp}/gs_raw" ]; then
+        rm -rfv ${tmp}/gs_raw
+    fi
+
+    #if [ ! -d "${tmp}/gs_raw" ]; then
         info "-> Cloning repo!"
         git clone ${gl_origin} \
         -b ${CI_DEFAULT_BRANCH} --single-branch ${tmp}/gs_raw \
@@ -43,9 +47,9 @@ bootstrap_raw ()
         info "-> moving ${CI_DEFAULT_BRANCH} to gl_master"
         git checkout -B gl_master
         git branch -D ${CI_DEFAULT_BRANCH}
-    else
-        cd ${tmp}/gs_raw || exit 255
-    fi
+    #else
+    #    cd ${tmp}/gs_raw || exit 255
+    #fi
 
     if ! git remote | grep gl_origin > /dev/null; then
         info "-> adding gitlab remote"
@@ -109,19 +113,19 @@ bootstrap_raw ()
 
     info "fetching lfs objects"
     git lfs fetch --all
-}
+#}
+#
+#bootstrap_stripped ()
+#{
+#    info "rm-ing unclean repo"
+#    rm -rf ${tmp}/gs_stripped
 
-bootstrap_stripped ()
-{
-    info "rm-ing unclean repo"
-    rm -rf ${tmp}/gs_stripped
+#    info "cping"
+#    cp -Rfv ${tmp}/gs_raw ${tmp}/gs_stripped
 
-    info "cping"
-    cp -Rfv ${tmp}/gs_raw ${tmp}/gs_stripped
-
-    info "cd-ing"
-    cd ${tmp}/gs_stripped
-    info "done"
+#    info "cd-ing"
+#    cd ${tmp}/gs_stripped
+#    info "done"
 
     if ! git remote | grep gl_origin > /dev/null; then
         info "-> adding gitlab remote"
@@ -237,8 +241,8 @@ push ()
     git push gh_origin stripped-master:${gh_branch} --progress --force
 }
 
-bootstrap_raw       || exit 255
-bootstrap_stripped  || exit 255
+# bootstrap_stripped  || exit 255
+bootstrap_clone     || exit 255
 stripchunkyblobs    || exit 255
 stripfiles          || exit 255
 stripsecrets        || exit 255
