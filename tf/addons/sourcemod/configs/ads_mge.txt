@@ -19,18 +19,18 @@
 {
     "1"
     {
-        "chat"          "{orange}Problems? Questions? Suggestions? Join the {green}discord! {#ff007f}https://discord.gg/Dn4wRu3"
+        "chat"    "{orange}Problems? Questions? Suggestions? Type {mediumpurple}/discord{orange} for a link to our discord!"
     }
     "2"
     {
-        "chat"          "{white}These servers are powered by contributions from {hotpink}gamers like you. {white}Visit {hotpink}https://sappho.io/donate{white} if you'd like to donate."
+        "chat"    "{lime}Enjoying the servers? Visit {hotpink}sappho.io/donate{lime} to donate once, or become a monthly {tan}patron{lime}. Join our {mediumpurple}/discord{lime} and verify your donation to get a sweet {purple}purple{lime} chat and name color!"
     }
     "3"
     {
-        "chat"          "{skyblue}Someone causing trouble? Type {fullred}/call{skyblue} to report a player - abuse will get you banned!"
+        "chat"    "{skyblue}Someone causing trouble? Type {fullred}/call{skyblue} to report a player - abuse will get you banned!"
     }
     "4"
     {
-        "chat"          "{fuchsia}All STV demos older than 30 minutes {plum}are now available over at {#ff007f}https://sappho.io/stvdemos/{plum}!"
+        "chat"    "{fuchsia}All STV demos older than 30 minutes{plum} are now available over at {hotpink}sappho.io/stvdemos{plum}!"
     }
 }
