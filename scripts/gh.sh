@@ -15,7 +15,7 @@ export TERM="screen"
 # written by sappho.io
 
 # TODO: use tmpfs
-tmp="/home/steph/spaceship-ci"
+tmp="/home/sappho/spaceship-ci"
 
 gh_branch="master"
 # CI_DEFAULT_BRANCH="master"
