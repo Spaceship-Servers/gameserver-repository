@@ -51,4 +51,4 @@ github:
     - master
   needs: []
   tags:
-    - soplet
+    - of-gitlab
