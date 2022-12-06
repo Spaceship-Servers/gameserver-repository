@@ -295,7 +295,7 @@ public void OnPluginStart()
 	kvThemeSets = new KeyValues("Themesets");
 	
 	// Translations
-	LoadTranslations("themes.phrases");
+	// LoadTranslations("themes.phrases");
 
 	// Execute main config
 //#if !defined DEBUG
@@ -684,7 +684,7 @@ void Initialize(bool enable, bool print=true)
 		pluginEnabled = false;
 		
 		if(print) {
-			MC_PrintToChatAll("%t", "Plugin_Disable", PLUGIN_NAME);
+			// MC_PrintToChatAll("%t", "Plugin_Disable", PLUGIN_NAME);
 		}
 	}
 }
@@ -706,7 +706,7 @@ void Event_NextThemeChange(ConVar convar, const char[] oldValue, const char[] ne
 			kvThemes.GoBack();
 			
 			if (cvAnnounce.BoolValue) {
-				MC_PrintToChatAll("Announce_NextTheme", nextTag, nextTheme);
+				// MC_PrintToChatAll("Announce_NextTheme", nextTag, nextTheme);
 			}
 		}
 	}
@@ -2772,7 +2772,7 @@ Action Event_PlayerTeam(Handle event, const char[] name, bool dontBroadcast)
 void AnnounceTheme()
 {
 	if (cvAnnounce.BoolValue) {
-		MC_PrintToChatAll("%t", "Announce_Theme", mapTag, mapTheme);
+		// MC_PrintToChatAll("%t", "Announce_Theme", mapTag, mapTheme);
 	}
 }
 
