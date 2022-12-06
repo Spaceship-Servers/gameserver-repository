@@ -12,4 +12,4 @@ ctf_turbine_pro_rc4
 koth_bagel_rc5
 cp_prolands_rc2ta
 cp_granary_pro_rc8
-cp_sultry_rc7
+cp_sultry_b7
