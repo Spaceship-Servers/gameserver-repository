@@ -29,6 +29,8 @@ tf/cfg/*
 !tf/cfg/koth*
 !tf/cfg/pl*
 !tf/cfg/cp*
+!tf/cfg/vscript_convar_allowlist.txt
+
 tf/addons/*/data/sqlite/clientprefs-sqlite.sq3
 tf/addons/*/data/_*.data
 tf/addons/*/configs/sourcebans/sb_admins.cfg
