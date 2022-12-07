@@ -95,8 +95,8 @@ git submodule update --init --recursive
 info "cleaning cfg folder..."
 git clean -d -f -x tf/cfg/
 
-info "cleaning maps folder..."
-git clean -d -f tf/maps/
+# info "cleaning maps folder..."
+# git clean -d -f tf/maps/
 # ignore the output if it already scrubbed it
 debug "running str0 to scrub steamclient spam"
 python3 ./scripts/str0.py ./bin/steamclient.so -c ./scripts/str0.ini | grep -v "Failed to locate string"
