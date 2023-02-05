@@ -1,10 +1,10 @@
 #!/bin/bash
 
-mm_url="https://mms.alliedmods.net/mmsdrop/1.12/mmsource-1.12.0-git1164-linux.tar.gz"
-sm_url="https://sm.alliedmods.net/smdrop/1.11/sourcemod-1.11.0-git6927-linux.tar.gz"
+mm_url="https://mms.alliedmods.net/mmsdrop/1.12/mmsource-1.12.0-git1165-linux.tar.gz"
+sm_url="https://sm.alliedmods.net/smdrop/1.11/sourcemod-1.11.0-git6930-linux.tar.gz"
 
-mm_dest="mm-1.12.1164.tgz"
-sm_dest="sm-1.11.6927.tgz"
+mm_dest="mm-1.12.1165.tgz"
+sm_dest="sm-1.11.6930.tgz"
 
 export destfolder="mmsm_xtracted"
 
@@ -52,5 +52,6 @@ find . -name "*insurgency.so"   -exec rm {} -fv     \;
 find . -name "*l4d*.so"         -exec rm {} -fv     \;
 find . -name "*nd.so"           -exec rm {} -fv     \;
 find . -name "*sdk2013.so"      -exec rm {} -fv     \;
+find . -name "*pvkii.so"          -exec rm {} -fv     \;
 
 echo "DONE"
