@@ -90,11 +90,11 @@ Action CheckAuthOn(Handle timer, int userid)
                 // TODO: detect clients that ignore this
                 // KickClient(Cl, "[StAC] Not authorized with Steam Network, please authorize and reconnect");
             }
-            else
+            else if (DEBUG)
             {
                 StacGeneralPlayerNotify(userid, "Client failed to authorize w/ Steam in a timely manner");
                 StacLog("Client %N failed to authorize w/ Steam in a timely manner.", Cl);
-                // SteamAuthFor[Cl][0] = '\0'; ?
+                SteamAuthFor[Cl][0] = '\0';
             }
         }
         else
@@ -157,6 +157,12 @@ public void ePlayerDisconnect(Handle event, const char[] name, bool dontBroadcas
 {
     int Cl = GetClientOfUserId(GetEventInt(event, "userid"));
     SteamAuthFor[Cl][0] = '\0';
+}
+
+// Just in case SourceMod whines about this not being used or we wanna do something with this later
+public bool OnClientPreConnectEx(const char[] name, char password[255], const char[] ip, const char[] steamID, char rejectReason[255])
+{
+    //
 }
 
 /********** CLIENT BASED EVENTS **********/

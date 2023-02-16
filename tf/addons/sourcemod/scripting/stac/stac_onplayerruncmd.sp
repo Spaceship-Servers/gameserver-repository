@@ -44,13 +44,26 @@ public Action OnPlayerRunCmd
     int mouse[2]
 )
 {
-    OnPlayerRunCmd_jaypatch(Cl, buttons, impulse, vel, angles, weapon, subtype, cmdnum, tickcount, seed, mouse);
-
     // sanity check, don't let banned clients do anything!
-    if (userBanQueued[Cl])
+    if ( userBanQueued[Cl] || !IsClientConnected(Cl) || !IsClientInGame(Cl) || IsClientInKickQueue(Cl) )
     {
-        return Plugin_Handled;
+        // Todo; maybe KickClient for the IsClientInGame failing here?
+        buttons     = 0;
+        impulse     = 0;
+        vel         = {0.0, 0.0, 0.0};
+        angles      = {0.0, 0.0, 0.0};
+        weapon      = 0;
+        subtype     = 0;
+        cmdnum      = 0;
+        tickcount   = 0;
+        seed        = 0;
+        mouse       = {0, 0};
+
+        timeSinceNullCmd[Cl] = GetEngineTime();
+        return Plugin_Continue;
     }
+
+    OnPlayerRunCmd_jaypatch(Cl, buttons, impulse, vel, angles, weapon, subtype, cmdnum, tickcount, seed, mouse);
 
     return Plugin_Continue;
 }
@@ -76,7 +89,6 @@ stock void PlayerRunCmd
     {
         return;
     }
-
     // need this basically no matter what
     int userid = GetClientUserId(Cl);
 
@@ -167,7 +179,7 @@ stock void PlayerRunCmd
     didBangThisFrame[Cl] = false;
 
     // detect trigger teleports
-    if (GetVectorDistance(clpos[Cl][0], clpos[Cl][1], false) > 500)
+    if (GetVectorDistance(clpos[Cl][0], clpos[Cl][1], false) > 256)
     {
         // reuse this variable
         timeSinceTeled[Cl] = GetEngineTime();
@@ -197,7 +209,7 @@ stock void PlayerRunCmd
         // ...isn't currently taunting - can cause fake angs!
         || playerTaunting[Cl]
         // ...didn't recently spawn - can cause invalid psilent detects
-        || engineTime[Cl][0] - 1.0 < timeSinceSpawn[Cl]
+        || engineTime[Cl][0] - 1.5 < timeSinceSpawn[Cl]
         // ...didn't recently taunt - can (obviously) cause fake angs!
         || engineTime[Cl][0] - 1.0 < timeSinceTaunt[Cl]
         // ...didn't recently teleport - can cause psilent detects
@@ -214,6 +226,7 @@ stock void PlayerRunCmd
         // make sure client isn't timing out - duh
         || IsClientTimingOut(Cl)
         // this is just for halloween shit - plenty of halloween effects can and will mess up all of these checks
+        // TODO: THIS CAN APPARENTLY BE SPOOFED. CLEAN THIS UP.
         || playerInBadCond[Cl] != 0
     )
     {
@@ -225,11 +238,9 @@ stock void PlayerRunCmd
 
     if
     (
-        // make sure client doesn't have invalid angles. "invalid" in this case means "any angle is 0.000000", usually caused by plugin / trigger based teleportation
-        !HasValidAngles(Cl)
         // make sure client doesn't have OUTRAGEOUS ping
         // most cheater fakeping goes up to 800 so tack on 50 just in case
-        || pingFor[Cl] > 850.0
+        pingFor[Cl] > 850.0
     )
     {
         return;
@@ -931,12 +942,12 @@ bool IsUserLagging(int userid, bool checkcmdnum = true, bool checktickcount = tr
     if
     (
         // we don't want very much loss at all. this may be removed some day.
-            lossFor[Cl] >= 1.0
+        lossFor[Cl] >= 1.0
         || !isCmdnumSequential(userid) && checkcmdnum
         || !isTickcountInOrder(userid) && checktickcount
         // tickcount the same over 6 ticks, client is *definitely* lagging
         || isTickcountRepeated(userid)
-        ||
+        || // TODO: HOOKS
         (
             isDefaultTickrate()
             &&

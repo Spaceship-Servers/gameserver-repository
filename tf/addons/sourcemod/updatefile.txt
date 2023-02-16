@@ -1,0 +1,22 @@
+"Updater"
+{
+    "Information"
+    {
+        "Version"
+        {
+            "Latest"    "5.4.4"
+        }
+
+        "Notes"     "Changes in 5.4.3"
+        "Notes"     "- Changes to prevent cheats from bypassing StAC"
+        "Notes"     "===== StAC is always looking for feedback! Got an issue, request, or wanna discuss? Open a GitHub issue and join the Discord server linked in the README, on GitHub! ====="
+        "Notes"     "===== Thank you for using StAC. -sappho ===== "
+    }
+
+    "Files"
+    {
+        "Plugin"    "Path_SM/plugins/stac.smx"
+        "Plugin"    "Path_SM/translations/stac.phrases.txt"
+    }
+}
+
