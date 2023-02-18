@@ -33,4 +33,8 @@
     {
         "chat"    "{fuchsia}All STV demos older than 30 minutes{plum} are now available over at {hotpink}sappho.io/stvdemos{plum}!"
     }
+    "5"
+    {
+        "chat"    "{#8dc0f7}Spaceship servers{white} are funded in part by {#FEC09A}SwiftyServers{white}. Visit {#F4722B}https://swiftyservers.com{white} for your personalized scrim/match ready server preloaded with configs, maps, plugins, and {#FEC09A}much more{white}!"
+    }
 }
