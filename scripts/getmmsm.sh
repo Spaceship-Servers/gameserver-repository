@@ -1,10 +1,10 @@
 #!/bin/bash
 
-mm_url="https://mms.alliedmods.net/mmsdrop/1.12/mmsource-1.12.0-git1165-linux.tar.gz"
-sm_url="https://sm.alliedmods.net/smdrop/1.11/sourcemod-1.11.0-git6930-linux.tar.gz"
+mm_url="https://mms.alliedmods.net/mmsdrop/1.12/mmsource-1.12.0-git1167-linux.tar.gz"
+sm_url="https://sm.alliedmods.net/smdrop/1.11/sourcemod-1.11.0-git6934-linux.tar.gz"
 
-mm_dest="mm-1.12.1165.tgz"
-sm_dest="sm-1.11.6930.tgz"
+mm_dest="mm-1.12.1167.tgz"
+sm_dest="sm-1.11.6934.tgz"
 
 export destfolder="mmsm_xtracted"
 
