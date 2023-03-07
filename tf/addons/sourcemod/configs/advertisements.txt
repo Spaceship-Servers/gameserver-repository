@@ -19,7 +19,7 @@
 {
     "1"
     {
-        "chat"          "{orange}Problems? Questions? Suggestions? Join the {green}discord! {#ff007f}https://discord.gg/Dn4wRu3"
+        "chat"          "{orange}Something broken? Someone causing trouble? Got a suggestion for the servers? Join the {green}discord! {#ff007f}https://discord.gg/Dn4wRu3"
     }
     "2"
     {
@@ -27,13 +27,9 @@
     }
     "3"
     {
-        "chat"          "{skyblue}Someone causing trouble? Type {fullred}/call{skyblue} to report a player - abuse will get you banned!"
-    }
-    "4"
-    {
         "chat"          "{fuchsia}All Spaceship SourceTV demos {plum}are publicly available over at {#ff007f}https://sappho.io/stvdemos/{plum}!"
     }
-    "5"
+    "4"
     {
         "chat"          "{#8dc0f7}Spaceship servers{white} are funded in part by {#FEC09A}SwiftyServers{white}. Visit {#F4722B}https://swiftyservers.com{white} for your personalized scrim/match ready server preloaded with configs, maps, plugins, and {#FEC09A}much more{white}!"
     }

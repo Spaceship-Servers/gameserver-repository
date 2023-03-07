@@ -19,7 +19,7 @@
 {
     "1"
     {
-        "chat"    "{orange}Problems? Questions? Suggestions? Type {mediumpurple}/discord{orange} for a link to our discord!"
+        "chat"    "{orange}Something broken? Someone causing trouble? Got a suggestion for the servers? Type {mediumpurple}/discord{orange} for a link to our discord!"
     }
     "2"
     {
@@ -27,22 +27,18 @@
     }
     "3"
     {
-        "chat"    "{skyblue}Someone causing trouble? Type {fullred}/call{skyblue} to report a player - abuse will get you banned!"
-    }
-    "4"
-    {
         "chat"    "{fuchsia}All STV demos older than 30 minutes{plum} are now available over at {hotpink}sappho.io/stvdemos{plum}!"
     }
     // rtv exclusive
-    "5"
+    "4"
     {
         "chat"          "{#add8e6}Wanna play a certain map? Type {gold}!​nominate{#add8e6} to nominate it!"
     }
-    "6"
+    "5"
     {
         "chat"          "{coral}Don't like the current map? Type {purple}!rtv{coral} to force a map vote!"
     }
-    "7"
+    "6"
     {
         "chat"          "{#8dc0f7}Spaceship servers{white} are funded in part by {#FEC09A}SwiftyServers{white}. Visit {#F4722B}https://swiftyservers.com{white} for your personalized scrim/match ready server preloaded with configs, maps, plugins, and {#FEC09A}much more{white}!"
     }
