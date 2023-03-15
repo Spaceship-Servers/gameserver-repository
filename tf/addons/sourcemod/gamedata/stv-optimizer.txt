@@ -1,0 +1,43 @@
+"Games"
+{
+    "tf"
+    {
+        "Functions"
+        {
+            // CGameServer::SetHibernating(CGameServer *this, bool a2)
+            "CGameServer::SetHibernating"
+            {
+                "signature"     "CGameServer::SetHibernating"
+                "callconv"      "thiscall"
+                "return"        "void"
+                "this"          "address"
+                "arguments"
+                {
+                    "bool"
+                    {
+                        "type"      "bool"
+                    }
+                }
+            }
+        }
+        "Signatures"
+        {
+            /*
+                "Server is hibernating\n"
+            */
+            "CGameServer::SetHibernating"
+            {
+                "library"   "engine"
+                "linux"     "@_ZN11CGameServer14SetHibernatingEb"
+                // "windows"   "\x55\x8B\xEC\x83\xEC\x10\x53\x56\x57\x8B\x7D\x08\x8B\xD9\x83\x7F\x24\x00"
+            }
+        }
+        "Offsets"
+        {
+            "Offset_SetHibernateMsgCheck"
+            {
+                "linux"     "172628"
+            }
+        }
+    }
+}

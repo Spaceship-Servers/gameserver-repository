@@ -1,93 +1,34 @@
-#pragma semicolon 1
-#pragma newdecls required
-
 #include <sourcemod>
+#include <dhooks>
 #include <concolors>
 
-public Plugin myinfo =
-{
-    name    = "SrcTV CPU Saver",
-    author  = "sappho.io",
-    version = "0.0.5"
-}
+const int TV_MAX_SNAPSHOT_RATE = 66;
+const int TV_MAX_MAXRATE       = 0;
 
-int TV_MAX_SNAPSHOT_RATE = 66;
-int TV_MAX_MAXRATE       = 0;
+const int TV_MIN_SNAPSHOT_RATE = 1;
+const int TV_MIN_MAXRATE       = 1;
 
-int TV_MIN_SNAPSHOT_RATE = 1;
-int TV_MIN_MAXRATE       = 1;
-
-bool STV_is_on;
+int Offset_SetHibernateMsgCheck = -1;
 
 ConVar tv_snapshotrate;
 ConVar tv_maxrate;
 
-public void OnPluginStart()
-{
-    tv_snapshotrate = FindConVar("tv_snapshotrate");
-    tv_maxrate      = FindConVar("tv_maxrate");
-}
+GameData gd;
 
-public void OnConfigsExecuted()
-{
-    TV_MAX_SNAPSHOT_RATE    = tv_snapshotrate.IntValue;
-    TV_MAX_MAXRATE          = tv_maxrate.IntValue;
-
-    // This is needed to avoid bullshit with SizzlingStats/TFTrue changing stv values on map change
-    CreateTimer(5.0, AvoidRaceCondition);
-}
-
-public void OnClientConnected(int client)
-{
-    IsServerEmpty();
-}
-
-public void OnClientDisconnect_Post(int client)
-{
-    IsServerEmpty();
-}
-
-Action AvoidRaceCondition(Handle timer)
-{
-    IsServerEmpty();
-}
-
+// For lateloading
 bool IsServerEmpty()
 {
     for (int Cl = 1; Cl <= MaxClients; Cl++)
     {
-        if (IsValidClient(Cl))
+        if (!IsValidClient(Cl))
         {
-            if (!STV_is_on)
-            {
-                STVOn();
-            }
-            return false;
+            continue;
         }
+        STVOn();
+        return false;
     }
     STVOff();
     return true;
-}
-
-void STVOn()
-{
-    STV_is_on = true;
-
-    PrintToServer(ansi_cyan ... "[STV Optimizer] Setting STV to max values"... ansi_reset);
-
-    SetConVarInt( tv_snapshotrate,   TV_MAX_SNAPSHOT_RATE );
-    SetConVarInt( tv_maxrate,        TV_MAX_MAXRATE );
-}
-
-void STVOff()
-{
-    STV_is_on = false;
-
-    PrintToServer(ansi_cyan ... "[STV Optimizer] Setting STV to min values" ... ansi_reset);
-
-    SetConVarInt( tv_snapshotrate,   TV_MIN_SNAPSHOT_RATE );
-    SetConVarInt( tv_maxrate,        TV_MIN_MAXRATE );
-
 }
 
 bool IsValidClient(int iClient)
@@ -101,4 +42,113 @@ bool IsValidClient(int iClient)
         return false;
     }
     return true;
+}
+
+public void OnPluginStart()
+{
+    tv_snapshotrate = FindConVar("tv_snapshotrate");
+    tv_maxrate      = FindConVar("tv_maxrate");
+
+    IsServerEmpty();
+
+    DoGamedata();
+}
+
+void DoGamedata()
+{
+    // Our base gamedata file
+    gd = LoadGameConfigFile("stv-optimizer");
+    if (!gd)
+    {
+        SetFailState("Failed to load stv-optimizer gamedata.");
+        return;
+    }
+
+    /*
+        Check Msg offset
+    */
+    {
+        char func[64] = "Offset_SetHibernateMsgCheck";
+        Offset_SetHibernateMsgCheck = GameConfGetOffset(gd, func);
+        if (Offset_SetHibernateMsgCheck == -1)
+        {
+            SetFailState("Failed to get %s", func);
+        }
+        PrintToServer("Got %s!", func);
+    }
+    /*
+        CGameServer::SetHibernating(CGameServer *this, bool a2)
+    */
+    {
+        char func[64] = "CGameServer::SetHibernating";
+        Handle SetHibernating = DHookCreateFromConf(gd, func);
+        if (!SetHibernating)
+        {
+            SetFailState("Failed to setup detour for %s", func);
+        }
+        // hook
+        if ( !DHookEnableDetour(SetHibernating, false, Hook_CGameServer__SetHibernating) )
+        {
+            SetFailState("Failed to detour %s.", func);
+        }
+        PrintToServer("%s detoured!", func);
+    }
+}
+
+
+void STVOn()
+{
+    PrintToServer(ansi_cyan ... "[STV Optimizer] Setting STV to max values"... ansi_reset);
+
+    SetConVarInt( tv_snapshotrate,   TV_MAX_SNAPSHOT_RATE );
+    SetConVarInt( tv_maxrate,        TV_MAX_MAXRATE );
+}
+
+void STVOff()
+{
+    PrintToServer(ansi_cyan ... "[STV Optimizer] Setting STV to min values" ... ansi_reset);
+
+    SetConVarInt( tv_snapshotrate,   TV_MIN_SNAPSHOT_RATE );
+    SetConVarInt( tv_maxrate,        TV_MIN_MAXRATE );
+}
+
+
+public MRESReturn Hook_CGameServer__SetHibernating(Address pThis, DHookParam hParams)
+{
+    // bool
+    bool a2 = DHookGetParam(hParams, 1);
+    /*
+        if ( *(this + 172628) != a2 )
+        {
+            v2 = "Server is hibernating\n";
+            if ( !a2 )
+            {
+                v2 = "Server waking up from hibernation\n";
+            }
+            *(this + 172628) = a2;
+            Msg(v2);
+
+            ...
+        }
+    */
+
+    if ( LoadFromAddress(pThis + view_as<Address>(Offset_SetHibernateMsgCheck), NumberType_Int8 /* byte */) == a2 )
+    {
+        return MRES_Ignored;
+    }
+
+    if (!a2)
+    {
+        // Wake up
+        // LogMessage("UN hibernating");
+        STVOn();
+    }
+    else
+    {
+        // Go to bed
+        // LogMessage("hibernating");
+        STVOff();
+    }
+
+    return MRES_Ignored;
 }
