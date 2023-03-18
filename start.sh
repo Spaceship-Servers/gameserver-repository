@@ -10,4 +10,5 @@ steamcmd/steamcmd.sh +force_install_dir ${PWD} +login anonymous +app_update 2322
 
 ok "./srcds_run $*"
 
-./srcds_run $*
+perf record ./srcds_run $* ; perf inject --jit --input perf.data --output perf.jit.data
+# ./srcds_run $*
