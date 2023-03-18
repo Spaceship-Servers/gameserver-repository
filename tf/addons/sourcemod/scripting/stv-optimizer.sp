@@ -15,43 +15,30 @@ ConVar tv_maxrate;
 
 GameData gd;
 
-// For lateloading
-bool IsServerEmpty()
-{
-    for (int Cl = 1; Cl <= MaxClients; Cl++)
-    {
-        if (!IsValidClient(Cl))
-        {
-            continue;
-        }
-        STVOn();
-        return false;
-    }
-    STVOff();
-    return true;
-}
-
-bool IsValidClient(int iClient)
-{
-    if (iClient <= 0 || iClient > MaxClients || !IsClientConnected(iClient))
-    {
-        return false;
-    }
-    if (IsClientSourceTV(iClient) || IsClientReplay(iClient))
-    {
-        return false;
-    }
-    return true;
-}
+bool IS_HIBERNATING = false;
 
 public void OnPluginStart()
 {
     tv_snapshotrate = FindConVar("tv_snapshotrate");
     tv_maxrate      = FindConVar("tv_maxrate");
 
-    IsServerEmpty();
+    HookConVarChange(tv_snapshotrate, tv_changed);
+    HookConVarChange(tv_maxrate, tv_changed);
 
     DoGamedata();
+}
+
+
+void tv_changed(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    if (IS_HIBERNATING)
+    {
+        STVOff();
+    }
+    else
+    {
+        STVOn();
+    }
 }
 
 void DoGamedata()
@@ -132,11 +119,22 @@ public MRESReturn Hook_CGameServer__SetHibernating(Address pThis, DHookParam hPa
         }
     */
 
+    // RUNS EVERY FRAME!
+    if (!a2)
+    {
+        IS_HIBERNATING = false;
+    }
+    else
+    {
+        IS_HIBERNATING = true;
+    }
+
     if ( LoadFromAddress(pThis + view_as<Address>(Offset_SetHibernateMsgCheck), NumberType_Int8 /* byte */) == a2 )
     {
         return MRES_Ignored;
     }
 
+    // ONLY RUNS WHEN HIBERNATION STATUS CHANGES!
     if (!a2)
     {
         // Wake up
