@@ -26,8 +26,15 @@ public void OnPluginStart()
     HookConVarChange(tv_maxrate, tv_changed);
 
     DoGamedata();
+
+    CreateTimer(2.5, Timer_ForceHiberCheck);
 }
 
+Action Timer_ForceHiberCheck(Handle timer)
+{
+    tv_changed(null, "", "");
+    return Plugin_Continue;
+}
 
 void tv_changed(ConVar convar, const char[] oldValue, const char[] newValue)
 {
