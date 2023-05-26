@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 2021  Mikusch
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+"Games"
+{
+	"tf"
+	{
+		"Signatures"
+		{
+			"CTFPlayer::CanAirDash"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CTFPlayer10CanAirDashEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x57\x8B\xF9\xF7\x87\xB4\x1B\x00\x00\x00\x00\x04\x00"
+			}
+			"CTFGameMovement::CheckJumpButton"
+			{
+				"library"	"server"
+				"linux"		"@_ZN15CTFGameMovement15CheckJumpButtonEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x0C\x57\x8B\xF9\x8B\x47\x04\x80\xB8\x84\x0B\x00\x00\x00"
+			}
+			"CTFGameMovement::PreventBunnyJumping"
+			{
+				"library"	"server"
+				"linux"		"@_ZN15CTFGameMovement19PreventBunnyJumpingEv"
+				"windows"	"\x56\x8B\xF1\x6A\x52\x8B\x8E\xA8\x07\x00\x00\x81\xC1\xE0\x1A\x00\x00\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A"
+			}
+		}
+		"MemPatches"
+		{
+			"CTFGameMovement::CheckJumpButton::AllowDuckJumping"
+			{
+				"signature"	"CTFGameMovement::CheckJumpButton"
+				"linux"
+				{
+					"offset"	"DFh"
+					"verify"	"\x74"
+					"patch"		"\xEB"
+				}
+				"windows"
+				{
+					"offset"	"1FFh"
+					"verify"	"\x74"
+					"patch"		"\xEB"
+				}
+			}
+			"CTFGameMovement::PreventBunnyJumping::AllowBunnyJumping"
+			{
+				"signature"	"CTFGameMovement::PreventBunnyJumping"
+				"linux"
+				{
+					"offset"	"27h"
+					"verify"	"\x75"
+					"patch"		"\xEB"
+				}
+				"windows"
+				{
+					"offset"	"18h"
+					"verify"	"\x75"
+					"patch"		"\xEB"
+				}
+			}
+		}
+	}
+}
