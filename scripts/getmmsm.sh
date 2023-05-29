@@ -1,12 +1,27 @@
 #!/bin/bash
 
-mm_url="https://mms.alliedmods.net/mmsdrop/1.12/mmsource-1.12.0-git1167-linux.tar.gz"
-sm_url="https://sm.alliedmods.net/smdrop/1.11/sourcemod-1.11.0-git6934-linux.tar.gz"
+latestMM=$(curl https://mms.alliedmods.net/mmsdrop/1.12/mmsource-latest-linux -s -S)
+latestSM=$(curl https://sm.alliedmods.net/smdrop/1.11/sourcemod-latest-linux -s -S)
 
-mm_dest="mm-1.12.1167.tgz"
-sm_dest="sm-1.11.6934.tgz"
+mm_url="https://mms.alliedmods.net/mmsdrop/1.12/${latestMM}"
+sm_url="https://sm.alliedmods.net/smdrop/1.11/${latestSM}"
+
+if [[ ! ${mm_url} =~ .*"tar.gz"$ ]]; then
+    echo "mm url is not fine; ${mm_url}"
+    exit 1
+fi
+
+if [[ ! ${sm_url} =~ .*"tar.gz"$ ]]; then
+    echo "sm url is not fine; ${sm_url}"
+    exit 1
+fi
+
+echo ${sm_url}
 
 export destfolder="mmsm_xtracted"
+
+
+
 
 
 echo "rming tempfolder"
@@ -17,16 +32,16 @@ echo "cding to destfolder"
 cd /tmp/$destfolder
 
 echo "Curling Metamod Source"
-curl "$mm_url" --output "$mm_dest" --limit-rate 4M
+curl "$mm_url" --output "${latestMM}" --limit-rate 4M
 
 
 echo "Curling SourceMod"
-curl "$sm_url" --output "$sm_dest" --limit-rate 4M
+curl "$sm_url" --output "${latestSM}" --limit-rate 4M
 
 echo "Untarring Metamod Source"
-tar xfv "$mm_dest" # -C "$destfolder"
+tar xfv "${latestMM}" # -C "$destfolder"
 echo "Untarring Metamod Source"
-tar xfv "$sm_dest" # -C "$destfolder"
+tar xfv "${latestSM}" # -C "$destfolder"
 
 echo "rming tgz"
 rm ./*.tgz -fv
