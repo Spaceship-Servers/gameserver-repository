@@ -277,7 +277,7 @@ public Action RefreshServerInfo(Handle timer) {
 public Action CleanUp(Handle timer) {
 	for (int i = 0; i < g_iServerCount; i++) {
 		if (strlen(g_sServerInfo[i]) == 0 && !g_bSocketError[i]) {
-			LogError("Server %s:%i is down, no reply received within %0.0f seconds.", g_sServerAddress[i], g_iServerPort[i], SERVER_TIMEOUT);
+			// LogError("Server %s:%i is down, no reply received within %0.0f seconds.", g_sServerAddress[i], g_iServerPort[i], SERVER_TIMEOUT);
 			delete g_hSocket[i];
 		}
 	}
@@ -469,7 +469,7 @@ public void OnSocketDisconnected(Handle sock, any i) {
 
 public void OnSocketError(Handle sock, const int errorType, const int errorNum, any i) {
 	if (!g_bCoolDown) {
-		LogError("Server %s:%i is down: socket error %d (errno %d)", g_sServerAddress[i], g_iServerPort[i], errorType, errorNum);
+		// LogError("Server %s:%i is down: socket error %d (errno %d)", g_sServerAddress[i], g_iServerPort[i], errorType, errorNum);
 		CreateTimer(600.0, timerErrorCooldown);
 		g_bCoolDown = true;
 	}
