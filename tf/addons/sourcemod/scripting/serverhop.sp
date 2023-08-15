@@ -7,7 +7,7 @@
 #define PLUGIN_DESCRIPTION "Provides live server info with join option"
 #define MAX_SERVERS 64
 #define REFRESH_TIME 60.0
-#define SERVER_TIMEOUT 600.0
+#define SERVER_TIMEOUT 15.0
 #define MAX_STR_LEN 160
 #define MAX_INFO_LEN 200
 

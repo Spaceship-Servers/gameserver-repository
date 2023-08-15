@@ -33,3 +33,6 @@ cp_follower
 // ctf_2fort_neocity
 // dm_bloodcov_b1a
 // de_nuke
+cp_badlands
+cp_granary
+koth_warmtic_f10
