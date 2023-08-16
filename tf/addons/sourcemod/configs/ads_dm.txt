@@ -32,10 +32,6 @@
     // dm exclusive
     "4"
     {
-        "chat"          "{coral}Don't like the current map? Type {gold}!nominate{coral} to nominate a map to play instead, and {purple}!rtv{coral} to force a map vote!"
-    }
-    "5"
-    {
-        "chat"          "{#8dc0f7}Spaceship servers{white} are funded in part by {#FEC09A}SwiftyServers{white}. Visit {#F4722B}https://swiftyservers.com{white} for your personalized scrim/match ready server preloaded with configs, maps, plugins, and {#FEC09A}much more{white}!"
+        "chat"    "{coral}Don't like the current map? Type {gold}!nominate{coral} to nominate a map to play instead, and {purple}!rtv{coral} to force a map vote!"
     }
 }
