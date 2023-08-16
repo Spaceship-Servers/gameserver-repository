@@ -12,3 +12,4 @@ ctf_turbine_pro_rc4
 koth_bagel_rc5
 cp_sultry_b8
 koth_warmtic_f10
+cp_entropy_b5
