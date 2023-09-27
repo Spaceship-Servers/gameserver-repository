@@ -3,11 +3,11 @@
 #include <sourcemod>
 #include <socket>
 
-#define PLUGIN_VERSION "1.0.2.spaceship"
+#define PLUGIN_VERSION "1.0.2-spaceship-fix"
 #define PLUGIN_DESCRIPTION "Provides live server info with join option"
-#define MAX_SERVERS 64
+#define MAX_SERVERS 16
 #define REFRESH_TIME 60.0
-#define SERVER_TIMEOUT 15.0
+#define SERVER_TIMEOUT 10.0
 #define MAX_STR_LEN 160
 #define MAX_INFO_LEN 200
 
@@ -242,6 +242,7 @@ public int Menu_Handler(Menu menu, MenuAction action, int param1, int param2) {
 	else if (action == MenuAction_End) {
 		delete menu;
 	}
+
 	return 0;
 }
 
@@ -257,6 +258,7 @@ public int MenuConfirmHandler(Menu menu, MenuAction action, int param1, int para
 	}
 	g_sAddress[param1][0] = '\0';
 	g_sServer[param1][0] = '\0';
+
 	return 0;
 }
 
@@ -271,13 +273,14 @@ public Action RefreshServerInfo(Handle timer) {
 	}
 
 	CreateTimer(SERVER_TIMEOUT, CleanUp);
+
 	return Plugin_Continue;
 }
 
 public Action CleanUp(Handle timer) {
 	for (int i = 0; i < g_iServerCount; i++) {
 		if (strlen(g_sServerInfo[i]) == 0 && !g_bSocketError[i]) {
-			// LogError("Server %s:%i is down, no reply received within %0.0f seconds.", g_sServerAddress[i], g_iServerPort[i], SERVER_TIMEOUT);
+			LogError("Server %s:%i is down, no reply received within %0.0f seconds.", g_sServerAddress[i], g_iServerPort[i], SERVER_TIMEOUT);
 			delete g_hSocket[i];
 		}
 	}
@@ -291,6 +294,7 @@ public Action CleanUp(Handle timer) {
 			g_iAdvertInterval = 1;
 		}
 	}
+
 	return Plugin_Continue;
 }
 
@@ -469,7 +473,7 @@ public void OnSocketDisconnected(Handle sock, any i) {
 
 public void OnSocketError(Handle sock, const int errorType, const int errorNum, any i) {
 	if (!g_bCoolDown) {
-		// LogError("Server %s:%i is down: socket error %d (errno %d)", g_sServerAddress[i], g_iServerPort[i], errorType, errorNum);
+		LogError("Server %s:%i is down: socket error %d (errno %d)", g_sServerAddress[i], g_iServerPort[i], errorType, errorNum);
 		CreateTimer(600.0, timerErrorCooldown);
 		g_bCoolDown = true;
 	}
@@ -481,5 +485,6 @@ public void OnSocketError(Handle sock, const int errorType, const int errorNum, 
 
 Action timerErrorCooldown(Handle timer) {
 	g_bCoolDown = false;
+
 	return Plugin_Continue;
 }
