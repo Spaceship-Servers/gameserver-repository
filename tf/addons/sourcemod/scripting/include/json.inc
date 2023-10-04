@@ -712,7 +712,6 @@ stock JSON_Object json_read_from_file(const char[] path, int options = JSON_NONE
 
     f.Seek(0, SEEK_SET);
     f.ReadString(buffer, size);
-    delete f;
 
     return json_decode(buffer, options);
 }
@@ -733,10 +732,6 @@ stock JSON_Object json_copy_shallow(JSON_Object obj)
     if (isArray) {
         view_as<JSON_Array>(result).Concat(view_as<JSON_Array>(obj));
     } else {
-        if (obj.OrderedKeys) {
-            result.EnableOrderedKeys();
-        }
-
         result.Merge(obj);
     }
 

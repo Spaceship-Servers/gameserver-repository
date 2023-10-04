@@ -21,7 +21,7 @@ void DoItemsConVars()
         "tftrue_whitelist_id",
         "-1",
         "tf2rue whitelist id",
-        _,
+        FCVAR_NOTIFY,
         true, -1.0,
         false
     );
@@ -56,7 +56,7 @@ void DoItemsGamedata()
     {
         SetFailState("Couldn't endPrepSdkcall for CEconItemSystem::ReloadWhitelist");
     }
-    PrintToServer(tagtag ... "-> Prepped SDKCall for CEconItemSystem::ReloadWhitelist");
+    LogMessage("-> Prepped SDKCall for CEconItemSystem::ReloadWhitelist");
 
 
 
@@ -72,12 +72,12 @@ void DoItemsGamedata()
     {
         SetFailState("Couldn't end PrepSdkcall for ItemSystem");
     }
-    PrintToServer(tagtag ... "-> Prepped SDKCall for ItemSystem*");
+    LogMessage("-> Prepped SDKCall for ItemSystem*");
 
     // Debug
-    // LogMessage("%x", SDKCall_GiveDefaultItems);
-    // LogMessage("%x", SDKCall_ItemSystem);
-    // LogMessage("%x", SDKCall_ReloadWhitelist);
+    //LogMessage("%x", SDKCall_GiveDefaultItems);
+    //LogMessage("%x", SDKCall_ItemSystem);
+    //LogMessage("%x", SDKCall_ReloadWhitelist);
 }
 
 void DoItemsMemPatches()
@@ -91,7 +91,7 @@ void DoItemsMemPatches()
     }
     else if (memp_ReloadWhitelist_tournamentfix.Enable())
     {
-        PrintToServer(tagtag ... "-> Patched CEconItemSystem::ReloadWhitelist::nopnop");
+        LogMessage("-> Patched CEconItemSystem::ReloadWhitelist::nopnop");
     }
 
 
@@ -105,7 +105,7 @@ void DoItemsMemPatches()
     }
     else if (memp_ReloadWhitelist_NoSpamMsgs.Enable())
     {
-        PrintToServer(tagtag ... "-> Patched CEconItemSystem::ReloadWhitelist::nopMsg");
+        LogMessage("-> Patched CEconItemSystem::ReloadWhitelist::nopMsg");
     }
 
 
@@ -119,7 +119,7 @@ void DoItemsMemPatches()
     }
     else if (memp_ReloadWhitelist_NoSpamWarnings.Enable())
     {
-        PrintToServer(tagtag ... "-> Patched CEconItemSystem::ReloadWhitelist::nopWarning");
+        LogMessage("-> Patched CEconItemSystem::ReloadWhitelist::nopWarning");
     }
 
 
@@ -134,18 +134,12 @@ void DoItemsMemPatches()
     }
     else if (memp_GetLoadoutItem.Enable())
     {
-        PrintToServer(tagtag ... "-> Patched CTFPlayer::GetLoadoutItem::nopnop");
+        LogMessage("-> Patched CTFPlayer::GetLoadoutItem::nopnop");
     }
 }
 
 
-void mptw_changed(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-    if (!StrEqual(oldValue, newValue))
-    {
-        ReloadWhitelist();
-    }
-}
+
 char wlvalue[32];
 
 void tft_wl_changed(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -161,24 +155,27 @@ void tft_wl_changed(ConVar convar, const char[] oldValue, const char[] newValue)
 }
 void CheckWltfMtime()
 {
+    char lastUpdateTimeURL[256];
+
     /* string vs numeric ids */
     if (IsStringNumeric(wlvalue))
     {
         Format(wlurl, sizeof(wlurl), "https://whitelist.tf/custom_whitelist_%s.txt", wlvalue);
         Format(wlcfg, sizeof(wlcfg), "cfg/custom_whitelist_%s.txt",                  wlvalue);
+        Format(lastUpdateTimeURL, sizeof(lastUpdateTimeURL), "https://whitelist.tf/last_update_time");
     }
     else
     {
         Format(wlurl, sizeof(wlurl), "https://whitelist.tf/%s.txt",  wlvalue);
         Format(wlcfg, sizeof(wlcfg), "cfg/%s.txt",                   wlvalue);
+        Format(lastUpdateTimeURL, sizeof(lastUpdateTimeURL), "https://whitelist.tf/last_update_time?whitelist=%s", wlvalue);
     }
-
+    localmtime = -1;
     localmtime = GetFileTime(wlcfg, FileTime_LastChange);
-    // LogMessage("%i", localmtime);
+    LogMessage("CheckWltfMtime - localmtime %i", localmtime);
+    LogMessage("CheckWltfMtime - GETing url %s", lastUpdateTimeURL);
 
-    // LogMessage("GETing url %s", "https://whitelist.tf/last_update_time");
-
-    Handle hRequest = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, "https://whitelist.tf/last_update_time");
+    Handle hRequest = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, lastUpdateTimeURL);
 
     SteamWorks_SetHTTPCallbacks(hRequest, SteamWorks_OnCheckWltfMtime);
     SteamWorks_SendHTTPRequest(hRequest);
@@ -186,43 +183,58 @@ void CheckWltfMtime()
 
 public void SteamWorks_OnCheckWltfMtime(Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode)
 {
-    if (!bFailure && bRequestSuccessful && eStatusCode == k_EHTTPStatusCode200OK)
+    wltfmtime = -1;
+    if
+    (
+        !bFailure
+        && bRequestSuccessful
+        &&
+        (
+            eStatusCode == k_EHTTPStatusCode200OK
+            //||
+            //eStatusCode == k_EHTTPStatusCode304NotModified
+            // caching currently doesn't work with steamworks...?
+        )
+    )
     {
         int bodysize;
         bool bodyexists = SteamWorks_GetHTTPResponseBodySize(hRequest, bodysize);
         if (bodyexists == false)
         {
-            PrintToServer(tagtag ... "No bodysize for wltf mtime request???");
+            LogImportant("No bodysize for wltf mtime request??? Forcibly redownloading whitelist...");
+
             CloseHandle(hRequest);
+            CheckMtimes();
             return;
         }
+        // this is on the stack it gets auto delete'd
         char[] strResponse = new char[bodysize];
-
 
         SteamWorks_GetHTTPResponseBodyData(hRequest, strResponse, bodysize);
         wltfmtime = StringToInt(strResponse);
-
-        CheckMtimes();
     }
     else
     {
-        PrintToServer(tagtag ... "Failed to download whitelist. StatusCode = %i, bFailure = %i, RequestSuccessful = %i.", eStatusCode, bFailure, bRequestSuccessful);
+        LogImportant("Failed to check whitelist modified time. Forcibly redownloading whitelist.\nStatusCode = %i, bFailure = %i, RequestSuccessful = %i.", eStatusCode, bFailure, bRequestSuccessful);
     }
 
     CloseHandle(hRequest);
+    CheckMtimes();
+    return;
 }
 
 void CheckMtimes()
 {
-    if (wltfmtime > localmtime)
+    // TODO; need to make sure localmtime is in UTC...
+    if (wltfmtime > localmtime || wltfmtime <= 0 || localmtime <= 0)
     {
-        // LogMessage("wltfmtime %i > %i localmtime", wltfmtime, localmtime);
+        LogMessage("CheckMtimes - wltfmtime %i > %i localmtime || wltfmtime %i <= 0 || localtime %i <= 0", wltfmtime, localmtime, wltfmtime, localmtime);
         DownloadWhitelist();
     }
     else
     {
-        PrintToServer(tagtag ... "Not redownloading unchanged whitelist for no reason.");
-        // LogMessage("wltfmtime %i < %i localmtime", wltfmtime, localmtime);
+        LogMessage("Not redownloading unchanged whitelist for no reason.");
+        LogMessage("wltfmtime %i < %i localmtime", wltfmtime, localmtime);
 
         SetWhitelist();
     }
@@ -230,9 +242,11 @@ void CheckMtimes()
 
 void DownloadWhitelist()
 {
-    PrintToServer(tagtag ... "GETing url %s", wlurl);
+    LogMessage("GETing url %s", wlurl);
 
     Handle request = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, wlurl);
+    //SteamWorks_SetHTTPRequestHeaderValue(request, "cache-control", "max-age=1200");
+    //SteamWorks_SetHTTPRequestHeaderValue(request, "If-Modified-Since", "Wed, 21 Oct 2024 07:28:00 GMT");
 
     SteamWorks_SetHTTPCallbacks(request, SteamWorks_OnDownloadWhitelist);
     SteamWorks_SendHTTPRequest(request);
@@ -241,30 +255,74 @@ void DownloadWhitelist()
 
 public void SteamWorks_OnDownloadWhitelist(Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode)
 {
-    if (!bFailure && bRequestSuccessful && eStatusCode == k_EHTTPStatusCode200OK)
+    if
+    (
+        !bFailure
+        && bRequestSuccessful
+        &&
+        (
+            eStatusCode == k_EHTTPStatusCode200OK
+            // ||
+            // eStatusCode == k_EHTTPStatusCode304NotModified
+        )
+    )
     {
         SteamWorks_WriteHTTPResponseBodyToFile(hRequest, wlcfg);
+    }
+    else
+    {
+        LogImportant("Failed to download whitelist. Attempting to use cached whitelist...\nStatusCode = %i, bFailure = %i, RequestSuccessful = %i.", eStatusCode, bFailure, bRequestSuccessful);
+    }
+
+    CloseHandle(hRequest);
+
+    // check that the file exists
+    if (FileExists(wlcfg))
+    {
+        LogMessage("Setting whitelist %s...", wlcfg);
         SetWhitelist();
     }
     else
     {
-        PrintToServer(tagtag ... "[TFT] Failed to download whitelist. StatusCode = %i, bFailure = %i, RequestSuccessful = %i.", eStatusCode, bFailure, bRequestSuccessful);
+        LogImportant("Whitelist %s DOES NOT EXIST, CAN NOT SET WHITELIST!", wlcfg);
     }
-
-    CloseHandle(hRequest);
 }
 
 void SetWhitelist()
 {
     mptw.SetString(wlcfg);
+    LogImportant("Setting whitelist %s...", wlcfg);
+}
+
+void mptw_changed(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    if (!StrEqual(oldValue, newValue))
+    {
+        ReloadWhitelist();
+    }
 }
 
 void ReloadWhitelist()
 {
-    // Reload the whitelist
+    static Profiler prof = null;
+    if (!prof)
+    {
+        prof = CreateProfiler();
+    }
+
+
+    StartProfiling(prof);
+    // Reload the whitelist - this is laggy (BECAUSE OF KeyValues::LoadFromFile in ReloadWhitelist, not because of my code), we need to optimize this at some point...
     Address Addr_ItemSys = SDKCall(SDKCall_ItemSystem);
     SDKCall(SDKCall_ReloadWhitelist, Addr_ItemSys);
+    StopProfiling(prof);
 
+
+    float profTime = GetProfilerTime(prof);
+    LogMessage("CEconItemSystem::ReloadWhitelist took %fms", profTime * 1000.0);
+
+
+    StartProfiling(prof);
     // Remove all client items
     for (int client = 1; client <= MaxClients; client++)
     {
@@ -307,7 +365,8 @@ void ReloadWhitelist()
         SetEntProp(client, Prop_Send, "m_bRegenerating", 0);
         // TF2_RegeneratePlayer(client);
     }
+    StopProfiling(prof);
+
+    profTime = GetProfilerTime(prof);
+    LogMessage("Regenerating all players took %fms", profTime * 1000.0);
 }
-
-
-
