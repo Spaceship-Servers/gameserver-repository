@@ -21,7 +21,9 @@
     #define MAXPLAYERS 101
 #endif
 
+#if !defined (AUTOLOAD_EXTENSIONS)
 #define AUTOLOAD_EXTENSIONS
+#endif
 // REQUIRED extensions:
 // SteamWorks for being able to make webrequests: https://forums.alliedmods.net/showthread.php?t=229556
 // Get latest version from here: https://github.com/KyleSanderson/SteamWorks/releases
@@ -53,7 +55,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION  "6.1.0"
+#define PLUGIN_VERSION  "6.1.2"
 
 #define UPDATE_URL      "https://raw.githubusercontent.com/sapphonie/StAC-tf2/master/updatefile.txt"
 
@@ -241,7 +243,7 @@ public void OnGameFrame()
         timeSinceLagSpikeFor[0] = GetEngineTime();
 
         StacLog("Server framerate stuttered. Expected: ~%.1f, got %i.\nDisabling OnPlayerRunCmd checks for %.2f seconds.", tps, tickspersec[0], ServerLagWaitLength);
-        if (DEBUG)
+        if (stac_debug.BoolValue)
         {
             PrintToImportant("{hotpink}[StAC]{white} Server framerate stuttered. Expected: {palegreen}~%.1f{white}, got {fullred}%i{white}.\nDisabling OnPlayerRunCmd checks for %f seconds.",
             tps, tickspersec[0], ServerLagWaitLength);
