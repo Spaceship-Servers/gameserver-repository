@@ -577,7 +577,7 @@ void cmdnumspikeCheck(int cl)
 
     int spikeamt = clcmdnum[cl][0] - clcmdnum[cl][1];
     // https://github.com/sapphonie/StAC-tf2/issues/74
-    if (spikeamt >= 32 || spikeamt < 0)
+    if (spikeamt >= 32 || spikeamt <= -32)
     {
         int userid = GetClientUserId(cl);
 
@@ -606,8 +606,8 @@ void cmdnumspikeCheck(int cl)
         }
 
         // punish if we reach limit set by cvar
-        if (cmdnumSpikeDetects[cl] >= stac_max_fakeang_detections.IntValue
-        && stac_max_fakeang_detections.IntValue > 0)
+        if (cmdnumSpikeDetects[cl] >= stac_max_cmdnum_detections.IntValue
+        && stac_max_cmdnum_detections.IntValue > 0)
         {
             char reason[128];
             Format(reason, sizeof(reason), "%t", "cmdnumSpikesBanMsg", cmdnumSpikeDetects[cl]);
