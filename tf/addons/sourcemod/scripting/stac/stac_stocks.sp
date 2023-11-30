@@ -49,11 +49,13 @@ void CloseStacLog()
     delete StacLogFile;
 }
 
-// log to StAC log file
-// This strips color strings, e.g.
-// {color}test{color2}
-// will become
-// test
+/*
+    log to StAC log file
+    This strips color strings, e.g.
+    {color}test{color2}
+    will become
+    [StAC] test
+*/
 void StacLog(const char[] format, any ...)
 {
     // crutch for reloading the plugin and still printing to our log file
@@ -704,6 +706,15 @@ public void OnLibraryAdded(const char[] name)
 // otherwise, it's a detection with a number of detections
 void StacNotify(int userid, const char[] prefmtedstring, int detections = 0)
 {
+    // This prevents a strange race condition where StAC seems to explode using ban
+    // systems that don't ban immediately, resulting in a ridiculous amount of discord spam.
+    // I'm still investigating, so this may not fully fix the issue.
+    int cl = GetClientOfUserId(userid);
+    if (userBanQueued[cl])
+    {
+        return;
+    }
+
     StacLogDemo();
 
     if (!DISCORD)
@@ -743,8 +754,6 @@ void StacNotify(int userid, const char[] prefmtedstring, int detections = 0)
 
     // this isn't used anywhere we're just using it to copy off of
     json_cleanup_and_delete(spacerField);
-
-    int cl = GetClientOfUserId(userid);
 
     JSON_Object nameField;
     JSON_Object steamIDfield;
@@ -1263,6 +1272,37 @@ float float_rand(float min, float max)
     float scale = GetURandomFloat();    /* [0, 1.0] */
     return min + scale * ( max - min ); /* [min, max] */
 }
+
+
+// https://bitbashing.io/comparing-floats.html
+// DON'T use prec values above ~2, even ~1 was giving me weird issues
+bool floatcmpreal( float a, float b, float precision = 0.001 )
+{
+    return FloatAbs( a - b ) <= precision;
+}
+
+
+bool KthBitOfN(int n, int k)
+{
+    int bit = (n >> k) & 1;
+    return !!bit;
+}
+
+
+// Signed version of GetURandomInt
+int GetSRandomInt()
+{
+    bool sign = KthBitOfN(GetURandomInt(), 0);
+    int random = GetURandomInt();
+
+    if (sign)
+    {
+        random = -random;
+    }
+
+    return random;
+}
+
 
 // https://forums.alliedmods.net/showpost.php?p=2698561&postcount=2
 // STEAM_1:1:23456789 to 23456789

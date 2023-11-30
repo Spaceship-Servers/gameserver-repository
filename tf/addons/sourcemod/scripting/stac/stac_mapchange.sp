@@ -22,6 +22,16 @@ public void OnMapStart()
     CreateTimer(0.2, getIP);
     EngineSanityChecks();
 
+    if ( !host_timescale )
+    {
+        host_timescale = FindConVar("host_timescale");
+        if ( !host_timescale )
+        {
+            SetFailState("Couldn't get host_timescale cvar!");
+        }
+    }
+
+
 /*
     int ent = -1;
     while ((ent = FindEntityByClassname(ent, "point_worldtext")) != -1)
@@ -127,9 +137,6 @@ Action checkNativesEtc(Handle timer)
         }
     }
 
-    // check timescale so we can check if the client's matches the server's
-    timescale = GetConVarFloat(FindConVar("host_timescale"));
-
     // check wait command
     if (GetConVarBool(FindConVar("sv_allow_wait_command")))
     {
@@ -174,11 +181,7 @@ void ResetTimers()
             QueryTimer[cl] =
             CreateTimer
             (
-                GetRandomFloat
-                (
-                    stac_min_randomcheck_secs.FloatValue,
-                    stac_max_randomcheck_secs.FloatValue
-                ),
+                float_rand( stac_min_randomcheck_secs.FloatValue, stac_max_randomcheck_secs.FloatValue ),
                 Timer_CheckClientConVars,
                 userid
             );

@@ -146,7 +146,7 @@ public void OnPluginStart()
     // hook sv_cheats so we can instantly unload if cheats get turned on
     HookConVarChange(FindConVar("sv_cheats"), GenericCvarChanged);
     // hook host_timescale so we don't ban ppl if it's not default
-    HookConVarChange(FindConVar("host_timescale"), GenericCvarChanged);
+    // HookConVarChange(FindConVar("host_timescale"), GenericCvarChanged);
     // hook wait command status for tbot
     HookConVarChange(FindConVar("sv_allow_wait_command"), GenericCvarChanged);
 
@@ -172,6 +172,10 @@ public void OnPluginStart()
     // create global timer running every couple jiffys for getting all clients' network info
     // This immediately populates the arrays instead of waiting a timer tick
     CreateTimer(0.1, Timer_GetNetInfo, _, TIMER_REPEAT);
+
+    SetUpIPConnectLeakyBucket();
+
+
     Timer_GetNetInfo(null);
 
     // init hud sync stuff for livefeed
