@@ -199,6 +199,7 @@ stripsecrets ()
         echo 'regex:(?m)((rcon|sv|tv)_password \".*)==>// ***REPLACED SRC PASSWORD***';
 ***REPLACED PRIVATE URL******';
 ***REPLACED API KEY***
+***REPLACED API KEY***
     } >> regex.txt
 
     # quite dumb that i need to do this lol, this ignores our bins
