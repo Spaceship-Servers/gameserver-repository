@@ -44,56 +44,65 @@ public bool OnClientPreConnectEx(const char[] name, char password[255], const ch
     strcopy(latestIP,       sizeof(latestIP),       ip);
     strcopy(latestSteamID,  sizeof(latestSteamID),  steamID);
 
-
     if (!stac_prevent_connect_spam.BoolValue)
     {
         return true;
     }
 
-    // TODO: does this need to be higher? or lower? or...?
-    static int threshold = 5;
-    int connects;
-    IPBuckets.GetValue(ip, connects); // 0 if not present
-    connects++;
-    if (connects >= threshold)
+    // DO NOT interfere with lan matches until we have a way to store port from here!
+    ConVar sv_lan = FindConVar("sv_lan");
+    if (sv_lan.BoolValue)
     {
-        rejectReason = "Rate limited.";
-        
-        // BanIdentity(steamID, 60, BANFLAG_AUTHID, "");
-        // BanIdentity(ip, 60, BANFLAG_IP, "");
-
-        // THE REASON we are doing this, is so that we hook into srcds's built in
-        // "firewall", basically, where with the default game banning system,
-        // srcds will ignore packets from banned ips.
-        // this prevents any clients from spamming, in a way that would otherwise not really be possible,
-        // without stupid memory hacks that would be overcomplicated anyway since this already exists
-        if ( CommandExists("sm_banip") && CommandExists("sm_addban") )
-        {
-            ServerCommand("sm_addban 60 %s %s", steamID,    "Rate limited");
-            ServerCommand("sm_banip %s 60 %s",  ip,         "Rate limited");
-        }
-        else
-        {
-            ServerCommand("addip 60 %s", ip);
-            ServerCommand("banid 60 %s", steamID);
-        }
-
-        return false;
+        return true;
     }
+
+    // connects is how many times have they connected recently, it decays by 1 every 5 seconds
+    // threshold how many times is "too many"
+    // thresholdEx is at what point we should start punishing & making each connect be worth double/triple/etc to the algorithm 
+    int connects            = 0;
+    static int threshold    = 6;
+    static int thresholdEx  = 10;
+    bool punish             = false;
+    IPBuckets.GetValue(ip, connects); // 0 if not present
+
+    // inc by one since we're in this callback
+    connects++;
+
+    // strong punishment
+    if (connects > thresholdEx)
+    {
+        punish          = true;
+        rejectReason    = "Rate limited for retry spam. Please try again in a few minutes.";
+        // worth double
+        connects++;
+    }
+    // light punishment
+    else if (connects >= threshold)
+    {
+        punish          = true;
+        rejectReason    = "Rate limited for retry spam. Please try again in a bit.";
+    }
+    else { /* no punishment, they didn't trip any threshold */ }
+
+    // set our connects to our stupid global var thing
     IPBuckets.SetValue(ip, connects);
 
     if (stac_debug.BoolValue)
     {
-        StacLog("-> connects from ip %s %i", ip, connects);
+        StacLog("[stac_prevent_connect_spam - OnClientPreConnectEx] %i connects from ip %s", connects, ip);
     }
-
-    return true;
+    
+    // this func detour returns true to let them in, and false to prevent them from connecting
+    // rejectReason is displayed as the reason to their client.
+    // that's just how it is.
+    return !punish;
 }
 
 Action LeakIPConnectBucket(Handle timer)
 {
     if (!stac_prevent_connect_spam.BoolValue)
     {
+        IPBuckets.Clear();
         return Plugin_Continue;
     }
 
@@ -110,14 +119,14 @@ Action LeakIPConnectBucket(Handle timer)
 
         if (stac_debug.BoolValue)
         {
-            StacLog("(LeakIPConnectBucket) connects from ip %s %i", ip, connects);
+            StacLog("[stac_prevent_connect_spam - LeakIPConnectBucket] %i connects from ip %s", connects, ip);
         }
 
         if (connects <= 0)
         {
             if (stac_debug.BoolValue)
             {
-                StacLog("-> connects from ip %s %i [ REMOVING ] ", ip, connects);
+                StacLog("[stac_prevent_connect_spam - LeakIPConnectBucket] %i connects from ip %s [ REMOVING ] ", connects, ip);
             }
 
             IPBuckets.Remove(ip);
@@ -330,8 +339,10 @@ public void OnClientPutInServer(int cl)
         StacLog("OCPIS steamid = %s", SteamAuthFor[cl]);
     }
 
-    // bail if cvar is set to 0
-    if (stac_max_connections_from_ip.IntValue > 0)
+    ConVar sv_lan = FindConVar("sv_lan");
+
+    // bail if cvar is set to 0 or if we're in sv_lan 1
+    if ( stac_max_connections_from_ip.IntValue > 0 && !(sv_lan.BoolValue) )
     {
         checkIP(cl);
     }
@@ -549,6 +560,7 @@ Action OnAllClientCommands(int cl, const char[] command, int argc)
     return Plugin_Continue;
 }
 
+// Runs OnClientPutInServer (which runs on map change too!) and OnClientDisconnect
 void ClearClBasedVars(int userid)
 {
     // get fresh cli id
@@ -565,6 +577,7 @@ void ClearClBasedVars(int userid)
     cmdnumSpikeDetects      [cl] = 0;
     tbotDetects             [cl] = -1;
     invalidUsercmdDetects   [cl] = 0;
+    stacProbingDetects      [cl] = 0;
 
     // frames since client "did something"
     //                      [ client index ][history]
