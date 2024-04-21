@@ -1,10 +1,10 @@
+#pragma newdecls required // use new syntax
+
+
 #if defined _SteamWorks_Included
  #endinput
 #endif
 #define _SteamWorks_Included
-
-#pragma semicolon 1
-#pragma newdecls required
 
 // https://partner.steamgames.com/doc/api
 
@@ -284,7 +284,6 @@ native bool SteamWorks_GetHTTPStreamingResponseBodyData(Handle hRequest, int cOf
 native bool SteamWorks_GetHTTPDownloadProgressPct(Handle hRequest, float &percent);
 native bool SteamWorks_GetHTTPRequestWasTimedOut(Handle hRequest, bool &bWasTimedOut);
 native bool SteamWorks_SetHTTPRequestRawPostBody(Handle hRequest, const char[] sContentType, const char[] sBody, int bodylen);
-native bool SteamWorks_SetHTTPRequestRawPostBodyFromFile(Handle hRequest, const char[] sContentType, const char[] sFileName);
 
 typeset SteamWorksHTTPBodyCallback
 {
@@ -302,7 +301,7 @@ forward void SteamWorks_SteamServersConnected();
 forward void SteamWorks_SteamServersConnectFailure(EResult result);
 forward void SteamWorks_SteamServersDisconnected(EResult result);
 
-forward void SteamWorks_RestartRequested();
+forward Action SteamWorks_RestartRequested();
 forward void SteamWorks_TokenRequested(char[] sToken, int maxlen);
 
 forward void SteamWorks_OnClientGroupStatus(int authid, int groupid, bool isMember, bool isOfficer);
@@ -375,7 +374,6 @@ public void __ext_SteamWorks_SetNTVOptional()
 	MarkNativeAsOptional("SteamWorks_GetHTTPStreamingResponseBodyData");
 	MarkNativeAsOptional("SteamWorks_GetHTTPDownloadProgressPct");
 	MarkNativeAsOptional("SteamWorks_SetHTTPRequestRawPostBody");
-	MarkNativeAsOptional("SteamWorks_SetHTTPRequestRawPostBodyFromFile");
 
 	MarkNativeAsOptional("SteamWorks_GetHTTPResponseBodyCallback");
 	MarkNativeAsOptional("SteamWorks_WriteHTTPResponseBodyToFile");
