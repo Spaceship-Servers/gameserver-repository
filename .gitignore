@@ -23,13 +23,13 @@ tf/cfg/*
 !tf/cfg/trusted_keys_base.txt
 !tf/cfg/motd_html.txt
 !tf/cfg/motd_text.txt
-!tf/cfg/custom_whitelist_*
+# !tf/cfg/custom_whitelist_*
 !tf/cfg/itemtest.cfg
 !tf/cfg/ctf*
 !tf/cfg/koth*
 !tf/cfg/pl*
 !tf/cfg/cp*
-!tf/cfg/vscript_convar_allowlist.txt
+# !tf/cfg/vscript_convar_allowlist.txt
 
 tf/addons/*/data/sqlite/clientprefs-sqlite.sq3
 tf/addons/*/data/_*.data
