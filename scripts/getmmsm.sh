@@ -1,10 +1,10 @@
 #!/bin/bash
 
 latestMM=$(curl https://mms.alliedmods.net/mmsdrop/1.12/mmsource-latest-linux -s -S)
-latestSM=$(curl https://sm.alliedmods.net/smdrop/1.11/sourcemod-latest-linux -s -S)
+latestSM=$(curl https://sm.alliedmods.net/smdrop/1.12/sourcemod-latest-linux -s -S)
 
 mm_url="https://mms.alliedmods.net/mmsdrop/1.12/${latestMM}"
-sm_url="https://sm.alliedmods.net/smdrop/1.11/${latestSM}"
+sm_url="https://sm.alliedmods.net/smdrop/1.12/${latestSM}"
 
 if [[ ! ${mm_url} =~ .*"tar.gz"$ ]]; then
     echo "mm url is not fine; ${mm_url}"
