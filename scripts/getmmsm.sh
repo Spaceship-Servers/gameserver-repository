@@ -1,10 +1,10 @@
 #!/bin/bash
 
-latestMM=$(curl https://mms.alliedmods.net/mmsdrop/1.12/mmsource-latest-linux -s -S)
-latestSM=$(curl https://sm.alliedmods.net/smdrop/1.12/sourcemod-latest-linux -s -S)
+latestMM=$(curl https://mms.alliedmods.net/mmsdrop/2.0/mmsource-latest-linux -s -S)
+latestSM=$(curl https://sm.alliedmods.net/smdrop/1.13/sourcemod-latest-linux -s -S)
 
-mm_url="https://mms.alliedmods.net/mmsdrop/1.12/${latestMM}"
-sm_url="https://sm.alliedmods.net/smdrop/1.12/${latestSM}"
+mm_url="https://mms.alliedmods.net/mmsdrop/2.0/${latestMM}"
+sm_url="https://sm.alliedmods.net/smdrop/1.13/${latestSM}"
 
 if [[ ! ${mm_url} =~ .*"tar.gz"$ ]]; then
     echo "mm url is not fine; ${mm_url}"
@@ -53,7 +53,7 @@ rm ./addons/sourcemod/plugins               -rfv
 rm ./addons/sourcemod/scripting             -rfv
 rm ./addons/sourcemod/configs               -rfv
 # this gets linux64 folder too lmao
-find . -name "*x64*"            -exec rm {} -rfv    \;
+# find . -name "*x64*"            -exec rm {} -rfv    \;
 find . -name "*blade.so"        -exec rm {} -fv     \;
 find . -name "*bms.so"          -exec rm {} -fv     \;
 find . -name "*css.so"          -exec rm {} -fv     \;
