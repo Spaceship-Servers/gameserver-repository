@@ -23,7 +23,7 @@ tf/cfg/*
 !tf/cfg/trusted_keys_base.txt
 !tf/cfg/motd_html.txt
 !tf/cfg/motd_text.txt
-!tf/cfg/custom_whitelist_*
+# !tf/cfg/custom_whitelist_*
 !tf/cfg/itemtest.cfg
 !tf/cfg/ctf*
 !tf/cfg/koth*
